@@ -1,5 +1,7 @@
 package com.example.mathengerapi.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,8 @@ public class Account {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToOne(mappedBy = "account",cascade = CascadeType.ALL)
     private User user;
     @Column(nullable = false, length = 15)
     private String firstName;
@@ -27,6 +30,7 @@ public class Account {
     @Temporal(value = TemporalType.DATE)
     @Column(nullable = false)
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date registrationDate;
     @Column(nullable = false, length = 15)
     private String color;
@@ -34,12 +38,15 @@ public class Account {
     @JoinTable(name = "account_contact",
             joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "contact_id", referencedColumnName = "id")})
+    @JsonIgnore
     private List<Account> contacts;
     @ManyToMany
     @JoinTable(name = "account_chat",
             joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")})
+    @JsonIgnore
     private List<Chat> chats;
     @OneToMany(mappedBy = "receiver")
+    @JsonIgnore
     private List<Notification> notifications;
 }
