@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using Mathenger.config;
 using Mathenger.windows;
-using Ninject;
 
 namespace Mathenger
 {

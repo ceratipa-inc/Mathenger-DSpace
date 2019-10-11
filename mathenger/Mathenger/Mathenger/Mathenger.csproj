@@ -75,6 +75,7 @@
         </Compile>
         <Compile Include="config\ApplicationProperties.cs" />
         <Compile Include="config\IoC.cs" />
+        <Compile Include="config\RestConfigurer.cs" />
         <Compile Include="models\User.cs" />
         <Compile Include="services\AuthenticationService.cs" />
         <Compile Include="services\JsonSerializer.cs" />

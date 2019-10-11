@@ -2,28 +2,25 @@ using System;
 using Mathenger.config;
 using Mathenger.models;
 using RestSharp;
-using RestSharp.Serialization;
 
 namespace Mathenger.services
 {
     public class AuthenticationService
     {
-        private ApplicationProperties _properties;
-        private IRestSerializer _serializer;
-        private RestClient _client;
+        private RestConfigurer _restConfigurer;
+        private IRestClient _client;
 
-        public AuthenticationService(ApplicationProperties properties, IRestSerializer serializer)
+        public AuthenticationService(RestConfigurer restConfigurer, IRestClient client)
         {
-            _properties = properties;
-            _serializer = serializer;
-            _client = new RestClient(_properties.ApiBaseUrl);
+            _restConfigurer = restConfigurer;
+            _client = client;
         }
 
         public void SignIn(User user, Action<string> tokenConsumer)
         {
             var request = new RestRequest("authentication/signin", Method.POST);
             request.AddJsonBody(user);
-            request.JsonSerializer = _serializer;
+            _restConfigurer.configure(request);
             var response = _client.Execute(request);
             if (response.IsSuccessful)
             {

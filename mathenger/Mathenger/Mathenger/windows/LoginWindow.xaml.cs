@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 
@@ -28,6 +29,7 @@ namespace Mathenger.windows
         {
             _authenticationService.SignIn(User, token =>
             {
+                IoC.Get<ApplicationProperties>().AuthToken = token;
                 new MainWindow
                 {
                     Token = token
