@@ -30,11 +30,11 @@ namespace Mathenger.windows
             _authenticationService.SignIn(User, token =>
             {
                 IoC.Get<ApplicationProperties>().AuthToken = token;
-                new MainWindow
+                Dispatcher.Invoke(() =>
                 {
-                    Token = token
-                }.Show();
-                Close();
+                    IoC.Get<MainWindow>().Show();
+                    Close();
+                });
             });
         }
 

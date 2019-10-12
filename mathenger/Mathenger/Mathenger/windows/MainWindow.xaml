@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mathenger"
         mc:Ignorable="d"
+        Name="mainWindow"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <TextBlock Text="{Binding Token}"></TextBlock>
-    </Grid>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="5" Text="{Binding Account.FirstName}"/>
+            <TextBlock Margin="5" Text="{Binding Account.LastName}"/>
+        </StackPanel>
+        <Button Name="SignOutButton" Click="SignOutButton_OnClick">Sign Out</Button>
+    </StackPanel>
 </Window>

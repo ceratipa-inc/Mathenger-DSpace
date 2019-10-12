@@ -17,7 +17,7 @@ namespace Mathenger.config
         private void SetProperty(string key, string value)
         {
             _configuration.AppSettings.Settings.Remove(key);
-            _configuration.AppSettings.Settings.Add(key, value);
+            if (value != null) _configuration.AppSettings.Settings.Add(key, value);
             ConfigurationManager.AppSettings[key] = value;
             _configuration.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");

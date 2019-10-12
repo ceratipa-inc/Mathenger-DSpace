@@ -1,8 +1,11 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Mathenger.Annotations;
 using Newtonsoft.Json;
 
 namespace Mathenger.models
 {
-    public class User
+    public class User : BaseViewModel
     {
         [JsonProperty("name")]
         public long Id { get; set; }
@@ -10,5 +13,6 @@ namespace Mathenger.models
         public string Email { get; set; }
         [JsonProperty("password")] 
         public string Password { get; set; }
+        
     }
 }

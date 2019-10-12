@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization;
 
-namespace Mathenger.services
+namespace Mathenger.config
 {
     public class JsonSerializer : IRestSerializer
     {

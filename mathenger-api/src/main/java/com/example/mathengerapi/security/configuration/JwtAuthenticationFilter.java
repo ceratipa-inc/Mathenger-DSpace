@@ -1,7 +1,9 @@
 package com.example.mathengerapi.security.configuration;
 
+import com.example.mathengerapi.exceptions.UnAuthorizedException;
 import com.example.mathengerapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,14 +41,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 refreshSession(request, jwt);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new ServletException("Could not set user"
-                        + " authentication in security context while "
-                        + "checking authentication token! Try to log out "
-                        + "and log in again.");
+                SecurityContextHolder.clearContext();
+                response.sendError(401,"Could not set user" + " authentication in security context while "
+                        + "checking authentication token! Try to log out " + "and log in again.");
+                return;
             }
         } else {
-            throw new ServletException("Authentication token not valid! " +
-                    "Try to log out and log in again.");
+            SecurityContextHolder.clearContext();
+            response.sendError(401, "Authentication token not valid! " +
+                    "Try to sign out and sign in again.");
+            return;
         }
 
         filterChain.doFilter(request, response);
@@ -59,17 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 && bearerToken.startsWith("Bearer ")) {
             String token = bearerToken.substring(7, bearerToken.length());
             return token.equals("Invalid") ? null : token;
-        }
-        return null;
-    }
-
-    private String refreshToken() {
-        Authentication authentication = SecurityContextHolder
-                .getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            String newToken = tokenProvider.generateToken(authentication);
-            return "Bearer " + newToken;
         }
         return null;
     }

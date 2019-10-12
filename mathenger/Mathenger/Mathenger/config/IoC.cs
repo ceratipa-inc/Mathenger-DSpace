@@ -19,7 +19,8 @@ namespace Mathenger.config
         {
             //Binding configs
             _kernel.Bind<ApplicationProperties>().ToSelf().InSingletonScope();
-            _kernel.Bind<RestConfigurer>().ToSelf().InSingletonScope();
+            _kernel.Bind<RequestSender>().ToSelf().InSingletonScope();
+            _kernel.Bind<UnAuthorizedHandler>().ToSelf().InSingletonScope();
             // Binding services
             _kernel.Bind<IRestClient>()
                 .ToConstructor(arg => new RestClient(arg.Inject<string>()))
@@ -27,8 +28,10 @@ namespace Mathenger.config
                     context => context.Kernel.Get<ApplicationProperties>().ApiBaseUrl);
             _kernel.Bind<AuthenticationService>().ToSelf().InSingletonScope();
             _kernel.Bind<IRestSerializer>().To<JsonSerializer>().InSingletonScope();
+            _kernel.Bind<AccountService>().ToSelf().InSingletonScope();
             // Binding windows
             _kernel.Bind<LoginWindow>().ToSelf().InTransientScope();
+            _kernel.Bind<MainWindow>().ToSelf().InTransientScope();
         }
     }
 }

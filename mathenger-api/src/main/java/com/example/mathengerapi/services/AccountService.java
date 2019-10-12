@@ -14,15 +14,19 @@ public class AccountService {
 
     private AccountRepository accountRepository;
     private UserRepository userRepository;
+    private ColorProvider colorProvider;
 
     public void createAccount(Account account, User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
+        account.setColor(colorProvider.getRandomColor());
         account.setUser(user);
         user.setAccount(account);
-        user.setId(0L);
-        account.setId(0L);
         accountRepository.save(account);
+    }
+
+    public Account findById(Long id) {
+        return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found!"));
     }
 }

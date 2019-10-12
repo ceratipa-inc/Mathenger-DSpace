@@ -13,7 +13,15 @@ namespace Mathenger
         {
             base.OnStartup(e);
             IoC.Setup();
-            IoC.Get<LoginWindow>().Show();
+            var properties = IoC.Get<ApplicationProperties>();
+            if (properties.AuthToken == null)
+            {
+                IoC.Get<LoginWindow>().Show();
+            }
+            else
+            {
+                IoC.Get<MainWindow>().Show();
+            }
         }
     }
 }
