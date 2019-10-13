@@ -40,14 +40,14 @@ public class AccountController {
         return new ResponseEntity<>(accountService.editAccount(user.getId(), account), HttpStatus.OK);
     }
 
-    @PostMapping("/me/contacts/new/{contactId}")
-    public ResponseEntity<Account> addNewContact(@AuthenticationPrincipal User user, @PathVariable Long contactId) {
-        return new ResponseEntity<Account>(accountService.addContact(user.getId(), contactId), HttpStatus.CREATED);
+    @PostMapping("/me/contacts/new/{contact}")
+    public ResponseEntity<Account> addNewContact(@AuthenticationPrincipal User user, @PathVariable Account contact) {
+        return new ResponseEntity<Account>(accountService.addContact(user.getId(), contact), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/me/contacts/delete/{contactId}")
-    public ResponseEntity deleteContact(@AuthenticationPrincipal User user, @PathVariable Long contactId) {
-        accountService.deleteContact(user.getId(), contactId);
+    @DeleteMapping("/me/contacts/delete/{contact}")
+    public ResponseEntity deleteContact(@AuthenticationPrincipal User user, @PathVariable Account contact) {
+        accountService.deleteContact(user.getId(), contact);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

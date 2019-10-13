@@ -26,6 +26,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @MapsId
     @OneToOne
+    @EqualsAndHashCode.Exclude
     private Account account;
     @JsonIgnore
     @Column(nullable = false)

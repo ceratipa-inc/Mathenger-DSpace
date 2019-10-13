@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "chats")
@@ -16,15 +17,16 @@ public class Chat {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(nullable = false, length = 40)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 25)
+    private final ChatType chatType = ChatType.PRIVATE_CHAT;
     @Column(nullable = false, length = 15)
     private String color;
     @ManyToMany
     @JoinTable(name = "chat_member",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")})
-    private List<Account> members;
+    private Set<Account> members;
     @OneToMany
     @JoinTable(name = "chat_message",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},

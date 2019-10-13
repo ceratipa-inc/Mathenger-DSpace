@@ -43,19 +43,20 @@ public class AccountService {
         return accountRepository.findContactsById(userId);
     }
 
-    public Account addContact(Long userId, Long contactId) {
-        if (userId.equals(contactId)) throw new IllegalArgumentException("You can not add yourself as contact");
+    public Account addContact(Long userId, Account contact) {
+        if (contact == null) {
+            throw new IllegalArgumentException("Account with such id not found!");
+        }
+        if (userId.equals(contact.getId())) throw new IllegalArgumentException("You can not add yourself as contact");
         var account = accountRepository.findById(userId).get();
-        var contact = accountRepository.findById(contactId)
-                .orElseThrow(() -> new IllegalArgumentException("Contact not found"));
         account.getContacts().add(contact);
         accountRepository.save(account);
         return contact;
     }
 
-    public void deleteContact(Long userId, Long contactId) {
+    public void deleteContact(Long userId, Account contact) {
         var account = accountRepository.findById(userId).get();
-        account.getContacts().removeIf(contact -> contact.getId().equals(contactId));
+        account.getContacts().remove(contact);
         accountRepository.save(account);
     }
 

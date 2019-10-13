@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -22,6 +23,7 @@ public class Account {
     private Long id;
     @JsonIgnore
     @OneToOne(mappedBy = "account",cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
     private User user;
     @Column(nullable = false, length = 15)
     private String firstName;
