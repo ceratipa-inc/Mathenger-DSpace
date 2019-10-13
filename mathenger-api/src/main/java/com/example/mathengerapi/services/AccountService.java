@@ -5,8 +5,10 @@ import com.example.mathengerapi.models.User;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,5 +30,49 @@ public class AccountService {
 
     public Account findById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found!"));
+    }
+
+    public Account editAccount(Long userId, Account account) {
+        var accountFromDb = accountRepository.findById(userId).get();
+        accountFromDb.setFirstName(account.getFirstName());
+        accountFromDb.setLastName(account.getLastName());
+        return accountRepository.save(accountFromDb);
+    }
+
+    public List<Account> getContacts(Long userId) {
+        return accountRepository.findContactsById(userId);
+    }
+
+    public Account addContact(Long userId, Long contactId) {
+        if (userId.equals(contactId)) throw new IllegalArgumentException("You can not add yourself as contact");
+        var account = accountRepository.findById(userId).get();
+        var contact = accountRepository.findById(contactId)
+                .orElseThrow(() -> new IllegalArgumentException("Contact not found"));
+        account.getContacts().add(contact);
+        accountRepository.save(account);
+        return contact;
+    }
+
+    public void deleteContact(Long userId, Long contactId) {
+        var account = accountRepository.findById(userId).get();
+        account.getContacts().removeIf(contact -> contact.getId().equals(contactId));
+        accountRepository.save(account);
+    }
+
+    public List<Account> findContactsExcept(String searchString, Long userId) {
+        var strings = searchString.split(" ");
+        List<Account> contacts;
+        if (strings.length == 2) {
+            contacts = accountRepository
+                    .findByNames(strings[0], strings[1]);
+        } else {
+            contacts = accountRepository
+                    .findByFirstNameContainingOrLastNameContainingOrUserEmailContainingIgnoreCase(
+                            searchString, searchString, searchString);
+        }
+        var account = findById(userId);
+        return contacts.stream()
+                .filter(contact -> !(contact.equals(account) || account.getContacts().contains(contact)))
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,7 @@
 package com.example.mathengerapi.security.configuration;
 
-import com.example.mathengerapi.exceptions.UnAuthorizedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException e)
             throws IOException, ServletException {
 
-        throw new UnAuthorizedException("Unauthorized error. " +
-                "Message - " + e.getMessage());
+        SecurityContextHolder.clearContext();
+        httpServletResponse.sendError(403, e.getMessage());
     }
 }
