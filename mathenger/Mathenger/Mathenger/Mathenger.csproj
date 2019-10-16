@@ -80,7 +80,14 @@
         <Compile Include="config\UnAuthorizedHandler.cs" />
         <Compile Include="models\Account.cs" />
         <Compile Include="models\BaseViewModel.cs" />
+        <Compile Include="models\SignUpForm.cs" />
         <Compile Include="models\User.cs" />
+        <Compile Include="pages\SignInPage.xaml.cs">
+          <DependentUpon>SignInPage.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="pages\SignUpPage.xaml.cs">
+          <DependentUpon>SignUpPage.xaml</DependentUpon>
+        </Compile>
         <Compile Include="Properties\Annotations.cs" />
         <Compile Include="services\AccountService.cs" />
         <Compile Include="services\AuthenticationService.cs" />
@@ -111,6 +118,8 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <Page Include="pages\SignInPage.xaml" />
+      <Page Include="pages\SignUpPage.xaml" />
       <Page Include="windows\LoginWindow.xaml" />
       <Page Include="windows\MainWindow.xaml">
         <Generator>MSBuild:Compile</Generator>

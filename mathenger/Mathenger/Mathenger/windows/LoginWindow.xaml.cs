@@ -2,47 +2,32 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using Mathenger.config;
-using Mathenger.models;
-using Mathenger.services;
+using Mathenger.pages;
 
 namespace Mathenger.windows
 {
     public partial class LoginWindow : Window
     {
-        private AuthenticationService _authenticationService;
-        public User User { get; set; } = new User();
+        public static readonly DependencyProperty CurrentPageProperty =
+            DependencyProperty.Register("CurrentPage",
+                typeof(Page), typeof(LoginWindow));
+        public Page CurrentPage
+        {
+            get => (Page) GetValue(CurrentPageProperty);
+            set => SetValue(CurrentPageProperty, value);
+        }
 
-        public LoginWindow(AuthenticationService authenticationService)
+        private SignInPage signInPage = IoC.Get<SignInPage>();
+        private SignUpPage signUpPage = IoC.Get<SignUpPage>();
+        public LoginWindow()
         {
             InitializeComponent();
-            _authenticationService = authenticationService;
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
+            CurrentPage = signInPage;
             DataContext = this;
             CenterWindowOnScreen();
+            signInPage.NavigationLinkOnClick += () => { CurrentPage = signUpPage; };
+            signUpPage.NavigationLinkOnClick += () => { CurrentPage = signInPage; };
         }
-
-        private void SignInButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            _authenticationService.SignIn(User, token =>
-            {
-                IoC.Get<ApplicationProperties>().AuthToken = token;
-                Dispatcher.Invoke(() =>
-                {
-                    IoC.Get<MainWindow>().Show();
-                    Close();
-                });
-            });
-        }
-
-        private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
-        {
-            User.Password = ((PasswordBox) sender).Password;
-        }
-        
         private void CenterWindowOnScreen()
         {
             var screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -51,6 +36,11 @@ namespace Mathenger.windows
             double windowHeight = Height;
             Left = screenWidth / 2 - windowWidth / 2;
             Top = screenHeight / 2 - windowHeight / 2;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
         }
     }
 }

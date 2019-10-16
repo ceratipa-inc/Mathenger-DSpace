@@ -31,5 +31,21 @@ namespace Mathenger.services
 
             _sender.Send(request, tokenConsumer, ErrorHandler, FailureHandler);
         }
+
+        public void SignUp(SignUpForm signUpForm, Action<string> tokenConsumer)
+        {
+            var request = new RestRequest("authentication/signup", Method.POST);
+            request.AddJsonBody(signUpForm);
+
+            void FailureHandler(IRestResponse response)
+            {
+            }
+            void ErrorHandler()
+            {
+                Application.Current.Dispatcher.Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
+            }
+            
+            _sender.Send(request, tokenConsumer, ErrorHandler, FailureHandler);
+        }
     }
 }

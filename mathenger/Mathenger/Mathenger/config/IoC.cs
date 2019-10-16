@@ -1,3 +1,4 @@
+using Mathenger.pages;
 using Mathenger.services;
 using Mathenger.windows;
 using Ninject;
@@ -32,6 +33,9 @@ namespace Mathenger.config
             // Binding windows
             _kernel.Bind<LoginWindow>().ToSelf().InTransientScope();
             _kernel.Bind<MainWindow>().ToSelf().InTransientScope();
+            // Binding pages
+            _kernel.Bind<SignInPage>().ToSelf().InTransientScope();
+            _kernel.Bind<SignUpPage>().ToSelf().InTransientScope();
         }
     }
 }
