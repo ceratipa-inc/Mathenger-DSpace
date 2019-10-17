@@ -1,5 +1,6 @@
 using System.Configuration;
 using System.Windows;
+using Mathenger.models;
 
 namespace Mathenger.config
 {
@@ -13,6 +14,8 @@ namespace Mathenger.config
             get => ConfigurationManager.AppSettings["authToken"];
             set => SetProperty("authToken", value);
         }
+        
+        public Account MyAccount { get; set; }
 
         private void SetProperty(string key, string value)
         {

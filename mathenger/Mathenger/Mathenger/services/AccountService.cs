@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Mathenger.config;
 using Mathenger.models;
 using RestSharp;
@@ -14,10 +15,29 @@ namespace Mathenger.services
             _sender = sender;
         }
 
-        public void getCurrentAccount(Action<Account> accountConsumer)
+        public void GetCurrentAccount(Action<Account> accountConsumer)
         {
-            var request = new RestRequest("/account/me", Method.GET);
+            var request = new RestRequest("/account/me");
             _sender.Send(request, accountConsumer);
+        }
+
+        public void GetMyContacts(Action<List<Account>> contactsConsumer)
+        {
+            var request = new RestRequest("/account/me/contacts");
+            _sender.Send(request, contactsConsumer);
+        }
+
+        public void Search(string search, Action<List<Account>> accountsConsumer)
+        {
+            var request = new RestRequest("/account/search");
+            request.AddParameter("search", search);
+            _sender.Send(request, accountsConsumer);
+        }
+
+        public void AddContact(long id, Action<Account> contactConsumer)
+        {
+            var request = new RestRequest($"/account/me/contacts/new/{id}", Method.POST);
+            _sender.Send(request, contactConsumer);
         }
     }
 }

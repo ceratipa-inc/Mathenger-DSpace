@@ -31,7 +31,7 @@ public class AccountController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Account>> findContacts(@AuthenticationPrincipal User user,
-                                                      @RequestParam String searchString) {
+                                                      @RequestParam(name = "search") String searchString) {
         return new ResponseEntity<>(accountService.findContactsExcept(searchString, user.getId()), HttpStatus.OK);
     }
 

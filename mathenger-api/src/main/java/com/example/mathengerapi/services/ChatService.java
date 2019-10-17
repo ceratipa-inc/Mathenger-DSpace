@@ -40,7 +40,7 @@ public class ChatService {
     }
 
     private Chat newChatWithMembers(Account account, Account account2) {
-        var chat = new Chat(0L, colorProvider.getRandomColor(), new LinkedHashSet<>(), new LinkedList<>());
+        var chat = new Chat(0L, new LinkedHashSet<>(), new LinkedList<>());
         chat.getMembers().add(account);
         chat.getMembers().add(account2);
         return chatRepository.save(chat);

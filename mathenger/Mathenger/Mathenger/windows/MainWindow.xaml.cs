@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using Mathenger.config;
 using Mathenger.models;
@@ -11,7 +13,8 @@ namespace Mathenger.windows
     /// </summary>
     public partial class MainWindow
     {
-        private AccountService _accountService;
+        private readonly AccountService _accountService;
+        private ChatService _chatService;
         private ApplicationProperties _properties;
         
         public static readonly DependencyProperty AccountProperty =
@@ -23,17 +26,37 @@ namespace Mathenger.windows
             get => (Account) GetValue(AccountProperty);
             set => SetValue(AccountProperty, value);
         }
+        
+        public static readonly DependencyProperty ChatsProperty =
+            DependencyProperty.Register("Chats", typeof(ObservableCollection<Chat>),
+                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Chat>()));
 
-        public MainWindow(AccountService accountService, ApplicationProperties properties)
+        public ObservableCollection<Chat> Chats
+        {
+            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
+            set => SetValue(ChatsProperty, value);
+        }
+        
+        public MainWindow(AccountService accountService, ApplicationProperties properties,
+            ChatService chatService)
         {
             InitializeComponent();
             _accountService = accountService;
             _properties = properties;
+            _chatService = chatService;
             DataContext = this;
             CenterWindowOnScreen();
-            _accountService.getCurrentAccount(account =>
+            _accountService.GetCurrentAccount(account =>
             {
-                Dispatcher.Invoke(() => { Account = account; });
+                Dispatcher.Invoke(() =>
+                {
+                    Account = account;
+                    _properties.MyAccount = account;
+                });
+                _chatService.GetMyChats(chats => { Dispatcher.Invoke(() =>
+                {
+                    Chats = new ObservableCollection<Chat>(chats);
+                }); });
             });
         }
         private void CenterWindowOnScreen()
@@ -44,13 +67,6 @@ namespace Mathenger.windows
             double windowHeight = Height;
             Left = screenWidth / 2 - windowWidth / 2;
             Top = screenHeight / 2 - windowHeight / 2;
-        }
-
-        private void SignOutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            _properties.AuthToken = null;
-            IoC.Get<LoginWindow>().Show();
-            Close();
         }
     }
 }

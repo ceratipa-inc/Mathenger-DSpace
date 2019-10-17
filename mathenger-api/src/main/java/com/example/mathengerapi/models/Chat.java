@@ -20,8 +20,6 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     @Column(length = 25)
     private final ChatType chatType = ChatType.PRIVATE_CHAT;
-    @Column(nullable = false, length = 15)
-    private String color;
     @ManyToMany
     @JoinTable(name = "chat_member",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
