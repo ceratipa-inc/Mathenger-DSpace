@@ -35,21 +35,24 @@ namespace Mathenger.config
             Send(request, contentConsumer, ErrorHandler, FailureHandler);
         }
 
+        public void Send(IRestRequest request, Action onSuccess)
+        {
+            Send(request, onSuccess, ErrorHandler, FailureHandler);
+        }
         public void Send<T>(IRestRequest request, Action<T> contentConsumer,
             Action<IRestResponse> failureHandler) where T : new()
         {
             Send(request, contentConsumer, ErrorHandler, failureHandler);
         }
-
-        public void Send<T>(IRestRequest request, Action<T> contentConsumer
-            , Action errorHandler, Action<IRestResponse> failureHandler) where T : new()
+        public void Send(IRestRequest request, Action onSuccess, Action errorHandler, 
+            Action<IRestResponse> failureHandler)
         {
             configure(request);
-            _client.ExecuteAsync<T>(request, response =>
+            _client.ExecuteAsync(request, response =>
             {
                 if (response.IsSuccessful)
                 {
-                    contentConsumer(response.Data);
+                    onSuccess?.Invoke();
                 }
                 else if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
                 {
@@ -57,11 +60,35 @@ namespace Mathenger.config
                 }
                 else if (response.StatusCode != 0)
                 {
-                    failureHandler(response);
+                    failureHandler?.Invoke(response);
                 }
                 else
                 {
-                    errorHandler();
+                    errorHandler?.Invoke();
+                }
+            });
+        }
+        public void Send<T>(IRestRequest request, Action<T> contentConsumer,
+            Action errorHandler, Action<IRestResponse> failureHandler) where T : new()
+        {
+            configure(request);
+            _client.ExecuteAsync<T>(request, response =>
+            {
+                if (response.IsSuccessful)
+                {
+                    contentConsumer?.Invoke(response.Data);
+                }
+                else if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+                {
+                    _unAuthorizedHandler.HandleUnAuthorizedResponse();
+                }
+                else if (response.StatusCode != 0)
+                {
+                    failureHandler?.Invoke(response);
+                }
+                else
+                {
+                    errorHandler?.Invoke();
                 }
             });
         }
@@ -75,7 +102,7 @@ namespace Mathenger.config
             {
                 if (response.IsSuccessful)
                 {
-                    contentConsumer(response.Content);
+                    contentConsumer?.Invoke(response.Content);
                 }
                 else if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
                 {
@@ -83,11 +110,11 @@ namespace Mathenger.config
                 }
                 else if (response.StatusCode != 0)
                 {
-                    failureHandler(response);
+                    failureHandler?.Invoke(response);
                 }
                 else
                 {
-                    errorHandler();
+                    errorHandler?.Invoke();
                 }
             });
         }

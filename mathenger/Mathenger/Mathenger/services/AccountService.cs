@@ -39,5 +39,11 @@ namespace Mathenger.services
             var request = new RestRequest($"/account/me/contacts/new/{id}", Method.POST);
             _sender.Send(request, contactConsumer);
         }
+
+        public void DeleteContact(long id, Action onSuccess)
+        {
+            var request = new RestRequest($"/account/me/contacts/delete/{id}", Method.DELETE);
+            _sender.Send(request, onSuccess);
+        }
     }
 }

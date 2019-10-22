@@ -8,15 +8,25 @@
         WindowStartupLocation="CenterOwner"
         Title="ContactsDialog" Height="350" Width="350">
     <Window.Resources>
-        <local:AccountNameConverter x:Key="AccountNameConverter"/>
+        <ContextMenu x:Key="ContextMenu">
+            <ContextMenu.Items>
+                <MenuItem DataContext="{Binding}" Name="DeleteButton" Header="Delete"
+                          Click="DeleteButton_OnClick" />
+            </ContextMenu.Items>
+        </ContextMenu>
+        <Style x:Key="ItemContainerMenuStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+        </Style>
+        <local:AccountNameConverter x:Key="AccountNameConverter" />
     </Window.Resources>
     <Grid>
-        <ListView SelectionMode="Single" ItemsSource="{Binding Contacts}">
+        <ListView ItemContainerStyle="{StaticResource ItemContainerMenuStyle}" 
+                  SelectionMode="Single" ItemsSource="{Binding Contacts}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="40">
-                        <TextBlock VerticalAlignment="Center" 
-                                   Text="{Binding Converter={StaticResource AccountNameConverter}}"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="{Binding Converter={StaticResource AccountNameConverter}}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

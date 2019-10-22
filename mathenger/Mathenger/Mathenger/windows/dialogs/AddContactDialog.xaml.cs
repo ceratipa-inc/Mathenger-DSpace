@@ -47,10 +47,13 @@ namespace Mathenger.windows.dialogs
 
         private void SearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            _accountService.Search(SearchBox.Text, accounts => { Dispatcher.Invoke(() =>
+            if (SearchBox.Text.Trim().Length > 0)
             {
-                Accounts = new ObservableCollection<Account>(accounts);
-            }); });
+                _accountService.Search(SearchBox.Text, accounts => { Dispatcher.Invoke(() =>
+                {
+                    Accounts = new ObservableCollection<Account>(accounts);
+                }); });
+            }
         }
 
         private void AddContactButton_OnClick(object sender, RoutedEventArgs e)
