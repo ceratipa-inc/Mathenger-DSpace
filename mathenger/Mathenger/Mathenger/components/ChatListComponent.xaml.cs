@@ -8,20 +8,34 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Mathenger.config;
 using Mathenger.models;
+using Mathenger.services;
 
 namespace Mathenger.components
 {
     public partial class ChatListComponent : UserControl
     {
+        private ChatService _chatService = IoC.Get<ChatService>();
+
         public static readonly DependencyProperty ChatsProperty =
             DependencyProperty.Register("Chats",
                 typeof(ObservableCollection<Chat>), typeof(ChatListComponent));
+
+        public static readonly DependencyProperty SelectedChatProperty =
+            DependencyProperty.Register("SelectedChat",
+                typeof(Chat), typeof(ChatListComponent));
+
         public ObservableCollection<Chat> Chats
         {
             get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
-        
+
+        public Chat SelectedChat
+        {
+            get => (Chat) GetValue(SelectedChatProperty);
+            set => SetValue(SelectedChatProperty, value);
+        }
+
         public ChatListComponent()
         {
             InitializeComponent();
@@ -31,6 +45,17 @@ namespace Mathenger.components
                 Width = double.NaN;
                 Height = double.NaN;
             }
+        }
+
+        private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as System.Windows.Controls.MenuItem;
+            var menu = menuItem?.Parent as ContextMenu;
+            var chat = menu?.DataContext as Chat;
+            _chatService.DeleteChat(chat.Id, () => { Dispatcher.Invoke(() =>
+            {
+                Chats.Remove(chat);
+            }); });
         }
     }
 

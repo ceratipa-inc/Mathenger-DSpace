@@ -1,6 +1,8 @@
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Windows;
 using Mathenger.models;
+using Mathenger.windows;
 
 namespace Mathenger.config
 {
@@ -16,6 +18,11 @@ namespace Mathenger.config
         }
         
         public Account MyAccount { get; set; }
+
+        public MainWindow MainWindow
+        {
+            get => (MainWindow)Application.Current.MainWindow;
+        }
 
         private void SetProperty(string key, string value)
         {

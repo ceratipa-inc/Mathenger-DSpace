@@ -21,6 +21,7 @@
     </Window.Resources>
     <Grid>
         <ListView ItemContainerStyle="{StaticResource ItemContainerMenuStyle}" 
+                  SelectionChanged="Selector_OnSelectionChanged"
                   SelectionMode="Single" ItemsSource="{Binding Contacts}">
             <ListView.ItemTemplate>
                 <DataTemplate>

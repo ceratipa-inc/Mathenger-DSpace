@@ -20,5 +20,17 @@ namespace Mathenger.services
             var request = new RestRequest("/chats", Method.GET);
             _sender.Send(request, chatsConsumer);
         }
+
+        public void StartPrivateChat(long contactId, Action<Chat> chatConsumer)
+        {
+            var request = new RestRequest($"/chats/new/{contactId}", Method.POST);
+            _sender.Send(request, chatConsumer);
+        }
+
+        public void DeleteChat(long chatId, Action onSuccess)
+        {
+            var request = new RestRequest($"/chats/delete/{chatId}", Method.DELETE);
+            _sender.Send(request, onSuccess);
+        }
     }
 }

@@ -7,15 +7,25 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <ContextMenu x:Key="ContextMenu">
+            <ContextMenu.Items>
+                <MenuItem DataContext="{Binding}" Name="DeleteButton" Header="Delete"
+                          Click="DeleteButton_OnClick" />
+            </ContextMenu.Items>
+        </ContextMenu>
+        <Style x:Key="ItemContainerMenuStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+        </Style>
         <local:ChatNameConverter x:Key="NameConverter"/>
     </UserControl.Resources>
-    <StackPanel>
-        <ListView SelectionMode="Single" ItemsSource="{Binding Chats}">
+    <Grid>
+        <ListView SelectedItem="{Binding SelectedChat}" ItemContainerStyle="{StaticResource ItemContainerMenuStyle}" 
+                  SelectionMode="Single" ItemsSource="{Binding Chats}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource NameConverter}}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-    </StackPanel>
+    </Grid>
 </UserControl>

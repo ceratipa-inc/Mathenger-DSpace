@@ -23,6 +23,6 @@
             <Label Content="{Binding Account.LastName}"/>
         </StackPanel>
         <component:SideMenuComponent Grid.Row="1" Grid.Column="0"/>
-        <component:ChatListComponent Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
+        <component:ChatListComponent x:Name="ChatListComponent" x:FieldModifier="public" SelectedChat="{Binding SelectedChat, ElementName=mainWindow}" Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
     </Grid>
 </Window>

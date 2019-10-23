@@ -2,9 +2,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using Mathenger.components;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
+using Mathenger.windows.dialogs;
 
 namespace Mathenger.windows
 {
@@ -21,15 +23,25 @@ namespace Mathenger.windows
             DependencyProperty.Register("Account",
                 typeof(Account), typeof(MainWindow),
                 new PropertyMetadata(new Account()));
+        
+        public static readonly DependencyProperty ChatsProperty =
+            DependencyProperty.Register("Chats", typeof(ObservableCollection<Chat>),
+                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Chat>()));
+        
+        public static readonly DependencyProperty SelectedChatProperty =
+            DependencyProperty.Register("SelectedChat", typeof(Chat),
+                typeof(ContactsDialog), new PropertyMetadata(new Chat()));
+        public Chat SelectedChat
+        {
+            get => (Chat) GetValue(SelectedChatProperty);
+            set => SetValue(SelectedChatProperty, value);
+        }
+        
         public Account Account
         {
             get => (Account) GetValue(AccountProperty);
             set => SetValue(AccountProperty, value);
         }
-        
-        public static readonly DependencyProperty ChatsProperty =
-            DependencyProperty.Register("Chats", typeof(ObservableCollection<Chat>),
-                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Chat>()));
 
         public ObservableCollection<Chat> Chats
         {
