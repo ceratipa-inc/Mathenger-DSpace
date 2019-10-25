@@ -10,7 +10,7 @@ using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 
-namespace Mathenger.components
+namespace Mathenger.ui.components
 {
     public partial class ChatListComponent : UserControl
     {
@@ -64,7 +64,7 @@ namespace Mathenger.components
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var chat = (Chat) value;
-            if (chat.ChatType.Equals("PRIVATE_CHAT"))
+            if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
             {
                 var properties = IoC.Get<ApplicationProperties>();
                 var contact = chat.Members.First(member => member.Id != properties.MyAccount.Id);

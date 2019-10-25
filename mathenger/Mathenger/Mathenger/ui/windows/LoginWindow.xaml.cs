@@ -2,9 +2,9 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using Mathenger.config;
-using Mathenger.pages;
+using Mathenger.ui.pages;
 
-namespace Mathenger.windows
+namespace Mathenger.ui.windows
 {
     public partial class LoginWindow : Window
     {

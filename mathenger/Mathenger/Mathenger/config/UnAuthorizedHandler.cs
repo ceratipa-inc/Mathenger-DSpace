@@ -1,5 +1,5 @@
 using System.Windows;
-using Mathenger.windows;
+using Mathenger.ui.windows;
 
 namespace Mathenger.config
 {

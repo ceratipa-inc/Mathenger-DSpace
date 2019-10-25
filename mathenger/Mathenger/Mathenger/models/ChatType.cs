@@ -4,6 +4,6 @@ namespace Mathenger.models
     
     public enum ChatType
     {
-        PRIVAT_CHAT, GROUP_CHAT
+        PRIVATE_CHAT, GROUP_CHAT
     }
 }

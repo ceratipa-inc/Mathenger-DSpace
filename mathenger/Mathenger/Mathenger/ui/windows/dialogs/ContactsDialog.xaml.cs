@@ -2,15 +2,15 @@ using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 
-namespace Mathenger.windows.dialogs
+namespace Mathenger.ui.windows.dialogs
 {
     public partial class ContactsDialog : Window
     {
@@ -29,38 +29,34 @@ namespace Mathenger.windows.dialogs
 
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var menuItem = sender as System.Windows.Controls.MenuItem;
+            var menuItem = sender as MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
             var Account = menu?.DataContext as Account;
             _accountService.DeleteContact(Account.Id,
                 () => { Dispatcher.Invoke(() => { Contacts.Remove(Account); }); });
         }
-
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EventSetter_OnClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.AddedItems.Count > 0)
+            var contact = (sender as ListViewItem).DataContext as Account;
+            var mainWindow = _properties.MainWindow;
+            var chats = mainWindow.Chats;
+            _chatService.StartPrivateChat(contact.Id, chat =>
             {
-                var contact = e.AddedItems[0] as Account;
-                var mainWindow = _properties.MainWindow;
-                var chats = mainWindow.Chats;
-                _chatService.StartPrivateChat(contact.Id, chat =>
+                Dispatcher.Invoke(() =>
                 {
-                    Dispatcher.Invoke(() =>
+                    var chatFromMemory = chats.SingleOrDefault(chatItem => chatItem.Id == chat.Id);
+                    if (chatFromMemory == null)
                     {
-                        var chatFromMemory = chats.SingleOrDefault(chatItem => chatItem.Id == chat.Id);
-                        if (chatFromMemory == null)
-                        {
-                            chats.Add(chat);
-                            mainWindow.ChatListComponent.SelectedChat = chat;
-                        }
-                        else
-                        {
-                            mainWindow.ChatListComponent.SelectedChat = chatFromMemory;
-                        }
-                        Close();
-                    });
+                        chats.Add(chat);
+                        mainWindow.SelectedChat = chat;
+                    }
+                    else
+                    {
+                        mainWindow.SelectedChat = chatFromMemory;
+                    }
+                    Close();
                 });
-            }
+            });
         }
     }
 

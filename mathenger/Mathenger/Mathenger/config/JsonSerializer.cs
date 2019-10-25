@@ -1,12 +1,15 @@
 using System.IO;
 using Newtonsoft.Json;
 using RestSharp;
+using RestSharp.Deserializers;
 using RestSharp.Serialization;
+using RestSharp.Serializers;
 
 namespace Mathenger.config
 {
     public class JsonSerializer : IRestSerializer
     {
+        private Newtonsoft.Json.JsonSerializer _serializer = new Newtonsoft.Json.JsonSerializer();
         public string Serialize(object obj)
         {
             return JsonConvert.SerializeObject(obj);
@@ -26,7 +29,7 @@ namespace Mathenger.config
             {
                 using (var jsonTextReader = new JsonTextReader(stringReader))
                 {
-                    return JsonConvert.DeserializeObject<T>(jsonTextReader.ReadAsString());
+                    return _serializer.Deserialize<T>(jsonTextReader);
                 }
             }
         }

@@ -1,10 +1,14 @@
-using Mathenger.pages;
 using Mathenger.services;
-using Mathenger.windows;
-using Mathenger.windows.dialogs;
+using Mathenger.ui.pages;
+using Mathenger.ui.windows;
+using Mathenger.ui.windows.dialogs;
+using Mathenger.utils.stomp;
 using Ninject;
 using RestSharp;
+using RestSharp.Deserializers;
 using RestSharp.Serialization;
+using RestSharp.Serializers;
+using WebSocketSharp;
 
 namespace Mathenger.config
 {
@@ -19,6 +23,9 @@ namespace Mathenger.config
 
         public static void Setup()
         {
+            //Binding utils
+            _kernel.Bind<StompMessageSerializer>().ToSelf().InSingletonScope();
+            _kernel.Bind<StompSocketProvider>().ToSelf().InSingletonScope();
             //Binding configs
             _kernel.Bind<ApplicationProperties>().ToSelf().InSingletonScope();
             _kernel.Bind<RequestSender>().ToSelf().InSingletonScope();
@@ -29,9 +36,12 @@ namespace Mathenger.config
                 .InSingletonScope().WithConstructorArgument("baseUrl",
                     context => context.Kernel.Get<ApplicationProperties>().ApiBaseUrl);
             _kernel.Bind<AuthenticationService>().ToSelf().InSingletonScope();
+            _kernel.Bind<ISerializer>().To<JsonSerializer>().InSingletonScope();
+            _kernel.Bind<IDeserializer>().To<JsonSerializer>().InSingletonScope();
             _kernel.Bind<IRestSerializer>().To<JsonSerializer>().InSingletonScope();
             _kernel.Bind<AccountService>().ToSelf().InSingletonScope();
             _kernel.Bind<ChatService>().ToSelf().InSingletonScope();
+            _kernel.Bind<MessageService>().ToSelf().InSingletonScope();
             // Binding windows
             _kernel.Bind<LoginWindow>().ToSelf().InTransientScope();
             _kernel.Bind<MainWindow>().ToSelf().InTransientScope();

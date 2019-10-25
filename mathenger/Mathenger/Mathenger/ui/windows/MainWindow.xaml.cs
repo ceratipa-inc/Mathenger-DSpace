@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows;
-using Mathenger.components;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
-using Mathenger.windows.dialogs;
+using Mathenger.utils.stomp;
 
-namespace Mathenger.windows
+namespace Mathenger.ui.windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -16,27 +14,29 @@ namespace Mathenger.windows
     public partial class MainWindow
     {
         private readonly AccountService _accountService;
+        private readonly MessageService _messageService;
         private ChatService _chatService;
         private ApplicationProperties _properties;
-        
+
         public static readonly DependencyProperty AccountProperty =
             DependencyProperty.Register("Account",
                 typeof(Account), typeof(MainWindow),
                 new PropertyMetadata(new Account()));
-        
+
         public static readonly DependencyProperty ChatsProperty =
             DependencyProperty.Register("Chats", typeof(ObservableCollection<Chat>),
                 typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Chat>()));
-        
+
         public static readonly DependencyProperty SelectedChatProperty =
             DependencyProperty.Register("SelectedChat", typeof(Chat),
-                typeof(ContactsDialog), new PropertyMetadata(new Chat()));
+                typeof(MainWindow));
+
         public Chat SelectedChat
         {
             get => (Chat) GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
-        
+
         public Account Account
         {
             get => (Account) GetValue(AccountProperty);
@@ -48,14 +48,15 @@ namespace Mathenger.windows
             get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
-        
+
         public MainWindow(AccountService accountService, ApplicationProperties properties,
-            ChatService chatService)
+            ChatService chatService, MessageService messageService)
         {
             InitializeComponent();
             _accountService = accountService;
             _properties = properties;
             _chatService = chatService;
+            _messageService = messageService;
             DataContext = this;
             CenterWindowOnScreen();
             _accountService.GetCurrentAccount(account =>
@@ -65,12 +66,28 @@ namespace Mathenger.windows
                     Account = account;
                     _properties.MyAccount = account;
                 });
-                _chatService.GetMyChats(chats => { Dispatcher.Invoke(() =>
+                _chatService.GetMyChats(chats =>
                 {
-                    Chats = new ObservableCollection<Chat>(chats);
-                }); });
+                    Dispatcher.Invoke(() =>
+                    {
+                        Chats = chats;
+                    });
+                    new Thread(o =>
+                    {
+                        foreach (var chat in chats)
+                        {
+                            _messageService.SubscribeToChat(chat.Id, message => { Dispatcher.Invoke(() =>
+                            {
+                                chat.Messages.Add(message);
+                            }); });
+//                            var ws = IoC.Get<StompSocketProvider>().GetSocket($"chat/{chat.Id}");
+//                            ws.OnMessage += (sender, args) => { Dispatcher.Invoke(() => { MessageBox.Show(args.Data); }); };
+                        }
+                    }).Start();
+                });
             });
         }
+
         private void CenterWindowOnScreen()
         {
             var screenWidth = SystemParameters.PrimaryScreenWidth;

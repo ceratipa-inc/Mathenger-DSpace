@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Windows;
 using Mathenger.models;
-using Mathenger.windows;
+using Mathenger.ui.windows;
 
 namespace Mathenger.config
 {
@@ -10,7 +10,7 @@ namespace Mathenger.config
     {
         private Configuration _configuration;
         public string ApiBaseUrl => ConfigurationManager.AppSettings["apiBaseUrl"];
-
+        public string WebSocketEndpointUrl => ConfigurationManager.AppSettings["webSocketEndpointUrl"];
         public string AuthToken
         {
             get => ConfigurationManager.AppSettings["authToken"];

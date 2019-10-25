@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Mathenger.config;
 using Mathenger.models;
 using RestSharp;
@@ -15,7 +16,7 @@ namespace Mathenger.services
             _sender = sender;
         }
 
-        public void GetMyChats(Action<List<Chat>> chatsConsumer)
+        public void GetMyChats(Action<ObservableCollection<Chat>> chatsConsumer)
         {
             var request = new RestRequest("/chats", Method.GET);
             _sender.Send(request, chatsConsumer);

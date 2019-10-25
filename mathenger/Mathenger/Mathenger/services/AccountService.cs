@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Mathenger.config;
 using Mathenger.models;
 using RestSharp;
@@ -21,13 +22,13 @@ namespace Mathenger.services
             _sender.Send(request, accountConsumer);
         }
 
-        public void GetMyContacts(Action<List<Account>> contactsConsumer)
+        public void GetMyContacts(Action<ObservableCollection<Account>> contactsConsumer)
         {
             var request = new RestRequest("/account/me/contacts");
             _sender.Send(request, contactsConsumer);
         }
 
-        public void Search(string search, Action<List<Account>> accountsConsumer)
+        public void Search(string search, Action<ObservableCollection<Account>> accountsConsumer)
         {
             var request = new RestRequest("/account/search");
             request.AddParameter("search", search);

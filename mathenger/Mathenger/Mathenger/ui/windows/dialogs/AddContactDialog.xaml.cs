@@ -4,11 +4,10 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 
-namespace Mathenger.windows.dialogs
+namespace Mathenger.ui.windows.dialogs
 {
     public partial class AddContactDialog : Window
     {

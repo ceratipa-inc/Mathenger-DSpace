@@ -5,25 +5,22 @@ using System.Windows.Controls;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
-using Mathenger.windows;
+using Mathenger.ui.windows;
 
-namespace Mathenger.pages
+namespace Mathenger.ui.pages
 {
-    public partial class SignUpPage : Page
+    public partial class SignInPage : Page
     {
-        public User User { get; } = new User();
-        public Account Account { get; } = new Account();
-        public event Action NavigationLinkOnClick; 
         private AuthenticationService _authenticationService;
-        private SignUpForm _signUpForm;
+        public User User { get; } = new User();
+        public event Action NavigationLinkOnClick;
         private ApplicationProperties _applicationProperties;
 
-        public SignUpPage(AuthenticationService authenticationService,
+        public SignInPage(AuthenticationService authenticationService,
             ApplicationProperties applicationProperties)
         {
             InitializeComponent();
             _authenticationService = authenticationService;
-            _signUpForm = new SignUpForm { Account = Account, User = User};
             _applicationProperties = applicationProperties;
             DataContext = this;
             if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
@@ -32,15 +29,10 @@ namespace Mathenger.pages
                 Height = double.NaN;
             }
         }
-
-        private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
+        
+        private void SignInButton_OnClick(object sender, RoutedEventArgs e)
         {
-            User.Password = ((PasswordBox) sender).Password;
-        }
-
-        private void SignUpButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            _authenticationService.SignUp(_signUpForm, token =>
+            _authenticationService.SignIn(User, token =>
             {
                 _applicationProperties.AuthToken = token;
                 Dispatcher.Invoke(() =>
@@ -49,6 +41,11 @@ namespace Mathenger.pages
                     Window.GetWindow(this)?.Close();
                 });
             });
+        }
+
+        private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            User.Password = ((PasswordBox) sender).Password;
         }
 
         private void Hyperlink_OnClick(object sender, RoutedEventArgs e)

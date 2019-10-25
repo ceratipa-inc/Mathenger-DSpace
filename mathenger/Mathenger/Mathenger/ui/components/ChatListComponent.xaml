@@ -1,9 +1,10 @@
-<UserControl x:Class="Mathenger.components.ChatListComponent"
+<UserControl x:Class="Mathenger.ui.components.ChatListComponent"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Mathenger.components"
+             xmlns:components="clr-namespace:Mathenger.ui.components"
+             Name="chatListComponent"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -13,14 +14,16 @@
                           Click="DeleteButton_OnClick" />
             </ContextMenu.Items>
         </ContextMenu>
-        <Style x:Key="ItemContainerMenuStyle" TargetType="{x:Type ListViewItem}">
-            <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
-        </Style>
-        <local:ChatNameConverter x:Key="NameConverter"/>
+        <components:ChatNameConverter x:Key="NameConverter"/>
     </UserControl.Resources>
     <Grid>
-        <ListView SelectedItem="{Binding SelectedChat}" ItemContainerStyle="{StaticResource ItemContainerMenuStyle}" 
-                  SelectionMode="Single" ItemsSource="{Binding Chats}">
+        <ListView SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}" 
+                  SelectionMode="Single" ItemsSource="{Binding Chats, ElementName=chatListComponent}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource NameConverter}}"/>

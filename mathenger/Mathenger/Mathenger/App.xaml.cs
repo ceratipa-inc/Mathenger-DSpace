@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Mathenger.config;
-using Mathenger.windows;
+using Mathenger.ui.windows;
+using Mathenger.utils.stomp;
 
 namespace Mathenger
 {
@@ -22,6 +23,12 @@ namespace Mathenger
             {
                 IoC.Get<MainWindow>().Show();
             }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            IoC.Get<StompSocketProvider>().Disconnect();
         }
     }
 }

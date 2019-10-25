@@ -14,10 +14,10 @@ namespace Mathenger.models
         public long Id { get; set; }
         [JsonProperty("chatType")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public string ChatType { get; set; }
+        public ChatType ChatType { get; set; }
         [JsonProperty("members")]
         public List<Account> Members { get; set; }
         [JsonProperty("messages")]
-        public List<Message> Messages { get; set; }
+        public ObservableCollection<Message> Messages { get; set; }
     }
 }

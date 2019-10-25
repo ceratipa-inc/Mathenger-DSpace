@@ -42,6 +42,14 @@ public class AuthenticationService {
         }
     }
 
+    public Long getUserId(String token) {
+        if (token.isBlank()) throw new IllegalArgumentException("User not found");
+        if (!tokenProvider.validateToken(token)) {
+            throw new IllegalArgumentException("Token is not valid");
+        }
+        return tokenProvider.getUserIdFromJWT(token);
+    }
+
     private String authenticate(String login, String password) {
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(

@@ -1,14 +1,12 @@
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using Mathenger.config;
-using Mathenger.models;
 using Mathenger.services;
-using Mathenger.windows;
-using Mathenger.windows.dialogs;
+using Mathenger.ui.windows;
+using Mathenger.ui.windows.dialogs;
 
-namespace Mathenger.components
+namespace Mathenger.ui.components
 {
     public partial class SideMenuComponent : UserControl
     {
@@ -39,7 +37,7 @@ namespace Mathenger.components
             {
                 Dispatcher.Invoke(() =>
                 {
-                    var dialog = new ContactsDialog(new ObservableCollection<Account>(contacts));
+                    var dialog = new ContactsDialog(contacts);
                     dialog.Owner = Window.GetWindow(this);
                     dialog.ShowDialog();
                 });

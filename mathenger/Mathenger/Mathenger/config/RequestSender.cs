@@ -2,7 +2,10 @@ using System;
 using System.Net;
 using System.Windows;
 using RestSharp;
+using RestSharp.Deserializers;
 using RestSharp.Serialization;
+using RestSharp.Serializers;
+using DataFormat = RestSharp.DataFormat;
 
 namespace Mathenger.config
 {
@@ -18,6 +21,11 @@ namespace Mathenger.config
             _serializer = serializer;
             _properties = properties;
             _client = client;
+            _client.AddHandler("application/json", () => _serializer);
+            _client.AddHandler("text/json", () => _serializer);
+            _client.AddHandler("text/x-json", () => _serializer);
+            _client.AddHandler("text/javascript", () => _serializer);
+            _client.AddHandler("*+json", () => _serializer);
             _unAuthorizedHandler = unAuthorizedHandler;
         }
 
