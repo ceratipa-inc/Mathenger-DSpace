@@ -5,28 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mathenger"
         xmlns:components="clr-namespace:Mathenger.ui.components"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Name="mainWindow"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Column="0" Grid.Row="0">
-            <Label Content="{Binding Account.FirstName}" />
-            <Label Content="{Binding Account.LastName}" />
-        </StackPanel>
-        <components:SideMenuComponent Grid.Row="1" Grid.Column="0" />
-        <components:ChatListComponent
+  <!--<Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="60"/>
+      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="50" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Column="0" Grid.Row="0">
+      <Label Content="{Binding Account.FirstName}" />
+      <Label Content="{Binding Account.LastName}" />
+    </StackPanel>
+    <components:SideMenuComponent Grid.Row="1" Grid.Column="0" />
+    <components:ChatListComponent
             SelectedChat="{Binding SelectedChat, ElementName=mainWindow, Mode=TwoWay}"
             Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
-        <components:ChatComponent Grid.Row="1" Grid.Column="2" 
+    <components:ChatComponent Grid.Row="1" Grid.Column="2" 
                                  Chat="{Binding SelectedChat, ElementName=mainWindow}"/>
-    </Grid>
+  </Grid>-->
 </Window>

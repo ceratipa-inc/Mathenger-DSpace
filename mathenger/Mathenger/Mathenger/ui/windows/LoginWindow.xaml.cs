@@ -23,7 +23,7 @@ namespace Mathenger.ui.windows
         {
             InitializeComponent();
             CurrentPage = signInPage;
-            DataContext = this;
+            DataContext = new WindowViewModel(this);
             CenterWindowOnScreen();
             signInPage.NavigationLinkOnClick += () => { CurrentPage = signUpPage; };
             signUpPage.NavigationLinkOnClick += () => { CurrentPage = signInPage; };

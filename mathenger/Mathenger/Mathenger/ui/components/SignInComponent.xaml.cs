@@ -1,24 +1,24 @@
+﻿using Mathenger.config;
+using Mathenger.models;
+using Mathenger.services;
+using Mathenger.ui.windows;
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using Mathenger.config;
-using Mathenger.models;
-using Mathenger.services;
-using Mathenger.ui.windows;
 
-namespace Mathenger.ui.pages {
-  public partial class SignInPage : Page {
-    private AuthenticationService _authenticationService;
+namespace Mathenger.ui.components {
+  /// <summary>
+  /// Interaction logic for SignInComponent.xaml
+  /// </summary>
+  /// 
+  public partial class SignInComponent : UserControl {
+    private AuthenticationService _authenticationService = IoC.Get<AuthenticationService>();
     public User User { get; } = new User();
     public event Action NavigationLinkOnClick;
-    private ApplicationProperties _applicationProperties;
-
-    public SignInPage(AuthenticationService authenticationService,
-        ApplicationProperties applicationProperties) {
+    private ApplicationProperties _applicationProperties = IoC.Get<ApplicationProperties>();
+    public SignInComponent() {
       InitializeComponent();
-      _authenticationService = authenticationService;
-      _applicationProperties = applicationProperties;
       DataContext = this;
       if (LicenseManager.UsageMode != LicenseUsageMode.Designtime) {
         Width = double.NaN;
@@ -27,11 +27,9 @@ namespace Mathenger.ui.pages {
     }
 
     private void SignInButton_OnClick(object sender, RoutedEventArgs e) {
-      _authenticationService.SignIn(User, token =>
-      {
+      _authenticationService.SignIn(User, token => {
         _applicationProperties.AuthToken = token;
-        Dispatcher.Invoke(() =>
-        {
+        Dispatcher.Invoke(() => {
           IoC.Get<MainWindow>().Show();
           Window.GetWindow(this)?.Close();
         });

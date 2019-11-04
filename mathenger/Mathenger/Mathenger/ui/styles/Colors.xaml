@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Mathenger.ui">
+  <Color x:Key="DarkPrimary">#090D11</Color>
+  <Color x:Key="DarkSecondary">#352F39</Color>
+  <Color x:Key="AccentBlue">#072489</Color>
+  <Color x:Key="LightPrimary">#FFFFFF</Color>
+  <Color x:Key="LightSecondary">#9EA0A1</Color>
+  
+  <SolidColorBrush x:Key="DarkPrimaryBrush">#090D11</SolidColorBrush>
+  <SolidColorBrush x:Key="DarkSecondaryBrush">#352F39</SolidColorBrush>
+  <SolidColorBrush x:Key="AccentBlueBrush">#072489</SolidColorBrush>
+  <SolidColorBrush x:Key="LightPrimaryBrush">#FFFFFF</SolidColorBrush>
+  <SolidColorBrush x:Key="LightSecondaryBrush">#9EA0A1</SolidColorBrush>
+</ResourceDictionary>
