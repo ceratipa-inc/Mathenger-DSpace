@@ -4,7 +4,7 @@ using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 
-namespace Mathenger.ui.components {
+namespace Mathenger {
   public partial class ChatComponent : UserControl {
     private MessageService _messageService = IoC.Get<MessageService>();
     public static readonly DependencyProperty ChatProperty =

@@ -79,60 +79,60 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="config\ApplicationProperties.cs" />
-    <Compile Include="config\IoC.cs" />
-    <Compile Include="config\JsonSerializer.cs" />
-    <Compile Include="config\RequestSender.cs" />
-    <Compile Include="config\UnAuthorizedHandler.cs" />
-    <Compile Include="models\Account.cs" />
-    <Compile Include="ui\components\SignInComponent.xaml.cs">
-      <DependentUpon>SignInComponent.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="utils\window\WindowResizer.cs" />
-    <Compile Include="viewmodels\BaseViewModel.cs" />
-    <Compile Include="models\Chat.cs" />
-    <Compile Include="models\ChatType.cs" />
-    <Compile Include="models\Message.cs" />
-    <Compile Include="models\SignUpForm.cs" />
-    <Compile Include="models\User.cs" />
-    <Compile Include="viewmodels\RelayCommand.cs" />
-    <Compile Include="viewmodels\WindowViewModel.cs" />
+    <Compile Include="Config\ApplicationProperties.cs" />
+    <Compile Include="Config\IoC.cs" />
+    <Compile Include="Config\JsonSerializer.cs" />
+    <Compile Include="Config\RequestSender.cs" />
+    <Compile Include="Config\UnAuthorizedHandler.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="UI\DataModels\ApplicationPage.cs" />
+    <Compile Include="UI\ValueConverters\ApplicationPageConverter.cs" />
+    <Compile Include="UI\ValueConverters\BaseValueConverter.cs" />
+    <Compile Include="Utils\Window\WindowResizer.cs" />
+    <Compile Include="UI\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Models\Chat.cs" />
+    <Compile Include="Models\ChatType.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\SignUpForm.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="UI\ViewModels\RelayCommand.cs" />
+    <Compile Include="UI\ViewModels\WindowViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="services\AccountService.cs" />
-    <Compile Include="services\AuthenticationService.cs" />
-    <Compile Include="services\ChatService.cs" />
-    <Compile Include="services\MessageService.cs" />
-    <Compile Include="ui\components\ChatComponent.xaml.cs">
+    <Compile Include="Services\AccountService.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\ChatService.cs" />
+    <Compile Include="Services\MessageService.cs" />
+    <Compile Include="UI\Components\ChatComponent.xaml.cs">
       <DependentUpon>ChatComponent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\components\ChatListComponent.xaml.cs">
+    <Compile Include="UI\Components\ChatListComponent.xaml.cs">
       <DependentUpon>ChatListComponent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\components\SideMenuComponent.xaml.cs">
+    <Compile Include="UI\Components\SideMenuComponent.xaml.cs">
       <DependentUpon>SideMenuComponent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\pages\SignInPage.xaml.cs">
+    <Compile Include="UI\Pages\SignInPage.xaml.cs">
       <DependentUpon>SignInPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\pages\SignUpPage.xaml.cs">
+    <Compile Include="UI\Pages\SignUpPage.xaml.cs">
       <DependentUpon>SignUpPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\windows\dialogs\AddContactDialog.xaml.cs">
+    <Compile Include="UI\Windows\Dialogs\AddContactDialog.xaml.cs">
       <DependentUpon>AddContactDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\windows\dialogs\ContactsDialog.xaml.cs">
+    <Compile Include="UI\Windows\Dialogs\ContactsDialog.xaml.cs">
       <DependentUpon>ContactsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\windows\LoginWindow.xaml.cs">
+    <Compile Include="UI\Windows\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ui\windows\MainWindow.xaml.cs">
+    <Compile Include="UI\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="utils\stomp\StompFrame.cs" />
-    <Compile Include="utils\stomp\StompMessage.cs" />
-    <Compile Include="utils\stomp\StompMessageSerializer.cs" />
-    <Compile Include="utils\stomp\StompSocketProvider.cs" />
+    <Compile Include="Utils\Stomp\StompFrame.cs" />
+    <Compile Include="Utils\Stomp\StompMessage.cs" />
+    <Compile Include="Utils\Stomp\StompMessageSerializer.cs" />
+    <Compile Include="Utils\Stomp\StompSocketProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -151,37 +151,44 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <Resource Include="UI\Assets\Fonts\Montserrat-Bold.ttf" />
+    <Resource Include="UI\Assets\Fonts\Montserrat-Light.ttf" />
+    <Resource Include="UI\Assets\Fonts\Montserrat-Medium.ttf" />
+    <Resource Include="UI\Assets\Fonts\Montserrat-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ui\components\ChatComponent.xaml" />
-    <Page Include="ui\components\ChatListComponent.xaml" />
-    <Page Include="ui\components\SideMenuComponent.xaml" />
-    <Page Include="ui\components\SignInComponent.xaml">
+    <Page Include="UI\Components\ChatComponent.xaml" />
+    <Page Include="UI\Components\ChatListComponent.xaml" />
+    <Page Include="UI\Components\SideMenuComponent.xaml" />
+    <Page Include="UI\Pages\SignInPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Pages\SignUpPage.xaml" />
+    <Page Include="UI\Styles\Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ui\pages\SignInPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ui\pages\SignUpPage.xaml" />
-    <Page Include="ui\styles\Buttons.xaml">
+    <Page Include="UI\Styles\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ui\styles\Colors.xaml">
+    <Page Include="UI\Styles\Fonts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ui\windows\dialogs\AddContactDialog.xaml" />
-    <Page Include="ui\windows\dialogs\ContactsDialog.xaml" />
-    <Page Include="ui\windows\LoginWindow.xaml" />
-    <Page Include="ui\windows\MainWindow.xaml">
+    <Page Include="UI\Styles\Texts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Dialogs\AddContactDialog.xaml" />
+    <Page Include="UI\Windows\Dialogs\ContactsDialog.xaml" />
+    <Page Include="UI\Windows\LoginWindow.xaml" />
+    <Page Include="UI\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ui\assets\fonts\" />
-    <Folder Include="ui\assets\images\" />
+    <Folder Include="UI\Assets\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.0.0\build\Fody.targets')" />

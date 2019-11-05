@@ -1,9 +1,8 @@
 using System.Windows;
 using Mathenger.ui.windows;
 
-namespace Mathenger.config
-{
-    public class UnAuthorizedHandler
+namespace Mathenger.config {
+  public class UnAuthorizedHandler
     {
         private ApplicationProperties _properties;
 
