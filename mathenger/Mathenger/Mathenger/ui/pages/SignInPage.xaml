@@ -57,12 +57,12 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
                 <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}"  Content="Email"/>
-                <TextBox Style="{StaticResource RegularTextBox}"/>
+                <TextBox Text="{Binding User.Email}" Style="{StaticResource RegularTextBox}"/>
             </StackPanel>
 
             <StackPanel Grid.Row="2" >
                 <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}" Content="Password"/>
-                <PasswordBox Style="{StaticResource RegularPasswordBox}"/>
+                <PasswordBox Style="{StaticResource RegularPasswordBox}" PasswordChanged="PasswordBox_OnPasswordChanged"/>
             </StackPanel>
 
             <StackPanel VerticalAlignment="Bottom" Grid.Row="3">

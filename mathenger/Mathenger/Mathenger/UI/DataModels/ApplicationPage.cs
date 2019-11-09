@@ -1,6 +1,8 @@
-﻿namespace Mathenger {
-  public enum ApplicationPage {
-    SignIn = 0,
-    SignUp
-  }
+﻿namespace Mathenger
+{
+    public enum ApplicationPage
+    {
+        SignIn = 0,
+        SignUp
+    }
 }
