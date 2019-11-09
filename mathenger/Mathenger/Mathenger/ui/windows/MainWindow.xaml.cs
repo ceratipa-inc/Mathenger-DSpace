@@ -4,9 +4,8 @@ using System.Windows;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
-using Mathenger.utils.stomp;
 
-namespace Mathenger.ui.windows
+namespace Mathenger
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -31,21 +30,18 @@ namespace Mathenger.ui.windows
             DependencyProperty.Register("SelectedChat", typeof(Chat),
                 typeof(MainWindow));
 
-        public Chat SelectedChat
-        {
-            get => (Chat) GetValue(SelectedChatProperty);
+        public Chat SelectedChat {
+            get => (Chat)GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
 
-        public Account Account
-        {
-            get => (Account) GetValue(AccountProperty);
+        public Account Account {
+            get => (Account)GetValue(AccountProperty);
             set => SetValue(AccountProperty, value);
         }
 
-        public ObservableCollection<Chat> Chats
-        {
-            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
+        public ObservableCollection<Chat> Chats {
+            get => (ObservableCollection<Chat>)GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
 
@@ -58,7 +54,6 @@ namespace Mathenger.ui.windows
             _chatService = chatService;
             _messageService = messageService;
             DataContext = this;
-            CenterWindowOnScreen();
             _accountService.GetCurrentAccount(account =>
             {
                 Dispatcher.Invoke(() =>
@@ -76,26 +71,17 @@ namespace Mathenger.ui.windows
                     {
                         foreach (var chat in chats)
                         {
-                            _messageService.SubscribeToChat(chat.Id, message => { Dispatcher.Invoke(() =>
+                            _messageService.SubscribeToChat(chat.Id, message =>
                             {
-                                chat.Messages.Add(message);
-                            }); });
-//                            var ws = IoC.Get<StompSocketProvider>().GetSocket($"chat/{chat.Id}");
-//                            ws.OnMessage += (sender, args) => { Dispatcher.Invoke(() => { MessageBox.Show(args.Data); }); };
+                                Dispatcher.Invoke(() =>
+                                {
+                                    chat.Messages.Add(message);
+                                });
+                            });
                         }
                     }).Start();
                 });
             });
-        }
-
-        private void CenterWindowOnScreen()
-        {
-            var screenWidth = SystemParameters.PrimaryScreenWidth;
-            var screenHeight = SystemParameters.PrimaryScreenHeight;
-            var windowWidth = Width;
-            double windowHeight = Height;
-            Left = screenWidth / 2 - windowWidth / 2;
-            Top = screenHeight / 2 - windowHeight / 2;
         }
     }
 }

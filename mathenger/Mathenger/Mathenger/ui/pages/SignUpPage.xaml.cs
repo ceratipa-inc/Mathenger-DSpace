@@ -7,24 +7,22 @@ using Mathenger.models;
 using Mathenger.services;
 using Mathenger.ui.windows;
 
-namespace Mathenger.ui.pages
+namespace Mathenger
 {
     public partial class SignUpPage : Page
     {
         public User User { get; } = new User();
         public Account Account { get; } = new Account();
-        public event Action NavigationLinkOnClick; 
-        private AuthenticationService _authenticationService;
+        public event Action NavigationLinkOnClick;
         private SignUpForm _signUpForm;
-        private ApplicationProperties _applicationProperties;
+        private AuthenticationService _authenticationService = IoC.Get<AuthenticationService>();
+        private ApplicationProperties _applicationProperties = IoC.Get<ApplicationProperties>();
 
-        public SignUpPage(AuthenticationService authenticationService,
-            ApplicationProperties applicationProperties)
+        public SignUpPage()
         {
             InitializeComponent();
-            _authenticationService = authenticationService;
-            _signUpForm = new SignUpForm { Account = Account, User = User};
-            _applicationProperties = applicationProperties;
+            _signUpForm = new SignUpForm { Account = Account, User = User };
+
             DataContext = this;
             if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
             {
@@ -35,7 +33,7 @@ namespace Mathenger.ui.pages
 
         private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
         {
-            User.Password = ((PasswordBox) sender).Password;
+            User.Password = ((PasswordBox)sender).Password;
         }
 
         private void SignUpButton_OnClick(object sender, RoutedEventArgs e)

@@ -1,6 +1,4 @@
 using Mathenger.services;
-using Mathenger.ui.pages;
-using Mathenger.ui.windows;
 using Mathenger.ui.windows.dialogs;
 using Mathenger.utils.stomp;
 using Ninject;
@@ -8,11 +6,9 @@ using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serialization;
 using RestSharp.Serializers;
-using WebSocketSharp;
 
-namespace Mathenger.config
-{
-    public static class IoC
+namespace Mathenger.config {
+  public static class IoC
     {
         private static IKernel _kernel = new StandardKernel();
 

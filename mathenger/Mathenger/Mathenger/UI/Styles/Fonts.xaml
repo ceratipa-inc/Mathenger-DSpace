@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Mathenger"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+  <FontFamily x:Key="MontserratLight">pack://appliction;,,,/UI/Assets/Fonts/#Montserrat Light</FontFamily>
+  <FontFamily x:Key="MontserratRegular">pack://appliction;,,,/UI/Assets/Fonts/#Montserrat Regular</FontFamily>
+  <FontFamily x:Key="MontserratMedium">pack://appliction;,,,/UI/Assets/Fonts/#Montserrat Medium</FontFamily>
+  <FontFamily x:Key="MontserratBold">pack://appliction;,,,/UI/Assets/Fonts/#Montserrat Bold</FontFamily>
+
+  <Style TargetType="{x:Type TextBlock}" x:Key="LightTextStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratLight}" />
+  </Style>
+  
+  <Style TargetType="{x:Type TextBlock}" x:Key="RegularTextStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratRegular}" />
+  </Style>
+  
+  <Style TargetType="{x:Type TextBlock}" x:Key="MediumTextStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratMedium}" />
+  </Style>
+
+  <Style TargetType="{x:Type TextBlock}" x:Key="BoldTextStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratBold}" />
+  </Style>
+  
+  
+  <Style TargetType="{x:Type Control}" x:Key="LightControlStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratLight}" />
+  </Style>
+  
+  <Style TargetType="{x:Type Control}" x:Key="RegularControlStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratRegular}" />
+  </Style>
+  
+  <Style TargetType="{x:Type Control}" x:Key="MediumControlStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratMedium}" />
+  </Style>
+
+  <Style TargetType="{x:Type Control}" x:Key="BoldControlStyle">
+    <Setter Property="FontFamily" Value="{StaticResource MontserratBold}" />
+  </Style>
+  
+
+  <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LightTextStyle}" />-->
+  <Style TargetType="{x:Type Label}" BasedOn="{StaticResource MediumControlStyle}" />
+  <!--<Style TargetType="{x:Type Button}" BasedOn="{StaticResource MediumControlStyle}" />-->
+  <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource RegularControlStyle}" />
+  <!--<Style TargetType="{x:Type ListView}" BasedOn="{StaticResource MediumControlStyle}" />-->
+
+  <system:Double x:Key="FontSizeSmall">11</system:Double>
+  <system:Double x:Key="FontSizeRegular">14</system:Double>
+  <system:Double x:Key="FontSizeMedium">18</system:Double>
+  <system:Double x:Key="FontSizeLarge">23</system:Double>
+  <system:Double x:Key="FontSizeExtraLarge">29</system:Double>
+
+</ResourceDictionary>

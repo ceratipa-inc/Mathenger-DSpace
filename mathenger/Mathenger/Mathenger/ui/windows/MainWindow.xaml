@@ -1,10 +1,10 @@
-﻿<Window x:Class="Mathenger.ui.windows.MainWindow"
+﻿<Window x:Class="Mathenger.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mathenger"
-        xmlns:components="clr-namespace:Mathenger.ui.components"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Name="mainWindow"
         Title="MainWindow" Height="350" Width="525">
@@ -22,11 +22,11 @@
             <Label Content="{Binding Account.FirstName}" />
             <Label Content="{Binding Account.LastName}" />
         </StackPanel>
-        <components:SideMenuComponent Grid.Row="1" Grid.Column="0" />
-        <components:ChatListComponent
+        <local:SideMenuComponent Grid.Row="1" Grid.Column="0" />
+        <local:ChatListComponent
             SelectedChat="{Binding SelectedChat, ElementName=mainWindow, Mode=TwoWay}"
             Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
-        <components:ChatComponent Grid.Row="1" Grid.Column="2" 
+        <local:ChatComponent Grid.Row="1" Grid.Column="2" 
                                  Chat="{Binding SelectedChat, ElementName=mainWindow}"/>
     </Grid>
 </Window>
