@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Mathenger.config;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Mathenger
@@ -25,7 +26,6 @@ namespace Mathenger
             MaximizeCommand = new RelayCommand(() => _window.WindowState ^= WindowState.Maximized);
             CloseCommand = new RelayCommand(() => _window.Close());
             MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(_window, GetMousePosition()));
-
             WindowResizer resizer = new WindowResizer(_window);
         }
 

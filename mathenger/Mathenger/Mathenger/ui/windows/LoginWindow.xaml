@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Mathenger"
         mc:Ignorable="d"
+        x:Name="loginWindow"
         WindowStyle="None"
         AllowsTransparency="True"
         ResizeMode="NoResize"
@@ -16,7 +17,6 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Window}">
                         <Border Padding="{Binding OuterMarginSizeThickness, FallbackValue=10}">
-                            <!-- Window Outline-->
                             <Grid>
                                 <Border Opacity="0.98" CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}">
                                     <Border.Effect>
@@ -31,9 +31,7 @@
                                 </Border>
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <!-- Window Header-->
                                         <RowDefinition Height="{Binding TitleHeightGridLength, FallbackValue=40}"/>
-                                        <!-- Window Content-->
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0" Panel.ZIndex="1" >
@@ -68,6 +66,6 @@
      />
     </WindowChrome.WindowChrome>
     <Grid>
-        <Frame x:Name="MainFrame"  Content="{Binding CurrentPage, Converter={local:ApplicationPageValueConverter}}"/>
+        <Frame NavigationUIVisibility="Hidden" x:Name="MainFrame"  Content="{Binding CurrentPage, ElementName=loginWindow}"/>
     </Grid>
 </Window>
