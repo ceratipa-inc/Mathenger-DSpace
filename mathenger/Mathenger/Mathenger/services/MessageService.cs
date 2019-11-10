@@ -8,8 +8,14 @@ namespace Mathenger.services
 {
     public class MessageService
     {
+        #region private fields
+
         private StompSocketProvider _socketProvider;
         private RequestSender _sender;
+
+        #endregion
+        
+        #region constructor
 
         public MessageService(StompSocketProvider socketProvider, RequestSender sender)
         {
@@ -17,6 +23,8 @@ namespace Mathenger.services
             _sender = sender;
         }
 
+        #endregion
+        
         public void SubscribeToChat(long id, Action<Message> messageConsumer)
         {
             _socketProvider.Subscribe($"chat-{id}",$"chat/{id}", stompMessage =>
@@ -24,6 +32,11 @@ namespace Mathenger.services
                 var message = JsonConvert.DeserializeObject<Message>(stompMessage.Body);
                 messageConsumer?.Invoke(message);
             });
+        }
+
+        public void UnsubscribeFromChat(long id)
+        {
+            _socketProvider.UnSubscribe($"chat-{id}");
         }
 
         public void SendMessage(long chatId, Message message, Action<bool> completed)

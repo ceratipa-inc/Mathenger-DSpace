@@ -9,6 +9,8 @@ namespace Mathenger.utils.stomp
 {
     public class StompSocketProvider
     {
+        #region private fields
+
         private WebSocket _socket;
 
         private IDictionary<string, Action<StompMessage>> _messageHandlers =
@@ -16,7 +18,10 @@ namespace Mathenger.utils.stomp
 
         private StompMessageSerializer _serializer;
         private ApplicationProperties _properties;
-        private IDictionary<string, WebSocket> _sockets = new Dictionary<string, WebSocket>();
+
+        #endregion
+
+        #region constructor
 
         public StompSocketProvider(StompMessageSerializer serializer, ApplicationProperties properties)
         {
@@ -25,20 +30,38 @@ namespace Mathenger.utils.stomp
             InitializeWebSocket();
         }
 
+        #endregion
+
         public void Subscribe(string id, string destination, Action<StompMessage> messageHandler)
         {
-            var sub = new StompMessage("SUBSCRIBE");
+            var sub = new StompMessage(StompFrame.SUBSCRIBE);
             sub["id"] = id;
             sub["destination"] = $"/topic/{destination}";
             _socket.SendAsync(_serializer.Serialize(sub), completed =>
             {
                 if (completed)
                 {
+                    _messageHandlers.Remove(id);
                     _messageHandlers.Add(id, messageHandler);
                 }
                 else
                 {
-                    Dispatcher.CurrentDispatcher.Invoke(() => MessageBox.Show("Socket subscription failed"));
+                    Dispatcher.CurrentDispatcher
+                        .Invoke(() => MessageBox.Show($"Socket subscription failed! id: {id}"));
+                }
+            });
+        }
+
+        public void UnSubscribe(string id)
+        {
+            var unsub = new StompMessage(StompFrame.UNSUBSCRIBE);
+            unsub["id"] = id;
+            _socket.SendAsync(_serializer.Serialize(unsub), completed =>
+            {
+                if (!completed)
+                {
+                    Dispatcher.CurrentDispatcher
+                        .Invoke(() => MessageBox.Show($"Failed to unsubscribe! Id: {id}"));
                 }
             });
         }
@@ -50,34 +73,6 @@ namespace Mathenger.utils.stomp
             broad["destination"] = destination;
             broad.Headers.Add("Authorization", _properties.AuthToken);
             _socket.SendAsync(_serializer.Serialize(broad), completed);
-        }
-
-        public WebSocket GetSocket(string subscribeDestination)
-        {
-            if (_sockets.ContainsKey(subscribeDestination))
-            {
-                return _sockets[subscribeDestination];
-            }
-
-            var ws = new WebSocket(_properties.WebSocketEndpointUrl);
-            ws.OnError += (sender, args) =>
-            {
-                Dispatcher.CurrentDispatcher.Invoke(() => { MessageBox.Show(args.Message); });
-            };
-
-            ws.Connect();
-
-            var connect = new StompMessage("CONNECT");
-            connect["accept-version"] = "1.2";
-            connect["host"] = "";
-            ws.Send(_serializer.Serialize(connect));
-
-            var sub = new StompMessage("SUBSCRIBE");
-            sub["id"] = "sub-0";
-            sub["destination"] = $"/topic/{subscribeDestination}";
-            ws.Send(_serializer.Serialize(sub));
-            _sockets.Add(subscribeDestination, ws);
-            return ws;
         }
 
         public void Disconnect()
@@ -104,7 +99,7 @@ namespace Mathenger.utils.stomp
                 Dispatcher.CurrentDispatcher.Invoke(() => { MessageBox.Show(args.Message); });
             };
             _socket.Connect();
-            var connect = new StompMessage("CONNECT");
+            var connect = new StompMessage(StompFrame.CONNECT);
             connect["accept-version"] = "1.2";
             connect["host"] = "";
             connect.Headers.Add("Authorization", _properties.AuthToken);
