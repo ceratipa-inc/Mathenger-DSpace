@@ -2,7 +2,7 @@ package com.example.mathengerapi.services;
 
 import com.example.mathengerapi.models.Account;
 import com.example.mathengerapi.models.Chat;
-import com.example.mathengerapi.models.ChatType;
+import com.example.mathengerapi.models.enums.ChatType;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.ChatRepository;
 import lombok.AllArgsConstructor;

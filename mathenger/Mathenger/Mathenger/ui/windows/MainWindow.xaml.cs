@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using Mathenger.config;
@@ -12,10 +15,17 @@ namespace Mathenger
     /// </summary>
     public partial class MainWindow
     {
+        #region private fields
+
         private readonly AccountService _accountService;
         private readonly MessageService _messageService;
-        private ChatService _chatService;
-        private ApplicationProperties _properties;
+        private readonly NotificationService _notificationService;
+        private readonly ChatService _chatService;
+        private readonly ApplicationProperties _properties;
+
+        #endregion
+
+        #region dependency properties
 
         public static readonly DependencyProperty AccountProperty =
             DependencyProperty.Register("Account",
@@ -30,30 +40,45 @@ namespace Mathenger
             DependencyProperty.Register("SelectedChat", typeof(Chat),
                 typeof(MainWindow));
 
-        public Chat SelectedChat {
-            get => (Chat)GetValue(SelectedChatProperty);
+        public Chat SelectedChat
+        {
+            get => (Chat) GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
 
-        public Account Account {
-            get => (Account)GetValue(AccountProperty);
+        public Account Account
+        {
+            get => (Account) GetValue(AccountProperty);
             set => SetValue(AccountProperty, value);
         }
 
-        public ObservableCollection<Chat> Chats {
-            get => (ObservableCollection<Chat>)GetValue(ChatsProperty);
+        public ObservableCollection<Chat> Chats
+        {
+            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
 
+        #endregion
+
+        #region constructor
+
         public MainWindow(AccountService accountService, ApplicationProperties properties,
-            ChatService chatService, MessageService messageService)
+            ChatService chatService, MessageService messageService, NotificationService notificationService)
         {
-            InitializeComponent();
             _accountService = accountService;
             _properties = properties;
             _chatService = chatService;
             _messageService = messageService;
+            _notificationService = notificationService;
             DataContext = this;
+            InitializeComponent();
+        }
+
+        #endregion
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
             _accountService.GetCurrentAccount(account =>
             {
                 Dispatcher.Invoke(() =>
@@ -63,25 +88,50 @@ namespace Mathenger
                 });
                 _chatService.GetMyChats(chats =>
                 {
-                    Dispatcher.Invoke(() =>
-                    {
-                        Chats = chats;
-                    });
+                    Dispatcher.Invoke(() => { Chats = chats; });
                     new Thread(o =>
                     {
                         foreach (var chat in chats)
                         {
-                            _messageService.SubscribeToChat(chat.Id, message =>
-                            {
-                                Dispatcher.Invoke(() =>
+                            _messageService.SubscribeToChat(chat.Id,
+                                message =>
                                 {
-                                    chat.Messages.Add(message);
+                                    Dispatcher
+                                        .Invoke(() => { chat.Messages.Add(message); });
                                 });
-                            });
                         }
+
+                        _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
+                        {
+                            Dispatcher
+                                .Invoke(() => { chats.Insert(0, chat); });
+                            _messageService.SubscribeToChat(chat.Id,
+                                message =>
+                                {
+                                    Dispatcher
+                                        .Invoke(() => { chat.Messages.Add(message); });
+                                });
+                        });
                     }).Start();
                 });
             });
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (Account != null)
+            {
+                new Thread(o =>
+                {
+                    _notificationService.UnsubscribeToNewChatNotifications(Account.Id);
+                    Chats?.Select(chat =>
+                    {
+                        _messageService.UnsubscribeFromChat(chat.Id);
+                        return chat;
+                    });
+                });
+            }
         }
     }
 }

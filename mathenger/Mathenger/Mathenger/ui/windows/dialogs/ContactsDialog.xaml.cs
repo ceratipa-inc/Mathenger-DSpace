@@ -16,9 +16,16 @@ namespace Mathenger.ui.windows.dialogs
     {
         public ObservableCollection<Account> Contacts { get; set; }
 
+        #region private fields
+
         private AccountService _accountService = IoC.Get<AccountService>();
         private ChatService _chatService = IoC.Get<ChatService>();
         private ApplicationProperties _properties = IoC.Get<ApplicationProperties>();
+        private MessageService _messageService = IoC.Get<MessageService>();
+
+        #endregion
+
+        #region constructor
 
         public ContactsDialog(ObservableCollection<Account> contacts)
         {
@@ -27,14 +34,20 @@ namespace Mathenger.ui.windows.dialogs
             Contacts = contacts;
         }
 
+        #endregion
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
             var Account = menu?.DataContext as Account;
             _accountService.DeleteContact(Account.Id,
-                () => { Dispatcher.Invoke(() => { Contacts.Remove(Account); }); });
+                () =>
+                {
+                    Dispatcher
+                        .Invoke(() => { Contacts.Remove(Account); });
+                });
         }
+
         private void EventSetter_OnClick(object sender, MouseButtonEventArgs e)
         {
             var contact = (sender as ListViewItem).DataContext as Account;
@@ -42,20 +55,30 @@ namespace Mathenger.ui.windows.dialogs
             var chats = mainWindow.Chats;
             _chatService.StartPrivateChat(contact.Id, chat =>
             {
-                Dispatcher.Invoke(() =>
+                var chatFromMemory = chats.SingleOrDefault(chatItem => chatItem.Id == chat.Id);
+                if (chatFromMemory == null)
                 {
-                    var chatFromMemory = chats.SingleOrDefault(chatItem => chatItem.Id == chat.Id);
-                    if (chatFromMemory == null)
+                    Dispatcher.Invoke(() =>
                     {
                         chats.Add(chat);
                         mainWindow.SelectedChat = chat;
-                    }
-                    else
+                        Close();
+                    });
+                    _messageService.SubscribeToChat(chat.Id,
+                        message =>
+                        {
+                            Dispatcher
+                                .Invoke(() => chat.Messages.Add(message));
+                        });
+                }
+                else
+                {
+                    Dispatcher.Invoke(() =>
                     {
                         mainWindow.SelectedChat = chatFromMemory;
-                    }
-                    Close();
-                });
+                        Close();
+                    });
+                }
             });
         }
     }

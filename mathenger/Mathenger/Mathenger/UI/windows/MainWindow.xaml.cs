@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using Mathenger.config;
@@ -17,8 +19,9 @@ namespace Mathenger
 
         private readonly AccountService _accountService;
         private readonly MessageService _messageService;
-        private ChatService _chatService;
-        private ApplicationProperties _properties;
+        private readonly NotificationService _notificationService;
+        private readonly ChatService _chatService;
+        private readonly ApplicationProperties _properties;
 
         #endregion
 
@@ -60,12 +63,13 @@ namespace Mathenger
         #region constructor
 
         public MainWindow(AccountService accountService, ApplicationProperties properties,
-            ChatService chatService, MessageService messageService)
+            ChatService chatService, MessageService messageService, NotificationService notificationService)
         {
             _accountService = accountService;
             _properties = properties;
             _chatService = chatService;
             _messageService = messageService;
+            _notificationService = notificationService;
             DataContext = this;
             InitializeComponent();
         }
@@ -90,11 +94,44 @@ namespace Mathenger
                         foreach (var chat in chats)
                         {
                             _messageService.SubscribeToChat(chat.Id,
-                                message => { Dispatcher.Invoke(() => { chat.Messages.Add(message); }); });
+                                message =>
+                                {
+                                    Dispatcher
+                                        .Invoke(() => { chat.Messages.Add(message); });
+                                });
                         }
+
+                        _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
+                        {
+                            Dispatcher
+                                .Invoke(() => { chats.Insert(0, chat); });
+                            _messageService.SubscribeToChat(chat.Id,
+                                message =>
+                                {
+                                    Dispatcher
+                                        .Invoke(() => { chat.Messages.Add(message); });
+                                });
+                        });
                     }).Start();
                 });
             });
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (Account != null)
+            {
+                new Thread(o =>
+                {
+                    _notificationService.UnsubscribeToNewChatNotifications(Account.Id);
+                    Chats?.Select(chat =>
+                    {
+                        _messageService.UnsubscribeFromChat(chat.Id);
+                        return chat;
+                    });
+                });
+            }
         }
     }
 }

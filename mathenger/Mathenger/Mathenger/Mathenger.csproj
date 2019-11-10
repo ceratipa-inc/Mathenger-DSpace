@@ -85,13 +85,16 @@
     <Compile Include="Config\RequestSender.cs" />
     <Compile Include="Config\UnAuthorizedHandler.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Enums\ChatType.cs" />
+    <Compile Include="Models\Enums\NotificationType.cs" />
+    <Compile Include="Models\Notification.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="UI\DataModels\ApplicationPage.cs" />
     <Compile Include="UI\ValueConverters\ApplicationPageConverter.cs" />
     <Compile Include="UI\ValueConverters\BaseValueConverter.cs" />
     <Compile Include="Utils\Window\WindowResizer.cs" />
     <Compile Include="UI\ViewModels\BaseViewModel.cs" />
     <Compile Include="Models\Chat.cs" />
-    <Compile Include="Models\ChatType.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\SignUpForm.cs" />
     <Compile Include="Models\User.cs" />

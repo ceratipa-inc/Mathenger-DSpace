@@ -11,16 +11,14 @@ namespace Mathenger.services
         #region private fields
 
         private StompSocketProvider _socketProvider;
-        private RequestSender _sender;
 
         #endregion
         
         #region constructor
 
-        public MessageService(StompSocketProvider socketProvider, RequestSender sender)
+        public MessageService(StompSocketProvider socketProvider)
         {
             _socketProvider = socketProvider;
-            _sender = sender;
         }
 
         #endregion

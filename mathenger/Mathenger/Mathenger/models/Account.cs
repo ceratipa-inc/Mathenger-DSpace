@@ -18,6 +18,5 @@ namespace Mathenger.models
         public DateTime RegistrationDate { get; set; }
         [JsonProperty("color")]
         public string Color { get; set; }
-        
     }
 }

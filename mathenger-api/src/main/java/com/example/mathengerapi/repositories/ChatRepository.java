@@ -2,7 +2,7 @@ package com.example.mathengerapi.repositories;
 
 import com.example.mathengerapi.models.Account;
 import com.example.mathengerapi.models.Chat;
-import com.example.mathengerapi.models.ChatType;
+import com.example.mathengerapi.models.enums.ChatType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

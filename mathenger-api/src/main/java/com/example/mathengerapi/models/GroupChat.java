@@ -1,5 +1,7 @@
 package com.example.mathengerapi.models;
 
+import com.example.mathengerapi.models.enums.ChatType;
+
 import javax.persistence.Column;
 
 public class GroupChat extends Chat {

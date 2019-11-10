@@ -38,6 +38,7 @@ namespace Mathenger.config {
             _kernel.Bind<AccountService>().ToSelf().InSingletonScope();
             _kernel.Bind<ChatService>().ToSelf().InSingletonScope();
             _kernel.Bind<MessageService>().ToSelf().InSingletonScope();
+            _kernel.Bind<NotificationService>().ToSelf().InSingletonScope();
             // Binding windows
             _kernel.Bind<LoginWindow>().ToSelf().InTransientScope();
             _kernel.Bind<MainWindow>().ToSelf().InTransientScope();

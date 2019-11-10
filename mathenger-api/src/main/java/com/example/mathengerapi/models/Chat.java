@@ -1,5 +1,6 @@
 package com.example.mathengerapi.models;
 
+import com.example.mathengerapi.models.enums.ChatType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

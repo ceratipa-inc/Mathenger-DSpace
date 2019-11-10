@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Mathenger.config;
 using Mathenger.models;
+using Mathenger.Models.Enums;
 using Mathenger.services;
 
 namespace Mathenger
