@@ -14,5 +14,4 @@ import java.util.Optional;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("select account.chats from Account account where account.id = :accountId")
     List<Chat> findChatsByAccountId(Long accountId);
-    Optional<Chat> findByChatTypeAndMembersContainingAndMembersContaining(ChatType type, Account account, Account contact);
 }

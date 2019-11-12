@@ -31,8 +31,17 @@ namespace Mathenger.services
                     var notification = JsonConvert.DeserializeObject<Notification>(stompMessage.Body);
                     if (notification.Type == NotificationType.NEW_CHAT)
                     {
-                        chatConsumer?.Invoke(JsonConvert
-                            .DeserializeObject<Chat>(notification.Text));
+                        var chat = JsonConvert.DeserializeObject<Chat>(notification.Text);
+                        if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
+                        {
+                            chatConsumer?.Invoke(JsonConvert
+                                .DeserializeObject<PrivateChat>(notification.Text));
+                        }
+                        else if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
+                        {
+                            chatConsumer?.Invoke(JsonConvert
+                                .DeserializeObject<GroupChat>(notification.Text));
+                        }
                     }
                 });
         }

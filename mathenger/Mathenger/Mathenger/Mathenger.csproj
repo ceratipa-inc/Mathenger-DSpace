@@ -84,14 +84,20 @@
     <Compile Include="Config\JsonSerializer.cs" />
     <Compile Include="Config\RequestSender.cs" />
     <Compile Include="Config\UnAuthorizedHandler.cs" />
+    <Compile Include="dto\ChatsDTO.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Enums\ChatType.cs" />
     <Compile Include="Models\Enums\NotificationType.cs" />
+    <Compile Include="Models\GroupChat.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\PrivateChat.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="UI\DataModels\ApplicationPage.cs" />
     <Compile Include="UI\ValueConverters\ApplicationPageConverter.cs" />
     <Compile Include="UI\ValueConverters\BaseValueConverter.cs" />
+    <Compile Include="UI\Windows\Dialogs\CreateChatDialog.xaml.cs">
+      <DependentUpon>CreateChatDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Window\WindowResizer.cs" />
     <Compile Include="UI\ViewModels\BaseViewModel.cs" />
     <Compile Include="Models\Chat.cs" />
@@ -185,6 +191,7 @@
     </Page>
     <Page Include="UI\Windows\Dialogs\AddContactDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\ContactsDialog.xaml" />
+    <Page Include="UI\Windows\Dialogs\CreateChatDialog.xaml" />
     <Page Include="UI\Windows\LoginWindow.xaml" />
     <Page Include="UI\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

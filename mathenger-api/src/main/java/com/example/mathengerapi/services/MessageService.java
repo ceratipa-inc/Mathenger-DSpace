@@ -1,7 +1,6 @@
 package com.example.mathengerapi.services;
 
 import com.example.mathengerapi.models.Account;
-import com.example.mathengerapi.models.Chat;
 import com.example.mathengerapi.models.Message;
 import com.example.mathengerapi.models.Notification;
 import com.example.mathengerapi.models.enums.NotificationType;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service

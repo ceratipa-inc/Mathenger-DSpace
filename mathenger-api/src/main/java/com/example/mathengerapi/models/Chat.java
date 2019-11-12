@@ -14,13 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Chat {
+@DiscriminatorColumn(name = "chatType", discriminatorType = DiscriminatorType.STRING)
+public abstract class Chat {
     @Id
     @GeneratedValue
     private Long id;
-    @Enumerated(EnumType.STRING)
-    @Column(length = 25)
-    private final ChatType chatType = ChatType.PRIVATE_CHAT;
+//    @Enumerated(EnumType.STRING)
+//    @Column(length = 25)
     @ManyToMany
     @JoinTable(name = "chat_member",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
@@ -31,4 +31,6 @@ public class Chat {
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "message_id", referencedColumnName = "id")})
     private List<Message> messages;
+
+    public abstract ChatType getChatType();
 }

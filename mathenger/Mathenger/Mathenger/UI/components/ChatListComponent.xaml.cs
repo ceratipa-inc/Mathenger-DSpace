@@ -86,6 +86,10 @@ namespace Mathenger
                 var contact = chat.Members.First(member => member.Id != properties.MyAccount.Id);
                 return contact.FirstName + " " + contact.LastName;
             }
+            else if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
+            {
+                return (chat as GroupChat).Name;
+            }
 
             return null;
         }

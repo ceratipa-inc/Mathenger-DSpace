@@ -8,7 +8,8 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <StackPanel Orientation="Vertical">
-                <Button Name="AddContactButton" Click="AddContactButton_OnClick" ToolTip="Add new contact">+</Button>
+                <Button Name="CreateChatButton" Click="CreateChatButton_OnClick" ToolTip="Create chat">+</Button>
+                <Button Name="AddContactButton" Click="AddContactButton_OnClick" ToolTip="Add new contact">C+</Button>
                 <Button Name="ContactsButton" Click="ContactsButton_OnClick" ToolTip="Contacts">Contacts</Button>
             </StackPanel>
         </DockPanel>
