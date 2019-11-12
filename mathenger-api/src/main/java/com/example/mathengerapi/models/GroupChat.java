@@ -1,10 +1,8 @@
 package com.example.mathengerapi.models;
 
 import com.example.mathengerapi.models.enums.ChatType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.List;
 public class GroupChat extends Chat {
     @Column(length = 40)
     private String name;
-    @Column(nullable = false, length = 15)
+    @Column(length = 15)
     private String color;
     @Transient
     private final ChatType chatType = ChatType.GROUP_CHAT;

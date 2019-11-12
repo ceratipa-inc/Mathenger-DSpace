@@ -26,11 +26,11 @@ public class ChatController {
         var chats = chatService.findByUserId(user.getId());
         var privateChats = chats.stream()
                 .filter(chat -> chat.getChatType().equals(ChatType.PRIVATE_CHAT))
-                .map(chat -> (PrivateChat)chat)
+                .map(chat -> (PrivateChat) chat)
                 .collect(Collectors.toList());
         var groupChats = chats.stream()
                 .filter(chat -> chat.getChatType().equals(ChatType.GROUP_CHAT))
-                .map(chat -> (GroupChat)chat)
+                .map(chat -> (GroupChat) chat)
                 .collect(Collectors.toList());
         var chatsDTO = new ChatsDTO(privateChats, groupChats);
         return new ResponseEntity<>(chatsDTO, HttpStatus.OK);
@@ -39,6 +39,30 @@ public class ChatController {
     @PostMapping("/new/{contact}")
     public ResponseEntity<Chat> startPrivateChat(@AuthenticationPrincipal User user, @PathVariable Account contact) {
         return new ResponseEntity<>(chatService.startPrivateChat(user.getId(), contact), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{chat}/addAdmin/{member}")
+    public ResponseEntity<GroupChat> addAdmin(@AuthenticationPrincipal User user,
+                                              @PathVariable GroupChat chat, @PathVariable Account member) {
+        return new ResponseEntity<>(chatService.addAdmin(user.getId(), chat, member), HttpStatus.OK);
+    }
+
+    @PutMapping("/{chat}/removeAdmin/{member}")
+    public ResponseEntity<GroupChat> removeAdmin(@AuthenticationPrincipal User user,
+                                                 @PathVariable GroupChat chat, @PathVariable Account member) {
+        return new ResponseEntity<>(chatService.removeAdmin(user.getId(), chat, member), HttpStatus.OK);
+    }
+
+    @PutMapping("/{chat}/addMembers")
+    public ResponseEntity<GroupChat> addMembers(@AuthenticationPrincipal User user, @PathVariable GroupChat chat,
+                                                @RequestBody List<Account> newMembers) throws JsonProcessingException {
+        return new ResponseEntity<>(chatService.addMembers(user.getId(), chat, newMembers), HttpStatus.OK);
+    }
+
+    @PutMapping("/{chat}/remove/{member}")
+    public ResponseEntity<GroupChat> removeMember(@AuthenticationPrincipal User user,
+                                                  @PathVariable GroupChat chat, @PathVariable Account member) {
+        return new ResponseEntity<>(chatService.removeMember(user.getId(), chat, member), HttpStatus.OK);
     }
 
     @PostMapping("/new")
