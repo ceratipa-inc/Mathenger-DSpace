@@ -95,6 +95,9 @@
     <Compile Include="UI\DataModels\ApplicationPage.cs" />
     <Compile Include="UI\ValueConverters\ApplicationPageConverter.cs" />
     <Compile Include="UI\ValueConverters\BaseValueConverter.cs" />
+    <Compile Include="UI\Windows\Dialogs\GroupChatInfoDialog.xaml.cs">
+      <DependentUpon>GroupChatInfoDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Windows\Dialogs\CreateChatDialog.xaml.cs">
       <DependentUpon>CreateChatDialog.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Windows\Dialogs\AddContactDialog.xaml" />
+    <Page Include="UI\Windows\Dialogs\GroupChatInfoDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\ContactsDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\CreateChatDialog.xaml" />
     <Page Include="UI\Windows\LoginWindow.xaml" />

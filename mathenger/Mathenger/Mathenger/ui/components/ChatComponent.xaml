@@ -7,19 +7,41 @@
              xmlns:local="clr-namespace:Mathenger"
              Name="chatComponent"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:ChatNameConverter x:Key="ChatNameConverter" />
+        <local:ChatMembersCountConverter x:Key="ChatMembersCountConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding Chat.Messages, ElementName=chatComponent}">
+
+        <DockPanel Height="50">
+            <TextBlock TextAlignment="Center" DockPanel.Dock="Top" FontSize="18"
+                       Text="{Binding ElementName=chatComponent, 
+                    Path=Chat, Converter={StaticResource ChatNameConverter}}" />
+            <WrapPanel HorizontalAlignment="Center">
+                <TextBlock>
+                    <Hyperlink Name="MembersBlock" Click="MembersBlock_OnClick">
+                        <TextBlock DockPanel.Dock="Bottom"
+                                   Text="{Binding ElementName=chatComponent, Path=Chat,
+                           Converter={StaticResource ChatMembersCountConverter}}" />
+                    </Hyperlink>
+                </TextBlock>
+            </WrapPanel>
+        </DockPanel>
+
+        <ListView Grid.Row="1" Name="MessagesListView" ItemsSource="{Binding Chat.Messages, ElementName=chatComponent}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Text}"/>
+                    <TextBlock Text="{Binding Text}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <DockPanel Grid.Row="1">
+        
+        <DockPanel Grid.Row="2">
             <Button DockPanel.Dock="Right" Margin="0 0 10 0" Name="SendButton" Click="SendButton_OnClick">Send</Button>
             <TextBox Text="{Binding NextMessage.Text, ElementName=chatComponent}" />
         </DockPanel>

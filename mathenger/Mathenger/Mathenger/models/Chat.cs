@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Mathenger.Models.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 
 namespace Mathenger.models
 {
-    public class Chat : BaseViewModel
+    public class chat : BaseViewModel
     {
         [JsonProperty("id")] public long Id { get; set; }
 

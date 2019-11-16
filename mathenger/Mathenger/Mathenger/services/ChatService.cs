@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Mathenger.config;
@@ -18,21 +17,19 @@ namespace Mathenger.services
             _sender = sender;
         }
 
-        public void GetMyChats(Action<ObservableCollection<Chat>> chatsConsumer)
+        public void GetMyChats(Action<ObservableCollection<chat>> chatsConsumer)
         {
             var request = new RestRequest("/chats", Method.GET);
             _sender.Send<ChatsDTO>(request, dto =>
             {
-                var chats = dto.PrivateChats.Cast<Chat>()
-                    .Concat(dto.GroupChats.Cast<Chat>())
+                var chats = dto.PrivateChats.Cast<chat>()
+                    .Concat(dto.GroupChats.Cast<chat>())
                     .ToList();
-                chats.Sort(((chat1, chat2) =>
-                    chat1.Messages.Last().Time.CompareTo(chat2.Messages.Last().Time)));
-                chatsConsumer?.Invoke(new ObservableCollection<Chat>(chats));
+                chatsConsumer?.Invoke(new ObservableCollection<chat>(chats));
             });
         }
 
-        public void StartPrivateChat(long contactId, Action<Chat> chatConsumer)
+        public void StartPrivateChat(long contactId, Action<chat> chatConsumer)
         {
             var request = new RestRequest($"/chats/new/{contactId}", Method.POST);
             _sender.Send(request, chatConsumer);

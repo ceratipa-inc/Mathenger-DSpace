@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Mathenger.models
 {
-    public class GroupChat : Chat
+    public class GroupChat : chat
     {
         [JsonProperty("name")] public string Name { get; set; }
         [JsonProperty("color")] public string Color { get; set; }

@@ -23,7 +23,7 @@ namespace Mathenger.services
 
         #endregion
 
-        public void SubscribeToNewChatNotifications(long userId, Action<Chat> chatConsumer)
+        public void SubscribeToNewChatNotifications(long userId, Action<chat> chatConsumer)
         {
             _socketProvider.Subscribe($"notification-{userId}",
                 $"user/{userId}/notifications", stompMessage =>
@@ -31,7 +31,7 @@ namespace Mathenger.services
                     var notification = JsonConvert.DeserializeObject<Notification>(stompMessage.Body);
                     if (notification.Type == NotificationType.NEW_CHAT)
                     {
-                        var chat = JsonConvert.DeserializeObject<Chat>(notification.Text);
+                        var chat = JsonConvert.DeserializeObject<chat>(notification.Text);
                         if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
                         {
                             chatConsumer?.Invoke(JsonConvert
@@ -46,7 +46,7 @@ namespace Mathenger.services
                 });
         }
 
-        public void UnsubscribeToNewChatNotifications(long userId)
+        public void UnsubscribeFromNewChatNotifications(long userId)
         {
             _socketProvider.UnSubscribe($"notification-{userId}");
         }

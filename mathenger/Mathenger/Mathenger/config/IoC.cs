@@ -1,5 +1,4 @@
 using Mathenger.services;
-using Mathenger.ui.windows.dialogs;
 using Mathenger.utils.stomp;
 using Ninject;
 using RestSharp;

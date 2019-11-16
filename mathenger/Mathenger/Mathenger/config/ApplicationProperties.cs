@@ -1,8 +1,6 @@
-using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Windows;
 using Mathenger.models;
-using Mathenger.ui.windows;
 
 namespace Mathenger.config
 {

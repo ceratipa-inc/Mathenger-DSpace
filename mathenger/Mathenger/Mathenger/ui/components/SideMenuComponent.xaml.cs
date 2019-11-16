@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using Mathenger.config;
 using Mathenger.services;
-using Mathenger.ui.windows;
-using Mathenger.ui.windows.dialogs;
 
 namespace Mathenger
 {

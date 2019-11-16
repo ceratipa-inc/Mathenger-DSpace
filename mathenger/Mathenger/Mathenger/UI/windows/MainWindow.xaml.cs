@@ -33,16 +33,16 @@ namespace Mathenger
                 new PropertyMetadata(new Account()));
 
         public static readonly DependencyProperty ChatsProperty =
-            DependencyProperty.Register("Chats", typeof(ObservableCollection<Chat>),
-                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Chat>()));
+            DependencyProperty.Register("Chats", typeof(ObservableCollection<chat>),
+                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<chat>()));
 
         public static readonly DependencyProperty SelectedChatProperty =
-            DependencyProperty.Register("SelectedChat", typeof(Chat),
+            DependencyProperty.Register("SelectedChat", typeof(chat),
                 typeof(MainWindow));
 
-        public Chat SelectedChat
+        public chat SelectedChat
         {
-            get => (Chat) GetValue(SelectedChatProperty);
+            get => (chat) GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
 
@@ -52,9 +52,9 @@ namespace Mathenger
             set => SetValue(AccountProperty, value);
         }
 
-        public ObservableCollection<Chat> Chats
+        public ObservableCollection<chat> Chats
         {
-            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
+            get => (ObservableCollection<chat>) GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
 
@@ -124,7 +124,7 @@ namespace Mathenger
             {
                 new Thread(o =>
                 {
-                    _notificationService.UnsubscribeToNewChatNotifications(Account.Id);
+                    _notificationService.UnsubscribeFromNewChatNotifications(Account.Id);
                     Chats?.Select(chat =>
                     {
                         _messageService.UnsubscribeFromChat(chat.Id);

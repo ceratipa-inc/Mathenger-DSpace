@@ -1,6 +1,6 @@
 namespace Mathenger.models
 {
-    public class PrivateChat : Chat
+    public class PrivateChat : chat
     {
         
     }

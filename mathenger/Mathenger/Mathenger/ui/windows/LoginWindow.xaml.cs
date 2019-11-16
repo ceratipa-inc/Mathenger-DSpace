@@ -1,7 +1,7 @@
-using Mathenger.config;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Mathenger.config;
 
 namespace Mathenger
 {
@@ -16,16 +16,16 @@ namespace Mathenger
             set => SetValue(CurrentPageProperty, value);
         }
 
-        private SignInPage signInPage = IoC.Get<SignInPage>();
-        private SignUpPage signUpPage = IoC.Get<SignUpPage>();
+        private readonly SignInPage _signInPage = IoC.Get<SignInPage>();
+        private readonly SignUpPage _signUpPage = IoC.Get<SignUpPage>();
 
         public LoginWindow()
         {
             InitializeComponent();
             DataContext = new WindowViewModel(this);
-            CurrentPage = signInPage;
-            signInPage.NavigationLinkOnClick += () => { CurrentPage = signUpPage; };
-            signUpPage.NavigationLinkOnClick += () => { CurrentPage = signInPage; };
+            CurrentPage = _signInPage;
+            _signInPage.NavigationLinkOnClick += () => { CurrentPage = _signUpPage; };
+            _signUpPage.NavigationLinkOnClick += () => { CurrentPage = _signInPage; };
         }
 
         protected override void OnClosed(EventArgs e)

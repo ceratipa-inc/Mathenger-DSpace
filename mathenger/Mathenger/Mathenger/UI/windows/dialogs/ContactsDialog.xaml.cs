@@ -10,7 +10,7 @@ using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 
-namespace Mathenger.ui.windows.dialogs
+namespace Mathenger
 {
     public partial class ContactsDialog : Window
     {
@@ -39,12 +39,12 @@ namespace Mathenger.ui.windows.dialogs
         {
             var menuItem = sender as MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
-            var Account = menu?.DataContext as Account;
-            _accountService.DeleteContact(Account.Id,
+            var account = menu?.DataContext as Account;
+            _accountService.DeleteContact(account.Id,
                 () =>
                 {
                     Dispatcher
-                        .Invoke(() => { Contacts.Remove(Account); });
+                        .Invoke(() => { Contacts.Remove(account); });
                 });
         }
 

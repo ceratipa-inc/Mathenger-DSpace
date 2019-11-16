@@ -7,7 +7,7 @@ using System.Windows.Data;
 using Mathenger.models;
 using Mathenger.services;
 
-namespace Mathenger.ui.windows.dialogs
+namespace Mathenger
 {
     public partial class AddContactDialog : Window
     {
