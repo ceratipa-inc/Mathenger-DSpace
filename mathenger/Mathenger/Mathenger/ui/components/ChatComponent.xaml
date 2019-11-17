@@ -21,7 +21,7 @@
         <DockPanel Height="50">
             <TextBlock TextAlignment="Center" DockPanel.Dock="Top" FontSize="18"
                        Text="{Binding ElementName=chatComponent, 
-                    Path=Chat, Converter={StaticResource ChatNameConverter}}" />
+                    Path=Chat, Converter={StaticResource ChatNameConverter}}"/>
             <WrapPanel HorizontalAlignment="Center">
                 <TextBlock>
                     <Hyperlink Name="MembersBlock" Click="MembersBlock_OnClick">

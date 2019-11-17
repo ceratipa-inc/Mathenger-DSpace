@@ -26,21 +26,21 @@ namespace Mathenger
 
         public static readonly DependencyProperty ChatsProperty =
             DependencyProperty.Register("Chats",
-                typeof(ObservableCollection<chat>), typeof(ChatListComponent));
+                typeof(ObservableCollection<Chat>), typeof(ChatListComponent));
 
         public static readonly DependencyProperty SelectedChatProperty =
             DependencyProperty.Register("SelectedChat",
-                typeof(chat), typeof(ChatListComponent));
+                typeof(Chat), typeof(ChatListComponent));
 
-        public ObservableCollection<chat> Chats
+        public ObservableCollection<Chat> Chats
         {
-            get => (ObservableCollection<chat>) GetValue(ChatsProperty);
+            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
 
-        public chat SelectedChat
+        public Chat SelectedChat
         {
-            get => (chat) GetValue(SelectedChatProperty);
+            get => (Chat) GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
 
@@ -65,7 +65,7 @@ namespace Mathenger
         {
             var menuItem = sender as System.Windows.Controls.MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
-            var chat = menu?.DataContext as chat;
+            var chat = menu?.DataContext as Chat;
             _chatService.DeleteChat(chat.Id, () =>
             {
                 Dispatcher
@@ -80,7 +80,7 @@ namespace Mathenger
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            var chat = (chat) value;
+            var chat = (Chat) value;
             if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
             {
                 var properties = IoC.Get<ApplicationProperties>();

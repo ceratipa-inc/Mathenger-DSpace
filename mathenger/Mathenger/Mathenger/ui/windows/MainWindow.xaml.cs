@@ -112,6 +112,18 @@ namespace Mathenger
                                         .Invoke(() => { chat.Messages.Add(message); });
                                 });
                         });
+
+                        _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
+                        {
+                            Dispatcher
+                                .Invoke(() =>
+                                {
+                                    chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
+                                    {
+                                        myChat.Update(chat);
+                                    });
+                                });
+                        });
                     }).Start();
                 });
             });
@@ -124,7 +136,8 @@ namespace Mathenger
             {
                 new Thread(o =>
                 {
-                    _notificationService.UnsubscribeToNewChatNotifications(Account.Id);
+                    _notificationService.UnsubscribeFromNewChatNotifications(Account.Id);
+                    _notificationService.UnsubscribeFromChatUpdateNotifications(Account.Id);
                     Chats?.Select(chat =>
                     {
                         _messageService.UnsubscribeFromChat(chat.Id);

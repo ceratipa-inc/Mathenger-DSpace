@@ -20,10 +20,10 @@ namespace Mathenger
 
         public static readonly DependencyProperty ChatProperty =
             DependencyProperty.Register("Chat",
-                typeof(chat), typeof(ChatComponent),
+                typeof(Chat), typeof(ChatComponent),
                 new PropertyMetadata((sender, args) =>
                 {
-                    var newChat = args.NewValue as chat;
+                    var newChat = args.NewValue as Chat;
                     var lastMessage = newChat.Messages.LastOrDefault();
                     if (lastMessage != null)
                     {
@@ -40,9 +40,9 @@ namespace Mathenger
 
         public Message NextMessage { get; set; } = new Message();
 
-        public chat Chat
+        public Chat Chat
         {
-            get => (chat) GetValue(ChatProperty);
+            get => (Chat) GetValue(ChatProperty);
             set => SetValue(ChatProperty, value);
         }
 
@@ -84,7 +84,7 @@ namespace Mathenger
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            chat chat = value as chat;
+            Chat chat = value as Chat;
             return $"{chat.Members.Count} members";
         }
 

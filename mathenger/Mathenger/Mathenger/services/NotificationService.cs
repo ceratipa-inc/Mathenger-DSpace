@@ -23,32 +23,56 @@ namespace Mathenger.services
 
         #endregion
 
-        public void SubscribeToNewChatNotifications(long userId, Action<chat> chatConsumer)
+        public void SubscribeToNewChatNotifications(long userId, Action<Chat> chatConsumer)
         {
-            _socketProvider.Subscribe($"notification-{userId}",
+            _socketProvider.Subscribe($"newChatNotification-{userId}",
                 $"user/{userId}/notifications", stompMessage =>
                 {
                     var notification = JsonConvert.DeserializeObject<Notification>(stompMessage.Body);
                     if (notification.Type == NotificationType.NEW_CHAT)
                     {
-                        var chat = JsonConvert.DeserializeObject<chat>(notification.Text);
-                        if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
-                        {
-                            chatConsumer?.Invoke(JsonConvert
-                                .DeserializeObject<PrivateChat>(notification.Text));
-                        }
-                        else if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
-                        {
-                            chatConsumer?.Invoke(JsonConvert
-                                .DeserializeObject<GroupChat>(notification.Text));
-                        }
+                        chatConsumer?.Invoke(DeserializeChat(notification.Text));
+                    }
+                });
+        }
+
+        public void SubscribeToChatUpdateNotifications(long userId, Action<Chat> chatConsumer)
+        {
+            _socketProvider.Subscribe($"chatUpdateNotification-{userId}",
+                $"user/{userId}/notifications", stompMessage =>
+                {
+                    var notification = JsonConvert.DeserializeObject<Notification>(stompMessage.Body);
+                    if (notification.Type == NotificationType.CHAT_UPDATE)
+                    {
+                        chatConsumer?.Invoke(DeserializeChat(notification.Text));
                     }
                 });
         }
 
         public void UnsubscribeFromNewChatNotifications(long userId)
         {
-            _socketProvider.UnSubscribe($"notification-{userId}");
+            _socketProvider.UnSubscribe($"newChatNotification-{userId}");
+        }
+
+        public void UnsubscribeFromChatUpdateNotifications(long userId)
+        {
+            _socketProvider.UnSubscribe($"chatUpdateNotification-{userId}");
+        }
+
+        private Chat DeserializeChat(string text)
+        {
+            var chat = JsonConvert.DeserializeObject<Chat>(text);
+            if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
+            {
+                return JsonConvert.DeserializeObject<PrivateChat>(text);
+            }
+
+            if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
+            {
+                return JsonConvert.DeserializeObject<GroupChat>(text);
+            }
+
+            throw new ArgumentException();
         }
     }
 }

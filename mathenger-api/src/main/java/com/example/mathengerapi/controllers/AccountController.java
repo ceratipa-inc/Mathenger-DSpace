@@ -42,7 +42,7 @@ public class AccountController {
 
     @PostMapping("/me/contacts/new/{contact}")
     public ResponseEntity<Account> addNewContact(@AuthenticationPrincipal User user, @PathVariable Account contact) {
-        return new ResponseEntity<Account>(accountService.addContact(user.getId(), contact), HttpStatus.CREATED);
+        return new ResponseEntity<>(accountService.addContact(user.getId(), contact), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/me/contacts/delete/{contact}")

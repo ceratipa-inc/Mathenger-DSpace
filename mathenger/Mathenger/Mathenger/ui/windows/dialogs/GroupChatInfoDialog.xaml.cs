@@ -6,14 +6,16 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Mathenger.config;
 using Mathenger.models;
+using Mathenger.services;
 
 namespace Mathenger
 {
     public partial class GroupChatInfoDialog : Window
     {
         private ApplicationProperties _properties = IoC.Get<ApplicationProperties>();
+        private AccountService _accountService = IoC.Get<AccountService>();
         public static GroupChat Chat { get; set; }
-        
+
         public bool IsAdmin => Chat.Admins.Select(admin => admin.Id).Contains(_properties.MyAccount.Id);
 
         public GroupChatInfoDialog(GroupChat chat)
@@ -25,7 +27,17 @@ namespace Mathenger
 
         private void AddMembersButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _accountService.GetMyContacts(contacts =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    var membersIds = Chat.Members.Select(member => member.Id);
+                    var contactsToAdd = contacts.Where(contact => !membersIds.Contains(contact.Id));
+                    var dialog = new AddMembersDialog(Chat, contactsToAdd);
+                    dialog.Owner = Window.GetWindow(this);
+                    dialog.ShowDialog();
+                });
+            });
         }
 
         private void RemoveButton_OnClick(object sender, RoutedEventArgs e)
@@ -41,7 +53,6 @@ namespace Mathenger
 
     public class MemberRoleConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var chat = GroupChatInfoDialog.Chat;

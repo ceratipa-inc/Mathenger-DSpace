@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Mathenger.config;
@@ -17,19 +18,19 @@ namespace Mathenger.services
             _sender = sender;
         }
 
-        public void GetMyChats(Action<ObservableCollection<chat>> chatsConsumer)
+        public void GetMyChats(Action<ObservableCollection<Chat>> chatsConsumer)
         {
             var request = new RestRequest("/chats", Method.GET);
             _sender.Send<ChatsDTO>(request, dto =>
             {
-                var chats = dto.PrivateChats.Cast<chat>()
-                    .Concat(dto.GroupChats.Cast<chat>())
+                var chats = dto.PrivateChats.Cast<Chat>()
+                    .Concat(dto.GroupChats.Cast<Chat>())
                     .ToList();
-                chatsConsumer?.Invoke(new ObservableCollection<chat>(chats));
+                chatsConsumer?.Invoke(new ObservableCollection<Chat>(chats));
             });
         }
 
-        public void StartPrivateChat(long contactId, Action<chat> chatConsumer)
+        public void StartPrivateChat(long contactId, Action<Chat> chatConsumer)
         {
             var request = new RestRequest($"/chats/new/{contactId}", Method.POST);
             _sender.Send(request, chatConsumer);
@@ -39,6 +40,13 @@ namespace Mathenger.services
         {
             var request = new RestRequest("/chats/new", Method.POST);
             request.AddJsonBody(chat);
+            _sender.Send(request, chatConsumer);
+        }
+
+        public void AddMembers(GroupChat chat,IList<Account> newMembers, Action<GroupChat> chatConsumer)
+        {
+            var request = new RestRequest($"/chats/{chat.Id}/addMembers", Method.PUT);
+            request.AddJsonBody(newMembers);
             _sender.Send(request, chatConsumer);
         }
 

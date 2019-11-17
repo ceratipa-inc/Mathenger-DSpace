@@ -25,7 +25,10 @@ namespace Mathenger
 
         public ObservableCollection<Account> Contacts { get; set; }
 
-        public GroupChat Chat { get; set; } = new GroupChat();
+        public GroupChat Chat { get; set; } = new GroupChat
+        {
+            Members = new ObservableCollection<Account>()
+        };
 
         #endregion
 

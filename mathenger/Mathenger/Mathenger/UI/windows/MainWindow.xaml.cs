@@ -33,16 +33,16 @@ namespace Mathenger
                 new PropertyMetadata(new Account()));
 
         public static readonly DependencyProperty ChatsProperty =
-            DependencyProperty.Register("Chats", typeof(ObservableCollection<chat>),
-                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<chat>()));
+            DependencyProperty.Register("Chats", typeof(ObservableCollection<Chat>),
+                typeof(MainWindow), new PropertyMetadata(new ObservableCollection<Chat>()));
 
         public static readonly DependencyProperty SelectedChatProperty =
-            DependencyProperty.Register("SelectedChat", typeof(chat),
+            DependencyProperty.Register("SelectedChat", typeof(Chat),
                 typeof(MainWindow));
 
-        public chat SelectedChat
+        public Chat SelectedChat
         {
-            get => (chat) GetValue(SelectedChatProperty);
+            get => (Chat) GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
 
@@ -52,9 +52,9 @@ namespace Mathenger
             set => SetValue(AccountProperty, value);
         }
 
-        public ObservableCollection<chat> Chats
+        public ObservableCollection<Chat> Chats
         {
-            get => (ObservableCollection<chat>) GetValue(ChatsProperty);
+            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
 
@@ -112,6 +112,18 @@ namespace Mathenger
                                         .Invoke(() => { chat.Messages.Add(message); });
                                 });
                         });
+
+                        _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
+                        {
+                            Dispatcher
+                                .Invoke(() =>
+                                {
+                                    chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
+                                    {
+                                        myChat.Update(chat);
+                                    });
+                                });
+                        });
                     }).Start();
                 });
             });
@@ -125,6 +137,7 @@ namespace Mathenger
                 new Thread(o =>
                 {
                     _notificationService.UnsubscribeFromNewChatNotifications(Account.Id);
+                    _notificationService.UnsubscribeFromChatUpdateNotifications(Account.Id);
                     Chats?.Select(chat =>
                     {
                         _messageService.UnsubscribeFromChat(chat.Id);

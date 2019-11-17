@@ -23,6 +23,7 @@ public class ChatService {
     private AccountRepository accountRepository;
     private ColorProvider colorProvider;
     private MessageService messageService;
+    private NotificationService notificationService;
 
     public List<Chat> findByUserId(Long userId) {
         return chatRepository.findChatsByAccountId(userId);
@@ -145,6 +146,7 @@ public class ChatService {
                     newMembers.get(0).getLastName());
             var message = new Message(0L, account, account, LocalDateTime.now(), messageText);
             messageService.sendMessage(userId, message, updatedChat.getId());
+            notificationService.notifyChatUpdate(updatedChat, account);
         }
         return updatedChat;
     }
