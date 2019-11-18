@@ -26,4 +26,12 @@ public class GroupChat extends Chat {
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "admin_id", referencedColumnName = "id")})
     private List<Account> admins;
+
+    @Override
+    public void update(Chat chat) {
+        if (chat.getChatType().equals(ChatType.GROUP_CHAT)) {
+            var newChat = (GroupChat) chat;
+            name = newChat.name;
+        }
+    }
 }

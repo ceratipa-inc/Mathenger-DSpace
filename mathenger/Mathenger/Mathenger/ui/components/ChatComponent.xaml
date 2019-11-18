@@ -19,14 +19,15 @@
         </Grid.RowDefinitions>
 
         <DockPanel Height="50">
-            <TextBlock TextAlignment="Center" DockPanel.Dock="Top" FontSize="18"
+            <TextBlock TextAlignment="Center" DockPanel.Dock="Top" FontSize="18" 
+                       Name="ChatNameBlock" x:FieldModifier="public"
                        Text="{Binding ElementName=chatComponent, 
                     Path=Chat, Converter={StaticResource ChatNameConverter}}"/>
             <WrapPanel HorizontalAlignment="Center">
                 <TextBlock>
                     <Hyperlink Name="MembersBlock" Click="MembersBlock_OnClick">
-                        <TextBlock DockPanel.Dock="Bottom"
-                                   Text="{Binding ElementName=chatComponent, Path=Chat,
+                        <TextBlock DockPanel.Dock="Bottom" Name="MembersCountTextBlock" x:FieldModifier="public"
+                                   Text="{Binding ElementName=chatComponent, Path=Chat.Members.Count,
                            Converter={StaticResource ChatMembersCountConverter}}" />
                     </Hyperlink>
                 </TextBlock>

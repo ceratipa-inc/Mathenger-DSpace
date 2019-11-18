@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
@@ -120,6 +121,8 @@ namespace Mathenger
                                 chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
                                 {
                                     myChat.Update(chat);
+                                    // Shit wpf binding
+                                    ChatList.View.Items.Refresh();
                                 });
                             });
                     });

@@ -33,4 +33,6 @@ public abstract class Chat {
     private List<Message> messages;
 
     public abstract ChatType getChatType();
+
+    public abstract void update(Chat chat);
 }

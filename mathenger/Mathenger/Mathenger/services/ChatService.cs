@@ -43,6 +43,13 @@ namespace Mathenger.services
             _sender.Send(request, chatConsumer);
         }
 
+        public void UpdateGroupChat(GroupChat chat, Action<GroupChat> chatConsumer)
+        {
+            var request = new RestRequest($"/chats/{chat.Id}", Method.PUT);
+            request.AddJsonBody(chat);
+            _sender.Send(request, chatConsumer);
+        }
+
         public void AddMembers(GroupChat chat,IList<Account> newMembers, Action<GroupChat> chatConsumer)
         {
             var request = new RestRequest($"/chats/{chat.Id}/addMembers", Method.PUT);

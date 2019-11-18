@@ -98,6 +98,9 @@
     <Compile Include="UI\Windows\Dialogs\AddMembersDialog.xaml.cs">
       <DependentUpon>AddMembersDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Windows\Dialogs\EditGroupChatDialog.xaml.cs">
+      <DependentUpon>EditGroupChatDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Windows\Dialogs\GroupChatInfoDialog.xaml.cs">
       <DependentUpon>GroupChatInfoDialog.xaml</DependentUpon>
     </Compile>
@@ -197,6 +200,7 @@
     </Page>
     <Page Include="UI\Windows\Dialogs\AddContactDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\AddMembersDialog.xaml" />
+    <Page Include="UI\Windows\Dialogs\EditGroupChatDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\GroupChatInfoDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\ContactsDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\CreateChatDialog.xaml" />

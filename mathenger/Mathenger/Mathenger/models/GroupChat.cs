@@ -15,11 +15,13 @@ namespace Mathenger.models
             base.Update(chat);
             if (chat.ChatType == ChatType.GROUP_CHAT)
             {
-                var newChat = chat as GroupChat;
-                Admins = newChat.Admins;
-                Name = newChat.Name;
-                Color = newChat.Color;
-                Creator = newChat.Creator;
+                if (chat is GroupChat newChat)
+                {
+                    Admins = newChat.Admins;
+                    Name = newChat.Name;
+                    Color = newChat.Color;
+                    Creator = newChat.Creator;
+                }
             }
         }
     }

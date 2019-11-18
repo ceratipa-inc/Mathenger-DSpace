@@ -170,4 +170,15 @@ public class ChatService {
                 member.getFirstName(), member.getLastName());
         return updatedChat;
     }
+
+    public GroupChat updateGroupChat(Long userId, GroupChat chat, GroupChat newChat) throws JsonProcessingException {
+        var account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        if (!chat.getAdmins().contains(account))
+            throw new IllegalArgumentException("You are not authorized to edit this chat");
+        chat.update(newChat);
+        var updatedChat = groupChatRepository.save(chat);
+        notificationService.notifyChatUpdate(updatedChat, account);
+        return updatedChat;
+    }
 }

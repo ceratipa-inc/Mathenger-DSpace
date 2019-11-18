@@ -15,4 +15,9 @@ import javax.persistence.Transient;
 public class PrivateChat extends Chat {
     @Transient
     private final ChatType chatType = ChatType.PRIVATE_CHAT;
+
+    @Override
+    public void update(Chat chat) {
+
+    }
 }

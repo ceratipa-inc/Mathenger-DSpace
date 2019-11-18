@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -83,9 +84,9 @@ namespace Mathenger
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
-            Chat chat = value as Chat;
-            return $"{chat.Members.Count} members";
+            Debug.Assert(value != null, nameof(value) + " != null");
+            var count = (int)value;
+            return $"{count} members";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -41,6 +41,12 @@ public class ChatController {
         return new ResponseEntity<>(chatService.startPrivateChat(user.getId(), contact), HttpStatus.CREATED);
     }
 
+    @PutMapping("/{chat}")
+    public ResponseEntity<GroupChat> updateChat(@AuthenticationPrincipal User user,
+                                                @PathVariable GroupChat chat, @RequestBody GroupChat newChat) throws JsonProcessingException {
+        return new ResponseEntity<>(chatService.updateGroupChat(user.getId(), chat, newChat), HttpStatus.OK);
+    }
+
     @PutMapping("/{chat}/addAdmin/{member}")
     public ResponseEntity<GroupChat> addAdmin(@AuthenticationPrincipal User user,
                                               @PathVariable GroupChat chat, @PathVariable Account member) throws JsonProcessingException {

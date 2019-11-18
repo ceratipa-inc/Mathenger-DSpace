@@ -80,7 +80,7 @@ namespace Mathenger
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            var chat = (Chat) value;
+            var chat = value as Chat;
             if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
             {
                 var properties = IoC.Get<ApplicationProperties>();
@@ -89,7 +89,7 @@ namespace Mathenger
             }
             else if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
             {
-                return (chat as GroupChat).Name;
+                return (chat as GroupChat)?.Name;
             }
 
             return null;

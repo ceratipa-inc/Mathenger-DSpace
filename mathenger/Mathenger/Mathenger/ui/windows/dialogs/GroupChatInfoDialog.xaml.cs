@@ -8,6 +8,7 @@ using System.Windows.Data;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
+using Mathenger.UI.Windows.Dialogs;
 
 namespace Mathenger
 {
@@ -41,7 +42,7 @@ namespace Mathenger
                     var membersIds = Chat.Members.Select(member => member.Id);
                     var contactsToAdd = contacts.Where(contact => !membersIds.Contains(contact.Id));
                     var dialog = new AddMembersDialog(Chat, contactsToAdd);
-                    dialog.Owner = Window.GetWindow(this);
+                    dialog.Owner = GetWindow(this);
                     dialog.ShowDialog();
                 });
             });
@@ -54,7 +55,9 @@ namespace Mathenger
 
         private void EditButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var dialog = new EditGroupChatDialog(Chat);
+            dialog.Owner = GetWindow(this);
+            dialog.ShowDialog();
         }
 
         private void ChangeRoleButton_OnClick(object sender, RoutedEventArgs e)

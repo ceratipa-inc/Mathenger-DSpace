@@ -11,7 +11,6 @@
         Title="GroupChatInfoDialog" Height="350" Width="350">
     <Window.Resources>
         <local:ChatMembersCountConverter x:Key="ChatMembersCountConverter" />
-        <local:ChatNameConverter x:Key="ChatNameConverter" />
         <local:AccountNameConverter x:Key="AccountNameConverter" />
         <local:MemberRoleConverter x:Key="MemberRoleConverter" />
         <local:CanRemoveMemberConverter x:Key="CanRemoveMemberConverter" />
@@ -32,10 +31,9 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" FontSize="16"
-                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat, 
-                       Converter={StaticResource ChatNameConverter}}" />
-            <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
-                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat,
+                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Name}"></TextBlock>
+            <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Name="MembersCountTextBlock"
+                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Members.Count,
                        Converter={StaticResource ChatMembersCountConverter}}" />
             <Button VerticalAlignment="Center" Padding="5" Margin="10 0" Grid.Column="2" Grid.Row="0"
                     Content="/" ToolTip="Edit" Name="EditButton" Click="EditButton_OnClick">
