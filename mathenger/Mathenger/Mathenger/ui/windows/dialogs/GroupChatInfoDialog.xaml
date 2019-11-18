@@ -41,17 +41,18 @@
                     Content="/" ToolTip="Edit" Name="EditButton" Click="EditButton_OnClick">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Setter Property="Visibility" Value="Hidden" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsAdmin,ElementName=groupChatInfoDialog}"
                                          Value="true">
-                                <Setter Property="Visibility" Value="Visible"/>
+                                <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
             </Button>
-            <Button VerticalAlignment="Center" Margin="10 0" Padding="5" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2"
+            <Button VerticalAlignment="Center" Margin="10 0" Padding="5" HorizontalAlignment="Right" Grid.Row="1"
+                    Grid.Column="2"
                     Name="AddMembersButton" Click="AddMembersButton_OnClick" Content="+" ToolTip="Add members" />
         </Grid>
         <ListView Grid.Row="1" SelectionMode="Single"
@@ -70,14 +71,34 @@
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center"
                                    Text="{Binding Converter={StaticResource AccountNameConverter}}" />
                         <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
                                    Text="{Binding Converter={StaticResource MemberRoleConverter}}" />
-                        <Button Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ToolTip="Remove from chat"
-                                Width="15" HorizontalAlignment="Right" VerticalContentAlignment="Center"
+                        <Button Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ToolTip="Promote/Devote"
+                                Width="20" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                VerticalContentAlignment="Center" Content="\__/" Name="ChangeRoleButton"
+                                Click="ChangeRoleButton_OnClick">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding RelativeSource={RelativeSource Self}, 
+                                            Converter={StaticResource CanRemoveMemberConverter}}"
+                                            Value="true">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ToolTip="Remove from chat"
+                                Width="20" HorizontalAlignment="Right" Margin="10 0 0 0"
+                                VerticalContentAlignment="Center"
                                 VerticalAlignment="Center" Content="-" Name="RemoveButton" Click="RemoveButton_OnClick">
                             <Button.Style>
                                 <Style TargetType="Button">

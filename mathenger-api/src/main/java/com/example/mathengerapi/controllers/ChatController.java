@@ -43,13 +43,13 @@ public class ChatController {
 
     @PutMapping("/{chat}/addAdmin/{member}")
     public ResponseEntity<GroupChat> addAdmin(@AuthenticationPrincipal User user,
-                                              @PathVariable GroupChat chat, @PathVariable Account member) {
+                                              @PathVariable GroupChat chat, @PathVariable Account member) throws JsonProcessingException {
         return new ResponseEntity<>(chatService.addAdmin(user.getId(), chat, member), HttpStatus.OK);
     }
 
     @PutMapping("/{chat}/removeAdmin/{member}")
     public ResponseEntity<GroupChat> removeAdmin(@AuthenticationPrincipal User user,
-                                                 @PathVariable GroupChat chat, @PathVariable Account member) {
+                                                 @PathVariable GroupChat chat, @PathVariable Account member) throws JsonProcessingException {
         return new ResponseEntity<>(chatService.removeAdmin(user.getId(), chat, member), HttpStatus.OK);
     }
 

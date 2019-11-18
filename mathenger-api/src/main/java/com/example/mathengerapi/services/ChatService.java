@@ -99,7 +99,7 @@ public class ChatService {
         return chat;
     }
 
-    public GroupChat addAdmin(Long userId, GroupChat chat, Account member) {
+    public GroupChat addAdmin(Long userId, GroupChat chat, Account member) throws JsonProcessingException {
         var account = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         if (!chat.getAdmins().contains(account))
@@ -109,10 +109,12 @@ public class ChatService {
         if (chat.getAdmins().contains(member))
             throw new IllegalArgumentException("Member is already an administrator");
         chat.getAdmins().add(member);
-        return groupChatRepository.save(chat);
+        var updatedChat = groupChatRepository.save(chat);
+        notificationService.notifyChatUpdate(updatedChat, account);
+        return updatedChat;
     }
 
-    public GroupChat removeAdmin(Long userId, GroupChat chat, Account member) {
+    public GroupChat removeAdmin(Long userId, GroupChat chat, Account member) throws JsonProcessingException {
         var account = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         if (!chat.getCreator().equals(account))
@@ -122,7 +124,9 @@ public class ChatService {
         if (!chat.getAdmins().contains(member))
             throw new IllegalArgumentException("Member is not an administrator");
         chat.getAdmins().remove(member);
-        return groupChatRepository.save(chat);
+        var updatedChat = groupChatRepository.save(chat);
+        notificationService.notifyChatUpdate(updatedChat, account);
+        return updatedChat;
     }
 
     public GroupChat addMembers(Long userId, GroupChat chat, List<Account> newMembers) throws JsonProcessingException {

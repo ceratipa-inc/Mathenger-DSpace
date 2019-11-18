@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -12,8 +13,14 @@ namespace Mathenger
 {
     public partial class GroupChatInfoDialog : Window
     {
+        #region private fields
+
         private ApplicationProperties _properties = IoC.Get<ApplicationProperties>();
         private AccountService _accountService = IoC.Get<AccountService>();
+        private ChatService _chatService = IoC.Get<ChatService>();
+
+        #endregion
+
         public static GroupChat Chat { get; set; }
 
         public bool IsAdmin => Chat.Admins.Select(admin => admin.Id).Contains(_properties.MyAccount.Id);
@@ -48,6 +55,30 @@ namespace Mathenger
         private void EditButton_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private void ChangeRoleButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            Debug.Assert(button != null, nameof(button) + " != null");
+            var member = button.DataContext as Account;
+            Debug.Assert(member != null, nameof(member) + " != null");
+            if (Chat.Admins.Select(admin => admin.Id).Contains(member.Id))
+            {
+                _chatService.RemoveAdmin(Chat, member, chat =>
+                {
+                    MessageBox
+                        .Show($"{member.FirstName} {member.LastName} is not administrator anymore!");
+                });
+            }
+            else
+            {
+                _chatService.AddAdmin(Chat, member, chat =>
+                {
+                    MessageBox
+                        .Show($"{member.FirstName} {member.LastName} is now administrator!");
+                });
+            }
         }
     }
 
