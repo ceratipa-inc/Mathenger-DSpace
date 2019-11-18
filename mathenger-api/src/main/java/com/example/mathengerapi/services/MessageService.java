@@ -7,7 +7,6 @@ import com.example.mathengerapi.models.enums.NotificationType;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.ChatRepository;
 import com.example.mathengerapi.repositories.MessageRepository;
-import com.example.mathengerapi.repositories.NotificationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,6 @@ public class MessageService {
     private MessageRepository messageRepository;
     private ChatRepository chatRepository;
     private AccountRepository accountRepository;
-    private NotificationRepository notificationRepository;
     private SimpMessagingTemplate messagingTemplate;
     private ObjectMapper objectMapper;
 
@@ -56,7 +54,7 @@ public class MessageService {
             member.getChats().add(chat);
         });
 
-        var notifications = notificationRepository.saveAll(
+        var notifications =
                 membersToNotify.stream()
                         .map(member -> {
                             try {
@@ -67,7 +65,7 @@ public class MessageService {
                                 throw new RuntimeException(e);
                             }
                         })
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
 
         for (Notification notification : notifications) {
             messagingTemplate

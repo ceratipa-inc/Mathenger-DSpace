@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Mathenger"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
         Name="groupChatInfoDialog"
         Title="GroupChatInfoDialog" Height="350" Width="350">
     <Window.Resources>

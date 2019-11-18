@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Mathenger"
         xmlns:dialogs="clr-namespace:Mathenger"
         mc:Ignorable="d"
+        ShowInTaskbar="False"
         Name="createChatDialog"
         WindowStartupLocation="CenterOwner"
         Title="CreateChatDialog" Height="350" Width="350">

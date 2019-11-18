@@ -89,46 +89,43 @@ namespace Mathenger
                 _chatService.GetMyChats(chats =>
                 {
                     Dispatcher.Invoke(() => { Chats = chats; });
-                    new Thread(o =>
+
+                    foreach (var chat in chats)
                     {
-                        foreach (var chat in chats)
-                        {
-                            _messageService.SubscribeToChat(chat.Id,
-                                message =>
-                                {
-                                    Dispatcher
-                                        .Invoke(() => { chat.Messages.Add(message); });
-                                });
-                        }
+                        _messageService.SubscribeToChat(chat.Id,
+                            message =>
+                            {
+                                Dispatcher
+                                    .Invoke(() => { chat.Messages.Add(message); });
+                            });
+                    }
 
-                        _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
-                        {
-                            Dispatcher
-                                .Invoke(() => { chats.Insert(0, chat); });
-                            _messageService.SubscribeToChat(chat.Id,
-                                message =>
-                                {
-                                    Dispatcher
-                                        .Invoke(() => { chat.Messages.Add(message); });
-                                });
-                        });
+                    _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
+                    {
+                        Dispatcher
+                            .Invoke(() => { chats.Insert(0, chat); });
+                        _messageService.SubscribeToChat(chat.Id,
+                            message =>
+                            {
+                                Dispatcher
+                                    .Invoke(() => { chat.Messages.Add(message); });
+                            });
+                    });
 
-                        _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
-                        {
-                            Dispatcher
-                                .Invoke(() =>
+                    _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
+                    {
+                        Dispatcher
+                            .Invoke(() =>
+                            {
+                                chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
                                 {
-                                    chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
-                                    {
-                                        myChat.Update(chat);
-                                    });
+                                    myChat.Update(chat);
                                 });
-                        });
-                    }).Start();
+                            });
+                    });
                 });
             });
         }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
