@@ -95,6 +95,7 @@
     <Compile Include="UI\DataModels\ApplicationPage.cs" />
     <Compile Include="UI\ValueConverters\ApplicationPageConverter.cs" />
     <Compile Include="UI\ValueConverters\BaseValueConverter.cs" />
+    <Compile Include="UI\ValueConverters\NotNullToStringConverter.cs" />
     <Compile Include="UI\Windows\Dialogs\AddMembersDialog.xaml.cs">
       <DependentUpon>AddMembersDialog.xaml</DependentUpon>
     </Compile>

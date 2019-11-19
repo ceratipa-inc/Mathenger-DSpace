@@ -8,13 +8,14 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <local:ChatNameConverter x:Key="NameConverter" />
         <ContextMenu x:Key="ContextMenu">
             <ContextMenu.Items>
                 <MenuItem DataContext="{Binding}" Name="DeleteButton" Header="Delete"
                           Click="DeleteButton_OnClick" />
+                <MenuItem DataContext="{Binding}" Name="LeaveButton" Header="Leave chat" Click="LeaveButton_OnClick" />
             </ContextMenu.Items>
         </ContextMenu>
-        <local:ChatNameConverter x:Key="NameConverter" />
     </UserControl.Resources>
     <Grid>
         <ListView Name="View" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"

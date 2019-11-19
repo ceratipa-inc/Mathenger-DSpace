@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -63,7 +64,7 @@ namespace Mathenger
 
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var menuItem = sender as System.Windows.Controls.MenuItem;
+            var menuItem = sender as MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
             var chat = menu?.DataContext as Chat;
             _chatService.DeleteChat(chat.Id, () =>
@@ -71,6 +72,28 @@ namespace Mathenger
                 Dispatcher
                     .Invoke(() => { Chats.Remove(chat); });
                 _messageService.UnsubscribeFromChat(chat.Id);
+            });
+        }
+
+        private void LeaveButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+            var menu = menuItem?.Parent as ContextMenu;
+            var chat = menu?.DataContext as Chat;
+            if (chat?.ChatType == ChatType.PRIVATE_CHAT)
+            {
+                DeleteButton_OnClick(sender, e);
+                return;
+            }
+            _chatService.LeaveGroupChat(chat as GroupChat, () =>
+            {
+                Dispatcher
+                    .Invoke(() =>
+                    {
+                        Debug.Assert(chat != null, nameof(chat) + " != null");
+                        Chats.Remove(chat);
+                        _messageService.UnsubscribeFromChat(chat.Id);
+                    });
             });
         }
     }

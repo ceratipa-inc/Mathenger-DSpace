@@ -187,4 +187,19 @@ public class ChatService {
         notificationService.notifyChatUpdate(updatedChat, account);
         return updatedChat;
     }
+
+    public void leave(Long userId, GroupChat chat) throws JsonProcessingException {
+        var account = accountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        if (!chat.getMembers().contains(account))
+            throw new IllegalArgumentException("You are not member of the chat");
+        var leaveMessage = new Message(0L, account, account, LocalDateTime.now(),
+                account.getFirstName() + " " + account.getLastName() + " has left the chat!");
+        messageService.sendMessage(userId, leaveMessage, chat.getId());
+        chat.getMembers().remove(account);
+        account.getChats().remove(chat);
+        groupChatRepository.save(chat);
+        accountRepository.save(account);
+        notificationService.notifyChatUpdate(chat, account);
+    }
 }

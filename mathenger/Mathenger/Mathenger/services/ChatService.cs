@@ -50,6 +50,12 @@ namespace Mathenger.services
             _sender.Send(request, chatConsumer);
         }
 
+        public void LeaveGroupChat(GroupChat chat, Action onSuccess)
+        {
+            var request = new RestRequest($"/chats/{chat.Id}/leave", Method.PUT);
+            _sender.Send(request, onSuccess);
+        }
+
         public void AddMembers(GroupChat chat,IList<Account> newMembers, Action<GroupChat> chatConsumer)
         {
             var request = new RestRequest($"/chats/{chat.Id}/addMembers", Method.PUT);
