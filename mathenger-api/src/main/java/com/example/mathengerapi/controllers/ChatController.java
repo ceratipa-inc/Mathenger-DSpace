@@ -42,20 +42,20 @@ public class ChatController {
     }
 
     @PutMapping("/{chat}")
-    public ResponseEntity<GroupChat> updateChat(@AuthenticationPrincipal User user,
-                                                @PathVariable GroupChat chat, @RequestBody GroupChat newChat) throws JsonProcessingException {
+    public ResponseEntity<GroupChat> updateChat(@AuthenticationPrincipal User user, @PathVariable GroupChat chat,
+                                                @RequestBody GroupChat newChat) throws JsonProcessingException {
         return new ResponseEntity<>(chatService.updateGroupChat(user.getId(), chat, newChat), HttpStatus.OK);
     }
 
     @PutMapping("/{chat}/addAdmin/{member}")
-    public ResponseEntity<GroupChat> addAdmin(@AuthenticationPrincipal User user,
-                                              @PathVariable GroupChat chat, @PathVariable Account member) throws JsonProcessingException {
+    public ResponseEntity<GroupChat> addAdmin(@AuthenticationPrincipal User user, @PathVariable GroupChat chat,
+                                              @PathVariable Account member) throws JsonProcessingException {
         return new ResponseEntity<>(chatService.addAdmin(user.getId(), chat, member), HttpStatus.OK);
     }
 
     @PutMapping("/{chat}/removeAdmin/{member}")
-    public ResponseEntity<GroupChat> removeAdmin(@AuthenticationPrincipal User user,
-                                                 @PathVariable GroupChat chat, @PathVariable Account member) throws JsonProcessingException {
+    public ResponseEntity<GroupChat> removeAdmin(@AuthenticationPrincipal User user, @PathVariable GroupChat chat,
+                                                 @PathVariable Account member) throws JsonProcessingException {
         return new ResponseEntity<>(chatService.removeAdmin(user.getId(), chat, member), HttpStatus.OK);
     }
 
@@ -66,8 +66,8 @@ public class ChatController {
     }
 
     @PutMapping("/{chat}/remove/{member}")
-    public ResponseEntity<GroupChat> removeMember(@AuthenticationPrincipal User user,
-                                                  @PathVariable GroupChat chat, @PathVariable Account member) {
+    public ResponseEntity<GroupChat> removeMember(@AuthenticationPrincipal User user, @PathVariable GroupChat chat,
+                                                  @PathVariable Account member) throws JsonProcessingException {
         return new ResponseEntity<>(chatService.removeMember(user.getId(), chat, member), HttpStatus.OK);
     }
 

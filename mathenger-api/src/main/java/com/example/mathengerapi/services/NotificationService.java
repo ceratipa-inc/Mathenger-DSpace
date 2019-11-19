@@ -24,4 +24,11 @@ public class NotificationService {
                     objectMapper.writeValueAsString(notification));
         }
     }
+
+    public void notifyRemovalFromChat(Long chatId, Account producer, Account receiver) throws JsonProcessingException {
+        var unsubscribeNotification = new Notification(0L, NotificationType.CHAT_UNSUBSCRIBE,
+                receiver, producer, chatId.toString());
+        messagingTemplate.convertAndSend("/topic/user/" + receiver.getId() + "/notifications",
+                objectMapper.writeValueAsString(unsubscribeNotification));
+    }
 }

@@ -155,7 +155,7 @@ public class ChatService {
         return updatedChat;
     }
 
-    public GroupChat removeMember(Long userId, GroupChat chat, Account member) {
+    public GroupChat removeMember(Long userId, GroupChat chat, Account member) throws JsonProcessingException {
         var account = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         if (!chat.getMembers().contains(member))
@@ -164,10 +164,16 @@ public class ChatService {
                 || !chat.getAdmins().contains(account))
             throw new IllegalArgumentException("You are not authorized to remove this member");
         chat.getMembers().remove(member);
+        member.getChats().remove(chat);
+        accountRepository.save(member);
         var updatedChat = groupChatRepository.save(chat);
         var messageText = String.format("%s %s removed %s %s from the chat",
                 account.getFirstName(), account.getLastName(),
                 member.getFirstName(), member.getLastName());
+        var message = new Message(0L, account, account, LocalDateTime.now(), messageText);
+        messageService.sendMessage(userId, message, updatedChat.getId());
+        notificationService.notifyChatUpdate(updatedChat, account);
+        notificationService.notifyRemovalFromChat(updatedChat.getId(), account, member);
         return updatedChat;
     }
 

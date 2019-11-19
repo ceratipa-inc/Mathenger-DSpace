@@ -57,6 +57,12 @@ namespace Mathenger.services
             _sender.Send(request, chatConsumer);
         }
 
+        public void RemoveMember(GroupChat chat, Account member, Action<GroupChat> chatConsumer)
+        {
+            var request = new RestRequest($"/chats/{chat.Id}/remove/{member.Id}", Method.PUT);
+            _sender.Send(request, chatConsumer);
+        }
+
         public void AddAdmin(GroupChat chat, Account member, Action<GroupChat> chatConsumer)
         {
             var request = new RestRequest($"/chats/{chat.Id}/addAdmin/{member.Id}", Method.PUT);

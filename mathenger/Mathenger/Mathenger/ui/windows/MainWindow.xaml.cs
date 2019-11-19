@@ -126,24 +126,32 @@ namespace Mathenger
                                 });
                             });
                     });
+
+                    _notificationService.SubscribeToChatUnsubscribeNotifications(account.Id, id =>
+                    {
+                        Dispatcher
+                            .Invoke(() =>
+                            {
+                                chats.Where(myChat => myChat.Id == id).ToList().ForEach(myChat =>
+                                {
+                                    chats.Remove(myChat);
+                                    _messageService.UnsubscribeFromChat(id);
+                                });
+                            });
+                    });
                 });
             });
         }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             if (Account != null)
             {
-                new Thread(o =>
-                {
-                    _notificationService.UnsubscribeFromNewChatNotifications(Account.Id);
-                    _notificationService.UnsubscribeFromChatUpdateNotifications(Account.Id);
-                    Chats?.Select(chat =>
-                    {
-                        _messageService.UnsubscribeFromChat(chat.Id);
-                        return chat;
-                    });
-                });
+                _notificationService.UnsubscribeFromNewChatNotifications(Account.Id);
+                _notificationService.UnsubscribeFromChatUpdateNotifications(Account.Id);
+                _notificationService.UnsubscribeFromChatUnsubscribeNotifications(Account.Id);
+                Chats?.ToList().ForEach(chat => { _messageService.UnsubscribeFromChat(chat.Id); });
             }
         }
     }

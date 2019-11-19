@@ -49,6 +49,19 @@ namespace Mathenger.services
                 });
         }
 
+        public void SubscribeToChatUnsubscribeNotifications(long userId, Action<long> chatIdConsumer)
+        {
+            _socketProvider.Subscribe($"chatUnsubscribeNotification-{userId}",
+                $"user/{userId}/notifications", stromMessage =>
+                {
+                    var notification = JsonConvert.DeserializeObject<Notification>(stromMessage.Body);
+                    if (notification.Type == NotificationType.CHAT_UNSUBSCRIBE)
+                    {
+                        chatIdConsumer?.Invoke(long.Parse(notification.Text));
+                    }
+                });
+        }
+
         public void UnsubscribeFromNewChatNotifications(long userId)
         {
             _socketProvider.UnSubscribe($"newChatNotification-{userId}");
@@ -57,6 +70,11 @@ namespace Mathenger.services
         public void UnsubscribeFromChatUpdateNotifications(long userId)
         {
             _socketProvider.UnSubscribe($"chatUpdateNotification-{userId}");
+        }
+
+        public void UnsubscribeFromChatUnsubscribeNotifications(long userId)
+        {
+            _socketProvider.UnSubscribe($"chatUnsubscribeNotification-{userId}");
         }
 
         private Chat DeserializeChat(string text)

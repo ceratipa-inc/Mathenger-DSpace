@@ -50,7 +50,9 @@ namespace Mathenger
 
         private void RemoveButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var button = sender as Button;
+            var member = button?.DataContext as Account;
+            _chatService.RemoveMember(Chat, member, chat => {});
         }
 
         private void EditButton_OnClick(object sender, RoutedEventArgs e)
