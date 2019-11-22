@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace Mathenger.utils.stomp
 {
@@ -37,7 +38,7 @@ namespace Mathenger.utils.stomp
             Body = body;
             _headers = headers;
 
-            this["content-length"] = body.Length.ToString();
+            this["content-length"] = Encoding.GetEncoding("utf-8").GetBytes(body).Length.ToString();
         }
 
         public Dictionary<string, string> Headers
