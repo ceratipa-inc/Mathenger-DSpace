@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -51,13 +51,8 @@ namespace Mathenger
 
         public ChatListComponent()
         {
-            InitializeComponent();
             DataContext = this;
-            if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
-            {
-                Width = double.NaN;
-                Height = double.NaN;
-            }
+            InitializeComponent();
         }
 
         #endregion
@@ -67,10 +62,10 @@ namespace Mathenger
             var menuItem = sender as MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
             var chat = menu?.DataContext as Chat;
+            Debug.Assert(chat != null, nameof(chat) + " != null");
             _chatService.DeleteChat(chat.Id, () =>
             {
-                Dispatcher
-                    .Invoke(() => { Chats.Remove(chat); });
+                Dispatcher?.Invoke(() => { Chats.Remove(chat); });
                 _messageService.UnsubscribeFromChat(chat.Id);
             });
         }
@@ -85,15 +80,15 @@ namespace Mathenger
                 DeleteButton_OnClick(sender, e);
                 return;
             }
+
             _chatService.LeaveGroupChat(chat as GroupChat, () =>
             {
-                Dispatcher
-                    .Invoke(() =>
-                    {
-                        Debug.Assert(chat != null, nameof(chat) + " != null");
-                        Chats.Remove(chat);
-                        _messageService.UnsubscribeFromChat(chat.Id);
-                    });
+                Dispatcher?.Invoke(() =>
+                {
+                    Debug.Assert(chat != null, nameof(chat) + " != null");
+                    Chats.Remove(chat);
+                    _messageService.UnsubscribeFromChat(chat.Id);
+                });
             });
         }
     }
@@ -104,6 +99,7 @@ namespace Mathenger
         {
             if (value == null) return null;
             var chat = value as Chat;
+            Debug.Assert(chat != null, nameof(chat) + " != null");
             if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
             {
                 var properties = IoC.Get<ApplicationProperties>();
@@ -121,6 +117,19 @@ namespace Mathenger
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class ChatLastMessageComparer : IComparer
+    {
+        public int Compare(Object x, Object y)
+        {
+            var chat1 = x as Chat;
+            var chat2 = y as Chat;
+            Debug.Assert(chat1 != null, nameof(chat1) + " != null");
+            Debug.Assert(chat2 != null, nameof(chat2) + " != null");
+            return -chat1.Messages.ToList().Max(message => message.Time)
+                .CompareTo(chat2.Messages.ToList().Max(message => message.Time));
         }
     }
 }

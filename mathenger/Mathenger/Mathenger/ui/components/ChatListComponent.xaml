@@ -18,8 +18,8 @@
         </ContextMenu>
     </UserControl.Resources>
     <Grid>
-        <ListView Name="View" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"
-                  SelectionMode="Single" ItemsSource="{Binding Chats, ElementName=chatListComponent}">
+        <ListView Name="ChatsListView" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"
+                  SelectionMode="Single" ItemsSource="{Binding Chats ,ElementName=chatListComponent}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Mathenger"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -11,6 +12,11 @@
     <UserControl.Resources>
         <local:ChatNameConverter x:Key="ChatNameConverter" />
         <local:ChatMembersCountConverter x:Key="ChatMembersCountConverter" />
+        <CollectionViewSource x:Key="MessagesSource" Source="{Binding Chat.Messages, ElementName=chatComponent}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Time" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -36,7 +42,7 @@
         </DockPanel>
 
         <ScrollViewer Grid.Row="1" Name="MessageScrollViewer">
-            <ListView Name="MessagesListView" ItemsSource="{Binding Chat.Messages, ElementName=chatComponent}">
+            <ListView Name="MessagesListView" ItemsSource="{Binding Source={StaticResource MessagesSource}}">
                 <interactivity:Interaction.Behaviors>
                     <local:IgnoreMouseWheelBehavior/>
                 </interactivity:Interaction.Behaviors>

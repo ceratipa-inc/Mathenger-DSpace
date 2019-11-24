@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Data;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
@@ -82,65 +83,89 @@ namespace Mathenger
             base.OnInitialized(e);
             _accountService.GetCurrentAccount(account =>
             {
-                Dispatcher.Invoke(() =>
+                Dispatcher?.Invoke(() =>
                 {
                     Account = account;
                     _properties.MyAccount = account;
                 });
                 _chatService.GetMyChats(chats =>
                 {
-                    Dispatcher.Invoke(() => { Chats = chats; });
+                    Dispatcher?.Invoke(() =>
+                    {
+                        Chats = chats;
+                        NotifyMessagesChanged(chats);
+                    });
 
                     foreach (var chat in chats)
                     {
                         _messageService.SubscribeToChat(chat.Id,
                             message =>
                             {
-                                Dispatcher
-                                    .Invoke(() => { chat.Messages.Add(message); });
+                                Dispatcher?.Invoke(() => { chat.Messages.Add(message); });
                             });
                     }
 
                     _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
                     {
-                        Dispatcher
-                            .Invoke(() => { chats.Insert(0, chat); });
+                        Dispatcher?.Invoke(() => { chats.Insert(0, chat); });
                         _messageService.SubscribeToChat(chat.Id,
                             message =>
                             {
-                                Dispatcher
-                                    .Invoke(() => { chat.Messages.Add(message); });
+                                Dispatcher?.Invoke(() => { chat.Messages.Add(message); });
                             });
                     });
 
                     _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
                     {
-                        Dispatcher
-                            .Invoke(() =>
+                        Dispatcher?.Invoke(() =>
+                        {
+                            chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
                             {
-                                chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
-                                {
-                                    myChat.Update(chat);
-                                    // Shit wpf binding
-                                    ChatList.View.Items.Refresh();
-                                });
+                                myChat.Update(chat);
+                                // Shit wpf binding
+                                ChatList.ChatsListView.Items.Refresh();
                             });
+                        });
                     });
 
                     _notificationService.SubscribeToChatUnsubscribeNotifications(account.Id, id =>
                     {
-                        Dispatcher
-                            .Invoke(() =>
+                        Dispatcher?.Invoke(() =>
+                        {
+                            chats.Where(myChat => myChat.Id == id).ToList().ForEach(myChat =>
                             {
-                                chats.Where(myChat => myChat.Id == id).ToList().ForEach(myChat =>
-                                {
-                                    chats.Remove(myChat);
-                                    _messageService.UnsubscribeFromChat(id);
-                                });
+                                chats.Remove(myChat);
+                                _messageService.UnsubscribeFromChat(id);
                             });
+                        });
                     });
                 });
             });
+        }
+
+        private void NotifyMessagesChanged(ObservableCollection<Chat> chats)
+        {
+            // shit wpf binding
+            var listCollectionView = CollectionViewSource.GetDefaultView(Chats) as ListCollectionView;
+            Debug.Assert(listCollectionView != null, nameof(listCollectionView) + " != null");
+            listCollectionView.CustomSort = new ChatLastMessageComparer();
+
+            var refreshListView = new NotifyCollectionChangedEventHandler(
+                (sender, args) => listCollectionView.Refresh());
+            
+            foreach (var chat in chats)
+            {
+                chat.Messages.CollectionChanged += refreshListView;
+            }
+
+            chats.CollectionChanged += (sender, args) =>
+            {
+                foreach (var chat in chats)
+                {
+                    chat.Messages.CollectionChanged -= refreshListView;
+                    chat.Messages.CollectionChanged += refreshListView;
+                }
+            };
         }
 
         protected override void OnClosing(CancelEventArgs e)
