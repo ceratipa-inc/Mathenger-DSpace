@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Mathenger"
+             xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              Name="chatComponent"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -34,13 +35,18 @@
             </WrapPanel>
         </DockPanel>
 
-        <ListView Grid.Row="1" Name="MessagesListView" ItemsSource="{Binding Chat.Messages, ElementName=chatComponent}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Text}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <ScrollViewer Grid.Row="1" Name="MessageScrollViewer">
+            <ListView Name="MessagesListView" ItemsSource="{Binding Chat.Messages, ElementName=chatComponent}">
+                <interactivity:Interaction.Behaviors>
+                    <local:IgnoreMouseWheelBehavior/>
+                </interactivity:Interaction.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Text}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
         
         <DockPanel Grid.Row="2">
             <Button DockPanel.Dock="Right" Margin="0 0 10 0" Name="SendButton" Click="SendButton_OnClick">Send</Button>

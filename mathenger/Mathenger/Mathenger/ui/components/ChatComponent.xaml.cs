@@ -1,9 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,7 +13,7 @@ namespace Mathenger
 {
     public partial class ChatComponent : UserControl
     {
-        private MessageService _messageService = IoC.Get<MessageService>();
+        private readonly MessageService _messageService = IoC.Get<MessageService>();
         private static ChatComponent _chatComponent;
 
         public static readonly DependencyProperty ChatProperty =
@@ -24,19 +21,7 @@ namespace Mathenger
                 typeof(Chat), typeof(ChatComponent),
                 new PropertyMetadata((sender, args) =>
                 {
-                    var newChat = args.NewValue as Chat;
-                    var lastMessage = newChat.Messages.LastOrDefault();
-                    if (lastMessage != null)
-                    {
-                        Task.Factory.StartNew(() =>
-                        {
-                            Thread.Sleep(5);
-                            _chatComponent.Dispatcher.Invoke(() =>
-                            {
-                                _chatComponent.MessagesListView.ScrollIntoView(lastMessage);
-                            });
-                        });
-                    }
+                    _chatComponent.MessageScrollViewer.ScrollToEnd();
                 }));
 
         public Message NextMessage { get; set; } = new Message();
@@ -50,8 +35,8 @@ namespace Mathenger
         public ChatComponent()
         {
             DataContext = this;
-            InitializeComponent();
             _chatComponent = this;
+            InitializeComponent();
         }
 
         private void SendButton_OnClick(object sender, RoutedEventArgs e)
@@ -64,7 +49,7 @@ namespace Mathenger
                 {
                     if (completed)
                     {
-                        Dispatcher.Invoke(() => { NextMessage.Text = string.Empty; });
+                        Dispatcher?.Invoke(() => { NextMessage.Text = string.Empty; });
                     }
                 });
             }
