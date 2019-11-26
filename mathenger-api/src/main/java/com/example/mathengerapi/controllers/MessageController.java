@@ -1,28 +1,43 @@
 package com.example.mathengerapi.controllers;
 
+import com.example.mathengerapi.models.Chat;
 import com.example.mathengerapi.models.Message;
+import com.example.mathengerapi.models.User;
 import com.example.mathengerapi.services.AuthenticationService;
 import com.example.mathengerapi.services.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.time.LocalDateTime;
+import java.util.List;
+
+@RestController
 @CrossOrigin
 @AllArgsConstructor
 public class MessageController {
     private MessageService messageService;
     private AuthenticationService authenticationService;
 
-    @MessageMapping("chat/{chatId}/send")
+    @MessageMapping("chats/{chatId}/send")
     public void sendMessage(@Header(name = "Authorization") String token,
                             @Payload Message message, @DestinationVariable Long chatId) throws JsonProcessingException {
         messageService.sendMessage(authenticationService.getUserId(token.replace("Bearer ", "")), message, chatId);
+    }
+
+    @GetMapping("chats/{chat}")
+    public ResponseEntity<List<Message>> getOlderMessages(@PathVariable Chat chat, @AuthenticationPrincipal User user,
+                                                          @RequestParam @DateTimeFormat(iso =
+                                                                  DateTimeFormat.ISO.DATE_TIME) LocalDateTime time) {
+        return new ResponseEntity<>(messageService.getOlderMessages(user.getId(), chat, time), HttpStatus.OK);
     }
 
 }

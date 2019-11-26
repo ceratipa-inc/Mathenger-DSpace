@@ -1,6 +1,8 @@
 package com.example.mathengerapi.models;
 
 import com.example.mathengerapi.models.enums.ChatType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "chats")
@@ -16,21 +19,32 @@ import java.util.Set;
 @Data
 @DiscriminatorColumn(name = "chatType", discriminatorType = DiscriminatorType.STRING)
 public abstract class Chat {
+    @JsonIgnore
+    @Transient
+    public static final int PAGE_SIZE = 100;
+
     @Id
     @GeneratedValue
     private Long id;
-//    @Enumerated(EnumType.STRING)
-//    @Column(length = 25)
     @ManyToMany
     @JoinTable(name = "chat_member",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")})
     private Set<Account> members;
+    @JsonIgnore
     @OneToMany
     @JoinTable(name = "chat_message",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "message_id", referencedColumnName = "id")})
     private List<Message> messages;
+
+    @Transient
+    @JsonProperty("messages")
+    public List<Message> getFirstMessagesPage() {
+        var sorted = messages.stream().sorted((m1, m2) -> -m1.getTime().compareTo(m2.getTime()))
+                .collect(Collectors.toList());
+        return (sorted.size() > PAGE_SIZE) ? sorted.subList(0, PAGE_SIZE) : sorted;
+    }
 
     public abstract ChatType getChatType();
 

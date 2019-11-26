@@ -1,8 +1,11 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.utils.stomp;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace Mathenger.services
 {
@@ -10,15 +13,17 @@ namespace Mathenger.services
     {
         #region private fields
 
-        private StompSocketProvider _socketProvider;
+        private readonly StompSocketProvider _socketProvider;
+        private readonly RequestSender _requestSender;
 
         #endregion
         
         #region constructor
 
-        public MessageService(StompSocketProvider socketProvider)
+        public MessageService(StompSocketProvider socketProvider, RequestSender requestSender)
         {
             _socketProvider = socketProvider;
+            _requestSender = requestSender;
         }
 
         #endregion
@@ -39,9 +44,17 @@ namespace Mathenger.services
 
         public void SendMessage(long chatId, Message message, Action<bool> completed)
         {
-            var destination = $"/app/chat/{chatId}/send";
+            var destination = $"/app/chats/{chatId}/send";
             var json = JsonConvert.SerializeObject(message);
             _socketProvider.SendMessage(destination, json, completed);
+        }
+
+        public void GetOlderMessages(Chat chat, Action<ObservableCollection<Message>> messagesConsumer)
+        {
+            var request = new RestRequest($"/chats/{chat.Id}", Method.GET);
+            var time = chat.Messages.Min(message => message.Time).ToString("O");
+            request.Parameters.Add(new Parameter("time", time, ParameterType.QueryString));
+            _requestSender.Send(request, messagesConsumer);
         }
     }
 }

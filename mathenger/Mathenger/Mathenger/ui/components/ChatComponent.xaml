@@ -41,7 +41,7 @@
             </WrapPanel>
         </DockPanel>
 
-        <ScrollViewer Grid.Row="1" Name="MessageScrollViewer">
+        <ScrollViewer Grid.Row="1" Name="MessageScrollViewer" ScrollChanged="MessageScrollViewer_OnScrollChanged">
             <ListView Name="MessagesListView" ItemsSource="{Binding Source={StaticResource MessagesSource}}">
                 <interactivity:Interaction.Behaviors>
                     <local:IgnoreMouseWheelBehavior/>

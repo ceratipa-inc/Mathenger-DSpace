@@ -16,6 +16,8 @@ namespace Mathenger.models
         [JsonProperty("members")] public ObservableCollection<Account> Members { get; set; }
         [JsonProperty("messages")] public ObservableCollection<Message> Messages { get; set; }
 
+        [JsonIgnore] public bool ContainsAllMessages { get; set; } = false;
+
         public virtual void Update(Chat chat)
         {
             Members = chat.Members;

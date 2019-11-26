@@ -1,6 +1,7 @@
 package com.example.mathengerapi.services;
 
 import com.example.mathengerapi.models.Account;
+import com.example.mathengerapi.models.Chat;
 import com.example.mathengerapi.models.Message;
 import com.example.mathengerapi.models.Notification;
 import com.example.mathengerapi.models.enums.NotificationType;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,5 +76,13 @@ public class MessageService {
         }
 
         return message;
+    }
+
+    public List<Message> getOlderMessages(Long userId, Chat chat, LocalDateTime time) {
+        if (!chat.getMembers().stream().map(Account::getId)
+                .collect(Collectors.toList()).contains(userId)) {
+            throw new IllegalArgumentException("You are not member of this chat");
+        }
+        return chatRepository.findOlderMessages(time, Chat.PAGE_SIZE, chat.getId());
     }
 }
