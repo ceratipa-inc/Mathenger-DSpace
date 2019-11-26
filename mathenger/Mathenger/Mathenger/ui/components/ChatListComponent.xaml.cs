@@ -114,6 +114,11 @@ namespace Mathenger
             return null;
         }
 
+        public string Convert(Chat chat)
+        {
+            return Convert(chat, chat.GetType(), null, null) as string;
+        }
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

@@ -18,10 +18,10 @@ namespace Mathenger
 
         #region private fields
 
-        private AccountService _accountService = IoC.Get<AccountService>();
-        private ChatService _chatService = IoC.Get<ChatService>();
-        private ApplicationProperties _properties = IoC.Get<ApplicationProperties>();
-        private MessageService _messageService = IoC.Get<MessageService>();
+        private readonly AccountService _accountService = IoC.Get<AccountService>();
+        private readonly ChatService _chatService = IoC.Get<ChatService>();
+        private readonly ApplicationProperties _properties = IoC.Get<ApplicationProperties>();
+        private readonly MessageService _messageService = IoC.Get<MessageService>();
 
         #endregion
 
@@ -58,22 +58,17 @@ namespace Mathenger
                 var chatFromMemory = chats.SingleOrDefault(chatItem => chatItem.Id == chat.Id);
                 if (chatFromMemory == null)
                 {
-                    Dispatcher.Invoke(() =>
+                    Dispatcher?.Invoke(() =>
                     {
                         chats.Add(chat);
                         mainWindow.SelectedChat = chat;
+                        _properties.MainWindow.SubscribeToNewMessages(chat);
                         Close();
                     });
-                    _messageService.SubscribeToChat(chat.Id,
-                        message =>
-                        {
-                            Dispatcher
-                                .Invoke(() => chat.Messages.Add(message));
-                        });
                 }
                 else
                 {
-                    Dispatcher.Invoke(() =>
+                    Dispatcher?.Invoke(() =>
                     {
                         mainWindow.SelectedChat = chatFromMemory;
                         Close();

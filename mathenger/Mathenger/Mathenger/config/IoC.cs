@@ -1,6 +1,7 @@
 using Mathenger.services;
 using Mathenger.utils.stomp;
 using Ninject;
+using Notifications.Wpf;
 using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serialization;
@@ -21,6 +22,9 @@ namespace Mathenger.config {
             //Binding utils
             _kernel.Bind<StompMessageSerializer>().ToSelf().InSingletonScope();
             _kernel.Bind<StompSocketProvider>().ToSelf().InSingletonScope();
+            var notificationManager = new NotificationManager();
+            _kernel.Bind<INotificationManager>().ToConstant(notificationManager);
+            _kernel.Bind<NotificationManager>().ToConstant(notificationManager);
             //Binding configs
             _kernel.Bind<ApplicationProperties>().ToSelf().InSingletonScope();
             _kernel.Bind<RequestSender>().ToSelf().InSingletonScope();

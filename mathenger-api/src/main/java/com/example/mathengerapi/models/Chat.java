@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@DiscriminatorColumn(name = "chatType", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "chat_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Chat {
     @JsonIgnore
     @Transient
@@ -36,7 +37,7 @@ public abstract class Chat {
     @JoinTable(name = "chat_message",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "message_id", referencedColumnName = "id")})
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
 
     @Transient
     @JsonProperty("messages")

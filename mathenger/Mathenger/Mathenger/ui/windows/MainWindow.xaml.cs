@@ -9,6 +9,7 @@ using System.Windows.Data;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
+using Notifications.Wpf;
 
 namespace Mathenger
 {
@@ -24,6 +25,7 @@ namespace Mathenger
         private readonly NotificationService _notificationService;
         private readonly ChatService _chatService;
         private readonly ApplicationProperties _properties;
+        private readonly INotificationManager _notificationManager;
 
         #endregion
 
@@ -65,13 +67,15 @@ namespace Mathenger
         #region constructor
 
         public MainWindow(AccountService accountService, ApplicationProperties properties,
-            ChatService chatService, MessageService messageService, NotificationService notificationService)
+            ChatService chatService, MessageService messageService, NotificationService notificationService,
+            INotificationManager notificationManager)
         {
             _accountService = accountService;
             _properties = properties;
             _chatService = chatService;
             _messageService = messageService;
             _notificationService = notificationService;
+            _notificationManager = notificationManager;
             DataContext = this;
             InitializeComponent();
         }
@@ -98,49 +102,95 @@ namespace Mathenger
 
                     foreach (var chat in chats)
                     {
-                        _messageService.SubscribeToChat(chat.Id,
-                            message =>
-                            {
-                                Dispatcher?.Invoke(() => { chat.Messages.Add(message); });
-                            });
+                        SubscribeToNewMessages(chat);
                     }
 
-                    _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
-                    {
-                        Dispatcher?.Invoke(() => { chats.Insert(0, chat); });
-                        _messageService.SubscribeToChat(chat.Id,
-                            message =>
-                            {
-                                Dispatcher?.Invoke(() => { chat.Messages.Add(message); });
-                            });
-                    });
+                    SubscribeToNewChatNotifications(account, chats);
 
-                    _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
-                    {
-                        Dispatcher?.Invoke(() =>
-                        {
-                            chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
-                            {
-                                myChat.Update(chat);
-                                // Shit wpf binding
-                                ChatList.ChatsListView.Items.Refresh();
-                            });
-                        });
-                    });
+                    SubscribeToChatUpdateNotifications(account, chats);
 
-                    _notificationService.SubscribeToChatUnsubscribeNotifications(account.Id, id =>
+                    SubscribeToChatUnsubscribeNotifications(account, chats);
+                });
+            });
+        }
+
+        private void SubscribeToChatUnsubscribeNotifications(Account account, ObservableCollection<Chat> chats)
+        {
+            _notificationService.SubscribeToChatUnsubscribeNotifications(account.Id, id =>
+            {
+                Dispatcher?.Invoke(() =>
+                {
+                    chats.Where(myChat => myChat.Id == id).ToList().ForEach(myChat =>
                     {
-                        Dispatcher?.Invoke(() =>
-                        {
-                            chats.Where(myChat => myChat.Id == id).ToList().ForEach(myChat =>
-                            {
-                                chats.Remove(myChat);
-                                _messageService.UnsubscribeFromChat(id);
-                            });
-                        });
+                        chats.Remove(myChat);
+                        _messageService.UnsubscribeFromChat(id);
                     });
                 });
             });
+        }
+
+        private void SubscribeToChatUpdateNotifications(Account account, ObservableCollection<Chat> chats)
+        {
+            _notificationService.SubscribeToChatUpdateNotifications(account.Id, chat =>
+            {
+                Dispatcher?.Invoke(() =>
+                {
+                    chats.Where(myChat => myChat.Id == chat.Id).ToList().ForEach(myChat =>
+                    {
+                        myChat.Update(chat);
+                        // Shit wpf binding
+                        ChatList.ChatsListView.Items.Refresh();
+                    });
+                });
+            });
+        }
+
+        private void SubscribeToNewChatNotifications(Account account, ObservableCollection<Chat> chats)
+        {
+            _notificationService.SubscribeToNewChatNotifications(account.Id, chat =>
+            {
+                Dispatcher?.Invoke(() =>
+                {
+                    chats.Insert(0, chat); 
+                    _notificationManager.Show(new NotificationContent
+                    {
+                        Title = new ChatNameConverter().Convert(chat),
+                        Message = "New chat!",
+                        Type = NotificationType.Information
+                    }, "", null, () =>
+                    {
+                        if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
+                        SelectedChat = chat;
+                    });
+                });
+                SubscribeToNewMessages(chat);
+            });
+        }
+
+        public void SubscribeToNewMessages(Chat chat)
+        {
+            _messageService.SubscribeToChat(chat.Id,
+                message =>
+                {
+                    Dispatcher?.Invoke(() =>
+                    {
+                        chat.Messages.Add(message);
+                        if (SelectedChat != chat || WindowState == WindowState.Minimized)
+                        {
+                            _notificationManager.Show(new NotificationContent
+                            {
+                                Message = $"{message.Author.FirstName} {message.Author.LastName} : " +
+                                          $"{message.Text}",
+                                Title = new ChatNameConverter().Convert(chat),
+                                Type = NotificationType.Information
+                            }, "", null, () =>
+                            {
+                                if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
+                                SelectedChat = chat;
+                            });
+                        }
+                    });
+                });
         }
 
         private void NotifyMessagesChanged(ObservableCollection<Chat> chats)

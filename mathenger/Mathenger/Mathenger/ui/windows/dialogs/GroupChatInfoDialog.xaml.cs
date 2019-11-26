@@ -9,6 +9,7 @@ using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
 using Mathenger.UI.Windows.Dialogs;
+using Notifications.Wpf;
 
 namespace Mathenger
 {
@@ -72,16 +73,24 @@ namespace Mathenger
             {
                 _chatService.RemoveAdmin(Chat, member, chat =>
                 {
-                    MessageBox
-                        .Show($"{member.FirstName} {member.LastName} is not administrator anymore!");
+                    new NotificationManager().Show(new NotificationContent
+                    {
+                        Title = "Role changed!",
+                        Message = $"{member.FirstName} {member.LastName} is not administrator anymore!",
+                        Type = NotificationType.Success
+                    }, "WindowArea");
                 });
             }
             else
             {
                 _chatService.AddAdmin(Chat, member, chat =>
                 {
-                    MessageBox
-                        .Show($"{member.FirstName} {member.LastName} is now administrator!");
+                    new NotificationManager().Show(new NotificationContent
+                    {
+                        Title = "Role changed!",
+                        Message = $"{member.FirstName} {member.LastName} is now administrator!",
+                        Type = NotificationType.Success
+                    }, "WindowArea");
                 });
             }
         }

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:notifications="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
         xmlns:local="clr-namespace:Mathenger"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
@@ -19,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Height="80">
             <Grid.ColumnDefinitions>
@@ -31,7 +33,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" FontSize="16"
-                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Name}"></TextBlock>
+                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Name}" />
             <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Name="MembersCountTextBlock"
                        Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Members.Count,
                        Converter={StaticResource ChatMembersCountConverter}}" />
@@ -116,5 +118,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <notifications:NotificationArea Grid.Row="2" x:Name="WindowArea" Position="BottomRight" MaxItems="1"/>
     </Grid>
 </Window>

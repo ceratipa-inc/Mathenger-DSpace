@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -51,17 +49,13 @@ namespace Mathenger
         {
             _chatService.StartGroupChat(Chat, chat =>
             {
-                Dispatcher.Invoke(() =>
+                Dispatcher?.Invoke(() =>
                 {
                     var mainWindow = _properties.MainWindow;
                     mainWindow.Chats.Insert(0, chat);
                     mainWindow.SelectedChat = chat;
+                    _properties.MainWindow.SubscribeToNewMessages(chat);
                     Close();
-                });
-                _messageService.SubscribeToChat(chat.Id, message =>
-                {
-                    Dispatcher
-                        .Invoke(() => chat.Messages.Add(message));
                 });
             });
         }

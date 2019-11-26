@@ -26,7 +26,7 @@ namespace Mathenger.UI.Windows.Dialogs
         private void SaveButton_OnClick(object sender, RoutedEventArgs e)
         {
             Chat.Name = ChatName;
-            _chatService.UpdateGroupChat(Chat, chat => { Dispatcher.Invoke(Close); });
+            _chatService.UpdateGroupChat(Chat, chat => { Dispatcher?.Invoke(Close); });
         }
     }
 }
