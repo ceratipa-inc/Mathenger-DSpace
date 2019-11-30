@@ -2,10 +2,7 @@ using System;
 using System.Net;
 using System.Windows;
 using RestSharp;
-using RestSharp.Deserializers;
 using RestSharp.Serialization;
-using RestSharp.Serializers;
-using DataFormat = RestSharp.DataFormat;
 
 namespace Mathenger.config
 {

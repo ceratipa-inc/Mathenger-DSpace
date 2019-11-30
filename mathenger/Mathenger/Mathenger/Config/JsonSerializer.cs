@@ -1,9 +1,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Deserializers;
 using RestSharp.Serialization;
-using RestSharp.Serializers;
 
 namespace Mathenger.config
 {

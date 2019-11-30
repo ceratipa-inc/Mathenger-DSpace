@@ -9,7 +9,6 @@ using Mathenger.config;
 using Mathenger.models;
 using Mathenger.Models.Enums;
 using Mathenger.services;
-using Ninject.Infrastructure.Language;
 
 namespace Mathenger
 {

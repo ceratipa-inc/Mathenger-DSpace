@@ -20,7 +20,7 @@
             <ColumnDefinition Width="125"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Image Grid.RowSpan="2"></Image>
+        <Image Grid.RowSpan="2" />
         <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom">Chat Name</TextBlock>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="0 10 20 0" 
                  Text="{Binding ChatName,ElementName=editGroupChatDialog, Mode=TwoWay}"/>
