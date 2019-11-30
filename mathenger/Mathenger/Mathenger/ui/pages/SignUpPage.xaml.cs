@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using Mathenger.config;
 using Mathenger.models;
 using Mathenger.services;
-using Mathenger.ui.windows;
 
 namespace Mathenger
 {

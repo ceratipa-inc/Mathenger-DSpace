@@ -8,11 +8,14 @@
         mc:Ignorable="d"
         Name="mainWindow"
         Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <local:NotNullToStringConverter x:Key="NotNullToStringConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
@@ -23,10 +26,23 @@
             <Label Content="{Binding Account.LastName}" />
         </StackPanel>
         <local:SideMenuComponent Grid.Row="1" Grid.Column="0" />
-        <local:ChatListComponent
-            SelectedChat="{Binding SelectedChat, ElementName=mainWindow, Mode=TwoWay}"
-            Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
-        <local:ChatComponent Grid.Row="1" Grid.Column="2" 
-                                 Chat="{Binding SelectedChat, ElementName=mainWindow}"/>
+        <local:ChatListComponent x:Name="ChatList"
+                                 SelectedChat="{Binding SelectedChat, ElementName=mainWindow, Mode=TwoWay}"
+                                 Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
+        <local:ChatComponent x:Name="chatComponent" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"
+                             Chat="{Binding SelectedChat, ElementName=mainWindow}">
+            <local:ChatComponent.Style>
+                <Style TargetType="local:ChatComponent">
+                    <Setter Property="Visibility" Value="Hidden" />
+                    <Style.Triggers>
+                        <DataTrigger Value="true"
+                                     Binding="{Binding ElementName=ChatList, Path=SelectedChat, 
+                                     Converter={StaticResource NotNullToStringConverter}}" >
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </local:ChatComponent.Style>
+        </local:ChatComponent>
     </Grid>
 </Window>

@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Mathenger.config;
-using Mathenger.ui.windows;
 using Mathenger.utils.stomp;
 
 namespace Mathenger {

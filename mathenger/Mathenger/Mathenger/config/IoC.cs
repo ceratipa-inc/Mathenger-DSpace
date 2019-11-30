@@ -1,7 +1,7 @@
 using Mathenger.services;
-using Mathenger.ui.windows.dialogs;
 using Mathenger.utils.stomp;
 using Ninject;
+using Notifications.Wpf;
 using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serialization;
@@ -22,6 +22,9 @@ namespace Mathenger.config {
             //Binding utils
             _kernel.Bind<StompMessageSerializer>().ToSelf().InSingletonScope();
             _kernel.Bind<StompSocketProvider>().ToSelf().InSingletonScope();
+            var notificationManager = new NotificationManager();
+            _kernel.Bind<INotificationManager>().ToConstant(notificationManager);
+            _kernel.Bind<NotificationManager>().ToConstant(notificationManager);
             //Binding configs
             _kernel.Bind<ApplicationProperties>().ToSelf().InSingletonScope();
             _kernel.Bind<RequestSender>().ToSelf().InSingletonScope();
@@ -38,6 +41,7 @@ namespace Mathenger.config {
             _kernel.Bind<AccountService>().ToSelf().InSingletonScope();
             _kernel.Bind<ChatService>().ToSelf().InSingletonScope();
             _kernel.Bind<MessageService>().ToSelf().InSingletonScope();
+            _kernel.Bind<NotificationService>().ToSelf().InSingletonScope();
             // Binding windows
             _kernel.Bind<LoginWindow>().ToSelf().InTransientScope();
             _kernel.Bind<MainWindow>().ToSelf().InTransientScope();

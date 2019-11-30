@@ -1,0 +1,123 @@
+<Window x:Class="Mathenger.GroupChatInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:notifications="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
+        xmlns:local="clr-namespace:Mathenger"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Name="groupChatInfoDialog"
+        Title="GroupChatInfoDialog" Height="350" Width="350">
+    <Window.Resources>
+        <local:ChatMembersCountConverter x:Key="ChatMembersCountConverter" />
+        <local:AccountNameConverter x:Key="AccountNameConverter" />
+        <local:MemberRoleConverter x:Key="MemberRoleConverter" />
+        <local:CanRemoveMemberConverter x:Key="CanRemoveMemberConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Height="80">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" FontSize="16"
+                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Name}" />
+            <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Name="MembersCountTextBlock"
+                       Text="{Binding ElementName=groupChatInfoDialog, Path=Chat.Members.Count,
+                       Converter={StaticResource ChatMembersCountConverter}}" />
+            <Button VerticalAlignment="Center" Padding="5" Margin="10 0" Grid.Column="2" Grid.Row="0"
+                    Content="/" ToolTip="Edit" Name="EditButton" Click="EditButton_OnClick">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Visibility" Value="Hidden" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsAdmin,ElementName=groupChatInfoDialog}"
+                                         Value="true">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button VerticalAlignment="Center" Margin="10 0" Padding="5" HorizontalAlignment="Right" Grid.Row="1"
+                    Grid.Column="2"
+                    Name="AddMembersButton" Click="AddMembersButton_OnClick" Content="+" ToolTip="Add members" />
+        </Grid>
+        <ListView Grid.Row="1" SelectionMode="Single"
+                  ItemsSource="{Binding ElementName=groupChatInfoDialog, Path=Chat.Members}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="40">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="{Binding Converter={StaticResource AccountNameConverter}}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                                   Text="{Binding Converter={StaticResource MemberRoleConverter}}" />
+                        <Button Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ToolTip="Promote/Devote"
+                                Width="20" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                VerticalContentAlignment="Center" Content="\__/" Name="ChangeRoleButton"
+                                Click="ChangeRoleButton_OnClick">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding RelativeSource={RelativeSource Self}, 
+                                            Converter={StaticResource CanRemoveMemberConverter}}"
+                                            Value="true">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ToolTip="Remove from chat"
+                                Width="20" HorizontalAlignment="Right" Margin="10 0 0 0"
+                                VerticalContentAlignment="Center"
+                                VerticalAlignment="Center" Content="-" Name="RemoveButton" Click="RemoveButton_OnClick">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding RelativeSource={RelativeSource Self}, 
+                                            Converter={StaticResource CanRemoveMemberConverter}}"
+                                            Value="true">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <notifications:NotificationArea Grid.Row="2" x:Name="WindowArea" Position="BottomRight" MaxItems="1"/>
+    </Grid>
+</Window>

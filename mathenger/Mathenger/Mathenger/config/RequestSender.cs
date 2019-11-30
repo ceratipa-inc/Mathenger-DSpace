@@ -11,11 +11,12 @@ namespace Mathenger.config
 {
     public class RequestSender
     {
-        private IRestSerializer _serializer;
-        private ApplicationProperties _properties;
-        private IRestClient _client;
-        private UnAuthorizedHandler _unAuthorizedHandler;
-        public RequestSender(IRestSerializer serializer, ApplicationProperties properties, 
+        private readonly IRestSerializer _serializer;
+        private readonly ApplicationProperties _properties;
+        private readonly IRestClient _client;
+        private readonly UnAuthorizedHandler _unAuthorizedHandler;
+
+        public RequestSender(IRestSerializer serializer, ApplicationProperties properties,
             IRestClient client, UnAuthorizedHandler unAuthorizedHandler)
         {
             _serializer = serializer;
@@ -29,7 +30,7 @@ namespace Mathenger.config
             _unAuthorizedHandler = unAuthorizedHandler;
         }
 
-        public void configure(IRestRequest request)
+        private void Configure(IRestRequest request)
         {
             request.JsonSerializer = _serializer;
             if (_properties.AuthToken != null)
@@ -47,15 +48,17 @@ namespace Mathenger.config
         {
             Send(request, onSuccess, ErrorHandler, FailureHandler);
         }
+
         public void Send<T>(IRestRequest request, Action<T> contentConsumer,
             Action<IRestResponse> failureHandler) where T : new()
         {
             Send(request, contentConsumer, ErrorHandler, failureHandler);
         }
-        public void Send(IRestRequest request, Action onSuccess, Action errorHandler, 
+
+        public void Send(IRestRequest request, Action onSuccess, Action errorHandler,
             Action<IRestResponse> failureHandler)
         {
-            configure(request);
+            Configure(request);
             _client.ExecuteAsync(request, response =>
             {
                 if (response.IsSuccessful)
@@ -76,10 +79,11 @@ namespace Mathenger.config
                 }
             });
         }
+
         public void Send<T>(IRestRequest request, Action<T> contentConsumer,
             Action errorHandler, Action<IRestResponse> failureHandler) where T : new()
         {
-            configure(request);
+            Configure(request);
             _client.ExecuteAsync<T>(request, response =>
             {
                 if (response.IsSuccessful)
@@ -104,7 +108,7 @@ namespace Mathenger.config
         public void Send(IRestRequest request, Action<string> contentConsumer,
             Action errorHandler, Action<IRestResponse> failureHandler)
         {
-            configure(request);
+            Configure(request);
 
             _client.ExecuteAsync(request, response =>
             {
@@ -126,13 +130,15 @@ namespace Mathenger.config
                 }
             });
         }
+
         private void FailureHandler(IRestResponse response)
         {
         }
 
-        private void ErrorHandler()
+        private static void ErrorHandler()
         {
-            Application.Current.Dispatcher.Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
+            Application.Current.Dispatcher?
+                .Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
         }
     }
 }
