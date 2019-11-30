@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Mathenger.models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Mathenger.dto
 {

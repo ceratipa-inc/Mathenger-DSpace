@@ -96,7 +96,7 @@
     <Compile Include="Config\JsonSerializer.cs" />
     <Compile Include="Config\RequestSender.cs" />
     <Compile Include="Config\UnAuthorizedHandler.cs" />
-    <Compile Include="dto\ChatsDTO.cs" />
+    <Compile Include="DTO\ChatsDTO.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Enums\ChatType.cs" />
     <Compile Include="Models\Enums\NotificationType.cs" />
