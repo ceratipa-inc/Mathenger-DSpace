@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -21,7 +22,6 @@ namespace Mathenger
         private readonly AccountService _accountService = IoC.Get<AccountService>();
         private readonly ChatService _chatService = IoC.Get<ChatService>();
         private readonly ApplicationProperties _properties = IoC.Get<ApplicationProperties>();
-        private readonly MessageService _messageService = IoC.Get<MessageService>();
 
         #endregion
 
@@ -40,19 +40,20 @@ namespace Mathenger
             var menuItem = sender as MenuItem;
             var menu = menuItem?.Parent as ContextMenu;
             var account = menu?.DataContext as Account;
+            Debug.Assert(account != null, nameof(account) + " != null");
             _accountService.DeleteContact(account.Id,
                 () =>
                 {
-                    Dispatcher
-                        .Invoke(() => { Contacts.Remove(account); });
+                    Dispatcher?.Invoke(() => { Contacts.Remove(account); });
                 });
         }
 
         private void EventSetter_OnClick(object sender, MouseButtonEventArgs e)
         {
-            var contact = (sender as ListViewItem).DataContext as Account;
+            var contact = (sender as ListViewItem)?.DataContext as Account;
             var mainWindow = _properties.MainWindow;
             var chats = mainWindow.Chats;
+            Debug.Assert(contact != null, nameof(contact) + " != null");
             _chatService.StartPrivateChat(contact.Id, chat =>
             {
                 var chatFromMemory = chats.SingleOrDefault(chatItem => chatItem.Id == chat.Id);
@@ -83,7 +84,7 @@ namespace Mathenger
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var account = (Account) value;
-            return $"{account.FirstName} {account.LastName}";
+            return $"{account?.FirstName} {account?.LastName}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

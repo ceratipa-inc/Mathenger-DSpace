@@ -110,6 +110,24 @@ namespace Mathenger
                     SubscribeToChatUpdateNotifications(account, chats);
 
                     SubscribeToChatUnsubscribeNotifications(account, chats);
+
+                    SubscribeToTextNotifications(account);
+                });
+            });
+        }
+
+        private void SubscribeToTextNotifications(Account account)
+        {
+            _notificationService.SubscribeToTextNotifications(account.Id, text =>
+            {
+                Dispatcher?.Invoke(() =>
+                {
+                    _notificationManager.Show(new NotificationContent
+                    {
+                        Title = "New Notification",
+                        Message = text,
+                        Type = NotificationType.Information
+                    });
                 });
             });
         }
@@ -151,7 +169,7 @@ namespace Mathenger
             {
                 Dispatcher?.Invoke(() =>
                 {
-                    chats.Insert(0, chat); 
+                    chats.Insert(0, chat);
                     _notificationManager.Show(new NotificationContent
                     {
                         Title = new ChatNameConverter().Convert(chat),
@@ -202,7 +220,7 @@ namespace Mathenger
 
             var refreshListView = new NotifyCollectionChangedEventHandler(
                 (sender, args) => listCollectionView.Refresh());
-            
+
             foreach (var chat in chats)
             {
                 chat.Messages.CollectionChanged += refreshListView;

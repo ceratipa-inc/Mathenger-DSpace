@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using Mathenger.config;
 using Mathenger.models;
 using Mathenger.Models.Enums;
 using Mathenger.utils.stomp;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace Mathenger.services
 {
@@ -10,18 +13,28 @@ namespace Mathenger.services
     {
         #region private fields
 
-        private StompSocketProvider _socketProvider;
+        private readonly StompSocketProvider _socketProvider;
+        private readonly RequestSender _requestSender;
 
         #endregion
 
         #region constructor
 
-        public NotificationService(StompSocketProvider socketProvider)
+        public NotificationService(StompSocketProvider socketProvider, RequestSender requestSender)
         {
             _socketProvider = socketProvider;
+            _requestSender = requestSender;
         }
 
         #endregion
+
+        public void GetMyNotifications(Action<List<Notification>> notificationsConsumer)
+        {
+            var request = new RestRequest("/notifications", Method.GET);
+            _requestSender.Send(request, notificationsConsumer);
+        }
+
+        #region subscriptions
 
         public void SubscribeToNewChatNotifications(long userId, Action<Chat> chatConsumer)
         {
@@ -52,15 +65,32 @@ namespace Mathenger.services
         public void SubscribeToChatUnsubscribeNotifications(long userId, Action<long> chatIdConsumer)
         {
             _socketProvider.Subscribe($"chatUnsubscribeNotification-{userId}",
-                $"user/{userId}/notifications", stromMessage =>
+                $"user/{userId}/notifications", stompMessage =>
                 {
-                    var notification = JsonConvert.DeserializeObject<Notification>(stromMessage.Body);
+                    var notification = JsonConvert.DeserializeObject<Notification>(stompMessage.Body);
                     if (notification.Type == NotificationType.CHAT_UNSUBSCRIBE)
                     {
                         chatIdConsumer?.Invoke(long.Parse(notification.Text));
                     }
                 });
         }
+
+        public void SubscribeToTextNotifications(long userId, Action<string> textConsumer)
+        {
+            _socketProvider.Subscribe($"textNotification-{userId}", 
+                $"user/{userId}/notifications", stompMessage =>
+                {
+                    var notification = JsonConvert.DeserializeObject<Notification>(stompMessage.Body);
+                    if (notification.Type == NotificationType.TEXT)
+                    {
+                        textConsumer?.Invoke(notification.Text);
+                    }
+                });
+        }
+
+        #endregion
+
+        #region unsubscriptions
 
         public void UnsubscribeFromNewChatNotifications(long userId)
         {
@@ -77,6 +107,13 @@ namespace Mathenger.services
             _socketProvider.UnSubscribe($"chatUnsubscribeNotification-{userId}");
         }
 
+        public void UnsubscribeFromTextNotifications(long userId)
+        {
+            _socketProvider.UnSubscribe($"textNotification - {userId}");
+        }
+
+        #endregion
+        
         private Chat DeserializeChat(string text)
         {
             var chat = JsonConvert.DeserializeObject<Chat>(text);

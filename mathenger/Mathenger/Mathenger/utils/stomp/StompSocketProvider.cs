@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
@@ -14,7 +15,7 @@ namespace Mathenger.utils.stomp
         private WebSocket _socket;
 
         private IDictionary<string, Action<StompMessage>> _messageHandlers =
-            new Dictionary<string, Action<StompMessage>>();
+            new ConcurrentDictionary<string, Action<StompMessage>>();
 
         private StompMessageSerializer _serializer;
         private ApplicationProperties _properties;

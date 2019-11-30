@@ -5,6 +5,6 @@ namespace Mathenger.Models.Enums
 {
     public enum NotificationType
     {
-        NEW_CHAT, CHAT_UPDATE, CHAT_UNSUBSCRIBE
+        NEW_CHAT, CHAT_UPDATE, CHAT_UNSUBSCRIBE, TEXT
     }
 }

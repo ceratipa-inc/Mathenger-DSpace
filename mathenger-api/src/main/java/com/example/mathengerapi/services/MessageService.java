@@ -3,8 +3,6 @@ package com.example.mathengerapi.services;
 import com.example.mathengerapi.models.Account;
 import com.example.mathengerapi.models.Chat;
 import com.example.mathengerapi.models.Message;
-import com.example.mathengerapi.models.Notification;
-import com.example.mathengerapi.models.enums.NotificationType;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.ChatRepository;
 import com.example.mathengerapi.repositories.MessageRepository;
@@ -27,9 +25,10 @@ public class MessageService {
     private AccountRepository accountRepository;
     private SimpMessagingTemplate messagingTemplate;
     private ObjectMapper objectMapper;
+    private NotificationService notificationService;
 
     @Transactional
-    public Message sendMessage(Long userId, Message message, Long chatId) throws JsonProcessingException {
+    public void sendMessage(Long userId, Message message, Long chatId) throws JsonProcessingException {
         var sender = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         var chat = chatRepository.findById(chatId)
@@ -47,35 +46,8 @@ public class MessageService {
         messagingTemplate.convertAndSend("/topic/chat/" + chat.getId(),
                 objectMapper.writeValueAsString(message));
 
-        var membersToNotify = accountRepository.findByChatsNotContainingAndIdIsIn(chat,
-                chat.getMembers().stream()
-                        .map(Account::getId)
-                        .collect(Collectors.toList()));
+        notificationService.remindMembersAboutChat(sender, chat);
 
-        membersToNotify.stream().forEach(member -> {
-            member.getChats().add(chat);
-        });
-
-        var notifications =
-                membersToNotify.stream()
-                        .map(member -> {
-                            try {
-                                return new Notification(0L, NotificationType.NEW_CHAT,
-                                        member, sender, objectMapper.writeValueAsString(chat));
-                            } catch (JsonProcessingException e) {
-                                e.printStackTrace();
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .collect(Collectors.toList());
-
-        for (Notification notification : notifications) {
-            messagingTemplate
-                    .convertAndSend("/topic/user/" + notification.getReceiver().getId() + "/notifications",
-                            objectMapper.writeValueAsString(notification));
-        }
-
-        return message;
     }
 
     public List<Message> getOlderMessages(Long userId, Chat chat, LocalDateTime time) {

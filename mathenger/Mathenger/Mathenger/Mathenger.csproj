@@ -121,6 +121,9 @@
     <Compile Include="UI\Windows\Dialogs\CreateChatDialog.xaml.cs">
       <DependentUpon>CreateChatDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Windows\Dialogs\NotificationsDialog.xaml.cs">
+      <DependentUpon>NotificationsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Window\WindowResizer.cs" />
     <Compile Include="UI\ViewModels\BaseViewModel.cs" />
     <Compile Include="Models\Chat.cs" />
@@ -218,6 +221,7 @@
     <Page Include="UI\Windows\Dialogs\GroupChatInfoDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\ContactsDialog.xaml" />
     <Page Include="UI\Windows\Dialogs\CreateChatDialog.xaml" />
+    <Page Include="UI\Windows\Dialogs\NotificationsDialog.xaml" />
     <Page Include="UI\Windows\LoginWindow.xaml" />
     <Page Include="UI\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

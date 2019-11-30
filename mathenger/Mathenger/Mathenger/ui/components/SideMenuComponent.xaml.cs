@@ -3,12 +3,14 @@ using System.Windows;
 using System.Windows.Controls;
 using Mathenger.config;
 using Mathenger.services;
+using Mathenger.UI.Windows.Dialogs;
 
 namespace Mathenger
 {
     public partial class SideMenuComponent : UserControl
     {
-        private AccountService _accountService = IoC.Get<AccountService>();
+        private readonly AccountService _accountService = IoC.Get<AccountService>();
+        private readonly NotificationService _notificationService = IoC.Get<NotificationService>();
 
         public SideMenuComponent()
         {
@@ -33,10 +35,9 @@ namespace Mathenger
         {
             _accountService.GetMyContacts(contacts =>
             {
-                Dispatcher.Invoke(() =>
+                Dispatcher?.Invoke(() =>
                 {
-                    var dialog = new ContactsDialog(contacts);
-                    dialog.Owner = Window.GetWindow(this);
+                    var dialog = new ContactsDialog(contacts) {Owner = Window.GetWindow(this)};
                     dialog.ShowDialog();
                 });
             });
@@ -53,10 +54,21 @@ namespace Mathenger
         {
             _accountService.GetMyContacts(contacts =>
             {
-                Dispatcher.Invoke(() =>
+                Dispatcher?.Invoke(() =>
                 {
-                    var dialog = new CreateChatDialog(contacts);
-                    dialog.Owner = Window.GetWindow(this);
+                    var dialog = new CreateChatDialog(contacts) {Owner = Window.GetWindow(this)};
+                    dialog.ShowDialog();
+                });
+            });
+        }
+
+        private void NotificationsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _notificationService.GetMyNotifications(notifications =>
+            {
+                Dispatcher?.Invoke(() =>
+                {
+                    var dialog = new NotificationsDialog(notifications) {Owner = Window.GetWindow(this)};
                     dialog.ShowDialog();
                 });
             });

@@ -11,7 +11,7 @@ namespace Mathenger.services
 {
     public class ChatService
     {
-        private RequestSender _sender;
+        private readonly RequestSender _sender;
 
         public ChatService(RequestSender sender)
         {

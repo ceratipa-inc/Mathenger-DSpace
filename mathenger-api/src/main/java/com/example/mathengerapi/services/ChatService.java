@@ -38,7 +38,7 @@ public class ChatService {
         if (!account.getContacts().contains(contact))
             throw new IllegalArgumentException("Can't start chatting with user! Add him as contact first.");
         var chat = privateChatRepository.findByMembersContainingAndMembersContaining(account, contact)
-                .or(() -> Optional.ofNullable(newChatWithMembers(account, contact))).get();
+                .or(() -> Optional.of(newChatWithMembers(account, contact))).get();
         if (!account.getChats().contains(chat)) {
             account.getChats().add(chat);
             accountRepository.save(account);
@@ -166,6 +166,7 @@ public class ChatService {
         chat.getMembers().remove(member);
         member.getChats().remove(chat);
         accountRepository.save(member);
+        notificationService.notifyRemovalFromChat(chat, account, member);
         var updatedChat = groupChatRepository.save(chat);
         var messageText = String.format("%s %s removed %s %s from the chat",
                 account.getFirstName(), account.getLastName(),
@@ -173,7 +174,6 @@ public class ChatService {
         var message = new Message(0L, account, account, LocalDateTime.now(), messageText);
         messageService.sendMessage(userId, message, updatedChat.getId());
         notificationService.notifyChatUpdate(updatedChat, account);
-        notificationService.notifyRemovalFromChat(updatedChat.getId(), account, member);
         return updatedChat;
     }
 
