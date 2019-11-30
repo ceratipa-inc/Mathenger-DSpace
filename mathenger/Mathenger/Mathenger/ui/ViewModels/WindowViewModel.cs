@@ -40,7 +40,6 @@ namespace Mathenger
             set => _windowRadius = value;
         }
 
-        public ApplicationPage CurrentPage { get; set; } = ApplicationPage.SignIn;
         public Thickness ResizeBorderThickness => new Thickness(ResizeBorder + OuterMarginSize);
         public Thickness OuterMarginSizeThickness => new Thickness(OuterMarginSize);
         public CornerRadius WindowCornerRadius => new CornerRadius(WindowRadius);
