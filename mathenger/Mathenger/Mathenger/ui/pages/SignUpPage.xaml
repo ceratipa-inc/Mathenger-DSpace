@@ -13,16 +13,15 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="5*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        
+
         <StackPanel Grid.Column="1" Grid.Row="0">
             <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}"  Content="First Name"/>
             <TextBox Text="{Binding Account.FirstName}" Style="{StaticResource RegularTextBox}"/>
@@ -36,20 +35,18 @@
             <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}"  Content="Email"/>
             <TextBox Text="{Binding User.Email}" Style="{StaticResource RegularTextBox}"/>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="3">
-            <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}"  Content="Email"/>
-            <TextBox Text="{Binding User.Email}" Style="{StaticResource RegularTextBox}"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="4" >
+
+        <StackPanel Grid.Column="1" Grid.Row="3" >
             <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}" Content="Password"/>
             <PasswordBox Style="{StaticResource RegularPasswordBox}" PasswordChanged="PasswordBox_OnPasswordChanged"/>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="5" >
+
+        <StackPanel Grid.Column="1" Grid.Row="4" >
             <Label Foreground="{StaticResource LightSecondaryBrush}" FontSize="{StaticResource FontSizeRegular}" Content="Repeat Password"/>
             <PasswordBox Style="{StaticResource RegularPasswordBox}" />
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="7" VerticalAlignment="Bottom" >
+        <StackPanel Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" >
             <Button
                     Grid.Column="1"
                     Style="{StaticResource MainButton}"
@@ -58,59 +55,21 @@
             />
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="8"  VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Grid.Column="1" Grid.Row="6"  VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock
                 FontFamily="{StaticResource MontserratLight}"
                 FontSize="{StaticResource FontSizeRegular}"
                 Foreground="{StaticResource LightSecondaryBrush}"
             >
-                New To Mathenger?
+                Back to 
                 <Hyperlink
-                    Foreground="{StaticResource AccentBlueBrush}"
-                    FontFamily="{StaticResource MontserratBold}"
-                    Click="Hyperlink_OnClick"
-                >
-                     Sign Up
+                        Foreground="{StaticResource AccentBlueBrush}"
+                        FontFamily="{StaticResource MontserratBold}"
+                        Click="Hyperlink_OnClick"
+                    >
+                     Sign In
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
     </Grid>
-    <!--<Grid>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="4*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <DockPanel Margin="0 10" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1">
-            <Label Padding="0" DockPanel.Dock="Left">First Name</Label>
-            <TextBox DockPanel.Dock="Right" Width="145" HorizontalAlignment="Right"
-                     Text="{Binding Account.FirstName}" />
-        </DockPanel>
-        <DockPanel Margin="0 10" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="1">
-            <Label Padding="0" DockPanel.Dock="Left">Last Name</Label>
-            <TextBox DockPanel.Dock="Right" Width="145" HorizontalAlignment="Right"
-                     Text="{Binding Account.LastName}" />
-        </DockPanel>
-        <DockPanel Margin="0 10" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1">
-            <Label Padding="0" DockPanel.Dock="Left">Email</Label>
-            <TextBox DockPanel.Dock="Right" Width="145" HorizontalAlignment="Right"
-                     Text="{Binding User.Email}" />
-        </DockPanel>
-        <DockPanel Margin="0 10" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="1">
-            <Label Padding="0" DockPanel.Dock="Left">Password</Label>
-            <PasswordBox DockPanel.Dock="Right" Width="145" HorizontalAlignment="Right"
-                         PasswordChanged="PasswordBox_OnPasswordChanged" />
-        </DockPanel>
-        <DockPanel Margin="0 10" Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="1">
-            <Label Padding="0" DockPanel.Dock="Left">Repeat Password</Label>
-            <PasswordBox DockPanel.Dock="Right" Width="145" HorizontalAlignment="Right"/>
-        </DockPanel>
-        <Button Margin="0 10" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
-                Name="SignUpButton" Padding="10" Click="SignUpButton_OnClick" Content="Sign Up" />
-        <TextBlock Grid.Row="7" Grid.Column="1" FontSize="14" Margin="0 10" Grid.ColumnSpan="2">
-            <Hyperlink Click="Hyperlink_OnClick">Sign In</Hyperlink>
-        </TextBlock>
-    </Grid>-->
 </Page>
