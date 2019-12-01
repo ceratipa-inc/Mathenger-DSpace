@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class NotificationService {
 
     public void notifyChatUpdate(GroupChat chat, Account sender) throws JsonProcessingException {
         var notification = new Notification(0L, NotificationType.CHAT_UPDATE, chat.getCreator(), sender,
-                objectMapper.writeValueAsString(chat));
+                objectMapper.writeValueAsString(chat), LocalDateTime.now());
         for (Account member : chat.getMembers()) {
             messagingTemplate.convertAndSend("/topic/user/" + member.getId() + "/notifications",
                     objectMapper.writeValueAsString(notification));
@@ -35,11 +36,11 @@ public class NotificationService {
 
     public void notifyRemovalFromChat(GroupChat chat, Account producer, Account receiver) throws JsonProcessingException {
         var unsubscribeNotification = new Notification(0L, NotificationType.CHAT_UNSUBSCRIBE,
-                receiver, producer, chat.getId().toString());
+                receiver, producer, chat.getId().toString(), LocalDateTime.now());
         var text = String.format("%s removed you from \" %s \"!",
                 producer.getFirstName() + " " + producer.getLastName(), chat.getName());
         var textNotification = notificationRepository.save(
-                new Notification(0L, NotificationType.TEXT, receiver, producer, text));
+                new Notification(0L, NotificationType.TEXT, receiver, producer, text, LocalDateTime.now()));
         messagingTemplate.convertAndSend("/topic/user/" + receiver.getId() + "/notifications",
                 objectMapper.writeValueAsString(unsubscribeNotification));
         messagingTemplate.convertAndSend("/topic/user/" + receiver.getId() + "/notifications",
@@ -59,7 +60,7 @@ public class NotificationService {
                         .map(member -> {
                             try {
                                 return new Notification(0L, NotificationType.NEW_CHAT,
-                                        member, sender, objectMapper.writeValueAsString(chat));
+                                        member, sender, objectMapper.writeValueAsString(chat), LocalDateTime.now());
                             } catch (JsonProcessingException e) {
                                 e.printStackTrace();
                                 throw new RuntimeException(e);
