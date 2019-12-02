@@ -34,6 +34,12 @@ namespace Mathenger.services
             _requestSender.Send(request, notificationsConsumer);
         }
 
+        public void DeleteNotification(long notificationId, Action onSuccess)
+        {
+            var request = new RestRequest($"/notifications/{notificationId}", Method.DELETE);
+            _requestSender.Send(request, onSuccess);
+        }
+
         #region subscriptions
 
         public void SubscribeToNewChatNotifications(long userId, Action<Chat> chatConsumer)

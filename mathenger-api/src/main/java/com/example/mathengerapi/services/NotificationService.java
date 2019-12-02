@@ -78,4 +78,8 @@ public class NotificationService {
     public List<Notification> findTextNotificationsByReceiver(Long userId) {
         return notificationRepository.findByReceiverIdAndType(userId, NotificationType.TEXT);
     }
+
+    public void deleteById(Long notificationId) {
+        notificationRepository.deleteById(notificationId);
+    }
 }

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByReceiverIdAndType(Long receiverId, NotificationType type);
+
+    boolean existsByReceiverIdAndId(Long receiverId, Long notificationId);
 }

@@ -9,10 +9,14 @@
         Name="notificationsDialog"
         Title="NotificationsDialog" Height="350" Width="300">
     <Grid>
-        <ListView ItemsSource="{Binding Notifications, ElementName=notificationsDialog}">
+        <ListView HorizontalContentAlignment="Stretch" ItemsSource="{Binding Notifications, ElementName=notificationsDialog}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Text}"/>
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Left" Text="{Binding Text}"/>
+                        <Button Padding="10 2" DockPanel.Dock="Right" Name = "DeleteButton" Click="DeleteButton_OnClick" ToolTip="Delete">-</Button>
+                        <Grid/>
+                    </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
