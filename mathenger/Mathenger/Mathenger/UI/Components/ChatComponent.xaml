@@ -41,8 +41,8 @@
             </WrapPanel>
         </DockPanel>
 
-        <ScrollViewer Grid.Row="1" Name="MessageScrollViewer" ScrollChanged="MessageScrollViewer_OnScrollChanged">
-            <ListView Name="MessagesListView" ItemsSource="{Binding Source={StaticResource MessagesSource}}">
+        <ScrollViewer  Grid.Row="1" Name="MessageScrollViewer" ScrollChanged="MessageScrollViewer_OnScrollChanged">
+            <ListView Background="Transparent" BorderThickness="0" Name="MessagesListView" ItemsSource="{Binding Source={StaticResource MessagesSource}}">
                 <interactivity:Interaction.Behaviors>
                     <local:IgnoreMouseWheelBehavior/>
                 </interactivity:Interaction.Behaviors>
@@ -53,10 +53,16 @@
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollViewer>
-        
-        <DockPanel Grid.Row="2">
-            <Button DockPanel.Dock="Right" Margin="0 0 10 0" Name="SendButton" Click="SendButton_OnClick">Send</Button>
-            <TextBox Text="{Binding NextMessage.Text, ElementName=chatComponent}" />
-        </DockPanel>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
+            <TextBox Padding="15" Grid.Column="0" Style="{StaticResource RegularTextBox}" Text="{Binding NextMessage.Text, ElementName=chatComponent}" />
+            <Button BorderThickness="0" Margin="0 0 10 0" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="1" Name="SendButton" Click="SendButton_OnClick">
+                <Button.Content>
+                    <Path Data="M2,21L23,12L2,3V10L17,12L2,14V21Z" Fill="{StaticResource LightSecondaryBrush}"/>
+                </Button.Content>
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>

@@ -4,20 +4,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Width="60" Height="400">
-    <DockPanel>
+             Height="400">
+    <DockPanel >
         <DockPanel DockPanel.Dock="Top">
             <StackPanel Orientation="Vertical">
-                <Button Name="CreateChatButton" Click="CreateChatButton_OnClick" ToolTip="Create chat">+</Button>
-                <Button Name="AddContactButton" Click="AddContactButton_OnClick" ToolTip="Add new contact">C+</Button>
-                <Button Name="ContactsButton" Click="ContactsButton_OnClick" ToolTip="Contacts">Contacts</Button>
-                <Button Name="NotificationsButton" Click="NotificationsButton_OnClick" ToolTip="Notifications">\/</Button>
+                <Button
+                    Name="CreateChatButton"
+                    Click="CreateChatButton_OnClick"
+                    ToolTip="Create chat"
+                    Style="{StaticResource MenuButton}"
+                >
+                    Create chat
+                </Button>
+                <Button
+                    Name="AddContactButton"
+                    Click="AddContactButton_OnClick"
+                    ToolTip="Add new contact"
+                    Style="{StaticResource MenuButton}"
+                >
+                    Add contact
+                </Button>
+                <Button
+                    Name="ContactsButton"
+                    Click="ContactsButton_OnClick"
+                    ToolTip="Contacts"
+                    Style="{StaticResource MenuButton}"
+                >
+                    Contacts
+                </Button>
+                <Button
+                    Name="NotificationsButton"
+                    Click="NotificationsButton_OnClick"
+                    ToolTip="Notifications"
+                    Style="{StaticResource MenuButton}"
+                >
+                    Notifications
+                </Button>
             </StackPanel>
         </DockPanel>
         <DockPanel DockPanel.Dock="Bottom">
             <StackPanel Orientation="Vertical">
-                <Button Name="SignOutButton" Click="SignOutButton_OnClick" 
-                        ToolTip="Sign out">Sign Out</Button>
+                <Button
+                    Style="{StaticResource MenuButton}"
+                    BorderThickness="0"
+                    VerticalAlignment="Bottom"
+                    Background="Transparent"
+                    Name="SignOutButton"
+                    Click="SignOutButton_OnClick" 
+                    ToolTip="Sign out"
+                >
+                    Sign Out
+                </Button>
             </StackPanel>
         </DockPanel>
         <Grid/>

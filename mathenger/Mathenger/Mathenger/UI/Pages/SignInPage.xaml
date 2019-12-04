@@ -67,6 +67,7 @@
 
             <StackPanel VerticalAlignment="Bottom" Grid.Row="3">
                 <Button
+                    IsDefault="True"
                     Grid.Column="1"
                     Style="{StaticResource MainButton}"
                     Click="SignInButton_OnClick"

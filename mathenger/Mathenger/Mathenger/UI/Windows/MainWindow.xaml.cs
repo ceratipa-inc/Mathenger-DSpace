@@ -76,7 +76,7 @@ namespace Mathenger
             _messageService = messageService;
             _notificationService = notificationService;
             _notificationManager = notificationManager;
-            DataContext = this;
+            DataContext = new WindowViewModel(this);
             InitializeComponent();
         }
 

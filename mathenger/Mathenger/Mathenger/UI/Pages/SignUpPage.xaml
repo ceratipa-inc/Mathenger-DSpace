@@ -48,6 +48,7 @@
 
         <StackPanel Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" >
             <Button
+                    IsDefault="True"
                     Grid.Column="1"
                     Style="{StaticResource MainButton}"
                     Click="SignUpButton_OnClick"

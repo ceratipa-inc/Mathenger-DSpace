@@ -5,44 +5,110 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mathenger"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
         mc:Ignorable="d"
         Name="mainWindow"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="700" Width="950">
     <Window.Resources>
+        <Style TargetType="{x:Type local:MainWindow}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <Border Padding="{Binding OuterMarginSizeThickness, FallbackValue=10}">
+                            <Grid>
+                                <Border Opacity="0.98" CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}">
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="0" Opacity="0.2"/>
+                                    </Border.Effect>
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                            <GradientStop Color="{StaticResource DarkPrimary}" Offset="0.0" />
+                                            <GradientStop Color="{StaticResource DarkSecondary}" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="{Binding TitleHeightGridLength, FallbackValue=40}"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Panel.ZIndex="1" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition  Width="*"/>
+                                            <ColumnDefinition  Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel  Margin="13"  Grid.Column="1" Orientation="Horizontal">
+                                            <Button 
+                                               Margin="5 0"
+                                                Style="{StaticResource ContolButtonContainer}"
+                                                Command="{Binding MaximizeCommand}"
+                                        >
+                                                <Path Data="M0,1 L9,1 L9,8 L0,8 Z" Style="{StaticResource ContolButtonContent}" />
+                                            </Button>
+                                            <Button 
+                                               Margin="5 0"
+                                                Style="{StaticResource ContolButtonContainer}"
+                                                Command="{Binding CloseCommand}"
+                                        >
+                                                <Path Data="M0,0 L1,1 M0,1 L1,0" Style="{StaticResource ContolButtonContent}" />
+                                            </Button>
+
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border Grid.Row="1">
+                                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <local:NotNullToStringConverter x:Key="NotNullToStringConverter" />
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Column="0" Grid.Row="0">
-            <Label Content="{Binding Account.FirstName}" />
-            <Label Content="{Binding Account.LastName}" />
-        </StackPanel>
-        <local:SideMenuComponent Grid.Row="1" Grid.Column="0" />
-        <local:ChatListComponent x:Name="ChatList"
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="{Binding ResizeBorderThickness}"
+                      CaptionHeight="{Binding TitleHeight}"
+                      CornerRadius="0"
+                      GlassFrameThickness="0"
+     />
+    </WindowChrome.WindowChrome>
+    <Border Padding="0 20 20 20">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" MinWidth="175" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="0">
+                <Label Content="{Binding Account.FirstName}" />
+                <Label Content="{Binding Account.LastName}" />
+            </StackPanel>
+            <local:SideMenuComponent Grid.Row="1" Grid.Column="0" />
+            <local:ChatListComponent x:Name="ChatList"
                                  SelectedChat="{Binding SelectedChat, ElementName=mainWindow, Mode=TwoWay}"
                                  Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
-        <local:ChatComponent x:Name="chatComponent" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"
+            <local:ChatComponent x:Name="chatComponent" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"
                              Chat="{Binding SelectedChat, ElementName=mainWindow}">
-            <local:ChatComponent.Style>
-                <Style TargetType="local:ChatComponent">
-                    <Setter Property="Visibility" Value="Hidden" />
-                    <Style.Triggers>
-                        <DataTrigger Value="true"
+                <local:ChatComponent.Style>
+                    <Style TargetType="local:ChatComponent">
+                        <Setter Property="Visibility" Value="Hidden" />
+                        <Style.Triggers>
+                            <DataTrigger Value="true"
                                      Binding="{Binding ElementName=ChatList, Path=SelectedChat, 
                                      Converter={StaticResource NotNullToStringConverter}}" >
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </local:ChatComponent.Style>
-        </local:ChatComponent>
-    </Grid>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </local:ChatComponent.Style>
+            </local:ChatComponent>
+        </Grid>
+    </Border>
 </Window>
