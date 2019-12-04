@@ -4,8 +4,10 @@ import com.example.mathengerapi.models.enums.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notifications")
@@ -27,4 +29,6 @@ public class Notification {
     private Account producer;
     @Lob
     private String text;
+    @CreationTimestamp
+    private LocalDateTime time;
 }
