@@ -20,6 +20,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             throws IOException, ServletException {
 
         SecurityContextHolder.clearContext();
-        httpServletResponse.sendError(403, e.getMessage());
+        httpServletResponse.sendError(400, e.getMessage());
     }
 }
