@@ -34,6 +34,7 @@ public class AuthenticationService {
             String login = user.getUsername();
             String password = user.getPassword();
             user.setPassword(passwordEncoder.encode(password));
+            user.setActive(true);
             accountService.createAccount(account, user);
             return authenticate(login, password);
         } catch (Exception e) {

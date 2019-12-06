@@ -26,7 +26,7 @@ namespace Mathenger.services
 
             void ErrorHandler()
             {
-                Application.Current.Dispatcher.Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
+                Application.Current.Dispatcher?.Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
             }
 
             _sender.Send(request, tokenConsumer, ErrorHandler, FailureHandler);
@@ -40,12 +40,25 @@ namespace Mathenger.services
             void FailureHandler(IRestResponse response)
             {
             }
+
             void ErrorHandler()
             {
-                Application.Current.Dispatcher.Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
+                Application.Current.Dispatcher?.Invoke(() => { MessageBox.Show("Can't connect to Mathenger server"); });
             }
-            
+
             _sender.Send(request, tokenConsumer, ErrorHandler, FailureHandler);
+        }
+
+        public void ResetPassword(string email, Action<string> responseConsumer)
+        {
+            var request = new RestRequest("password/reset", Method.POST);
+            request.AddParameter("email", email);
+            _sender.Send(request, responseConsumer,
+                () => { },
+                response =>
+                {
+                    Application.Current.Dispatcher?.Invoke(() => { MessageBox.Show(response.ErrorMessage); });
+                });
         }
     }
 }

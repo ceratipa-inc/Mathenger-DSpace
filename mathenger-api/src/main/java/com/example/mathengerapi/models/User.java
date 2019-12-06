@@ -2,7 +2,10 @@ package com.example.mathengerapi.models;
 
 import com.example.mathengerapi.security.configuration.AuthenticationConstant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +34,10 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(nullable = false)
     private boolean active;
+    @JsonIgnore
+    private String passwordRecoveryCode;
+    @JsonIgnore
+    private String activationCode;
 
     @Transient
     @JsonIgnore
@@ -69,6 +76,6 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }
