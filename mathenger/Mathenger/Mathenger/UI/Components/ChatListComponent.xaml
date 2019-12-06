@@ -9,6 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <local:ChatNameConverter x:Key="NameConverter" />
+        <local:LastMessageConverter x:Key="LastMessageConverter" />
         <ContextMenu x:Key="ContextMenu">
             <ContextMenu.Items>
                 <MenuItem DataContext="{Binding}" Name="DeleteButton" Header="Delete"
@@ -18,7 +19,7 @@
         </ContextMenu>
     </UserControl.Resources>
     <Grid>
-        <ListView Background="Transparent" BorderThickness="0" Name="ChatsListView" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"
+        <ListView HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0" Name="ChatsListView" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"
                   SelectionMode="Single" ItemsSource="{Binding Chats ,ElementName=chatListComponent}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
@@ -27,7 +28,58 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=., Converter={StaticResource NameConverter}}" />
+                    <!--<TextBlock Text="{Binding Path=., Converter={StaticResource NameConverter}}" />-->
+                    <Border Width="{Binding ElementName=ChatsListView, Path=Width}" CornerRadius="10" Height="70" Background="{StaticResource DarkSecondaryBrush}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Padding="10">
+                                <Border
+                                    Background="Red"
+                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                    CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                >
+                                    <TextBlock
+                                        Style="{StaticResource LightTextStyle}"
+                                        Foreground="{StaticResource LightPrimaryBrush}"
+                                        Text="AS"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                    />
+                                </Border>
+                            </Border>
+                            <Border Padding="0 0 8 0" Grid.Column="1">
+                                <StackPanel  VerticalAlignment="Center">
+                                    <TextBlock
+                                        Style="{StaticResource RegularTextStyle}"
+                                        FontSize="{StaticResource FontSizeRegular}"
+                                        Foreground="{StaticResource LightPrimaryBrush}"
+                                        Text="{Binding Path=., Converter={StaticResource NameConverter}}"
+                                    />
+                                    <Border Name="b" />
+                                    <TextBlock
+                                        Style="{StaticResource RegularTextStyle}"
+                                        FontSize="{StaticResource FontSizeSmall}"
+                                        Foreground="{StaticResource LightPrimaryBrush}"
+                                        TextTrimming="CharacterEllipsis"
+                                        Width="{Binding ElementName=b,Path=ActualWidth}"
+                                        Text="{Binding Path=., Converter={StaticResource LastMessageConverter}}"
+                                    />
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" VerticalAlignment="Center" Padding="0 0 5 10">
+                                <TextBlock
+                                    Style="{StaticResource LightTextStyle}"
+                                    FontSize="{StaticResource FontSizeSmall}"
+                                    Foreground="{StaticResource LightSecondaryBrush}"
+                                    Text="date"
+                                 />
+                            </Border>
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
