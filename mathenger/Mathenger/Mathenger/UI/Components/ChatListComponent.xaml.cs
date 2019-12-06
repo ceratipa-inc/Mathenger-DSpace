@@ -123,6 +123,34 @@ namespace Mathenger
         }
     }
 
+    public class ChatImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return null;
+            var chat = value as Chat;
+            Debug.Assert(chat != null, nameof(chat) + " != null");
+            if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
+            {
+                var properties = IoC.Get<ApplicationProperties>();
+                var contact = chat.Members.First(member => member.Id != properties.MyAccount.Id);
+                return contact.Color;
+            }
+
+            return "#3459c0";
+        }
+
+        public string Convert(Chat chat)
+        {
+            return Convert(chat, chat.GetType(), null, null) as string;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class LastMessageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -143,6 +171,73 @@ namespace Mathenger
             throw new NotImplementedException();
         }
     }
+
+    public class ChatImageInitialsConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return null;
+            var chat = value as Chat;
+            Debug.Assert(chat != null, nameof(chat) + " != null");
+            string chatName = new ChatNameConverter().Convert(chat, null, null, null) as string;
+            var splittedChatName = chatName.Split(' ');
+            if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
+            {
+                return $"{splittedChatName[0][0]}{splittedChatName[1][0]}".ToUpper();
+            }
+            else if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
+            {
+                return $"{splittedChatName[0][0]}{splittedChatName[splittedChatName.Length - 1][0]}".ToUpper();
+            }
+            return "";
+        }
+
+        public string Convert(Chat chat)
+        {
+            return Convert(chat, chat.GetType(), null, null) as string;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class LastMessageDateConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return null;
+            var chat = value as Chat;
+            Debug.Assert(chat != null, nameof(chat) + " != null");
+            var date = chat.Messages.Max(x => x.Time);
+            var difference = DateTime.Now - date;
+            if (difference.TotalDays < 1)
+            {
+                return $"{date.Hour}:{date.Minute}";
+            }
+            else if (difference.TotalDays < 7)
+            {
+                return date.DayOfWeek;
+            }
+            else
+            {
+                return $"{date.Day}.{date.Month}.{date.Year}";
+            }
+        }
+
+        public string Convert(Chat chat)
+        {
+            return Convert(chat, chat.GetType(), null, null) as string;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
 
     public class ChatLastMessageComparer : IComparer
     {

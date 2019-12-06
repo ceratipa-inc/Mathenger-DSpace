@@ -48,7 +48,7 @@
                                                 
                                         >
                                                 <Path VerticalAlignment="Bottom" Data="M9,0 1,0" Style="{StaticResource ContolButtonContent}" />
-                                            </Button> 
+                                            </Button>
                                             <Button 
                                                Margin="5 0"
                                                 Style="{StaticResource ContolButtonContainer}"
@@ -85,26 +85,42 @@
                       GlassFrameThickness="0"
      />
     </WindowChrome.WindowChrome>
-    <Border Padding="0 20 20 20">
+    <Border Padding="0 0 20 20">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="185"/>
-                <ColumnDefinition Width="380"  />
+                <ColumnDefinition Width="300"  />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Column="0" Grid.Row="0">
-                <Label Content="{Binding Account.FirstName, ElementName=mainWindow}" />
-                <Label Content="{Binding Account.LastName, ElementName=mainWindow}" />
+            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0 4 0 15">
+                <Path Margin="0 0 0 10" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{StaticResource LightPrimaryBrush}" >
+                    <Path.Data>
+                        <CombinedGeometry GeometryCombineMode="Xor">
+                            <CombinedGeometry.Geometry1>
+                                <EllipseGeometry RadiusX="13" RadiusY="13" Center="20,20" />
+                            </CombinedGeometry.Geometry1>
+                            <CombinedGeometry.Geometry2>
+                                <EllipseGeometry RadiusX="20" RadiusY="20" Center="20,20" />
+                            </CombinedGeometry.Geometry2>
+                        </CombinedGeometry>
+                    </Path.Data>
+                </Path>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock FontSize="{StaticResource FontSizeRegular}" Text="{Binding Account.FirstName, ElementName=mainWindow}" Foreground="{StaticResource LightPrimaryBrush}" Style="{StaticResource BoldTextStyle}" />
+                    <TextBlock FontSize="{StaticResource FontSizeRegular}" Text=" " Foreground="{StaticResource LightPrimaryBrush}" Style="{StaticResource BoldTextStyle}" />
+                    <TextBlock FontSize="{StaticResource FontSizeRegular}" Text="{Binding Account.LastName, ElementName=mainWindow}" Foreground="{StaticResource LightPrimaryBrush}" Style="{StaticResource BoldTextStyle}" />
+                </StackPanel>
             </StackPanel>
             <local:SideMenuComponent Grid.Row="1" Grid.Column="0" />
             <local:ChatListComponent x:Name="ChatList"
+                                    
                                  SelectedChat="{Binding SelectedChat, ElementName=mainWindow, Mode=TwoWay}"
-                                 Chats="{Binding Chats, ElementName=mainWindow}" Grid.Row="1" Grid.Column="1" />
-            <local:ChatComponent x:Name="chatComponent" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"
+                                 Chats="{Binding Chats, ElementName=mainWindow}" Grid.RowSpan="2" Grid.Column="1" />
+            <local:ChatComponent  Margin="10 0 0 0" x:Name="chatComponent" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"
                              Chat="{Binding SelectedChat, ElementName=mainWindow}">
                 <local:ChatComponent.Style>
                     <Style TargetType="local:ChatComponent">

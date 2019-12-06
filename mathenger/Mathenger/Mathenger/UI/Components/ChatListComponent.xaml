@@ -10,6 +10,9 @@
     <UserControl.Resources>
         <local:ChatNameConverter x:Key="NameConverter" />
         <local:LastMessageConverter x:Key="LastMessageConverter" />
+        <local:LastMessageDateConverter x:Key="LastMessageDateConverter" />
+        <local:ChatImageInitialsConverter x:Key="ChatImageInitialsConverter" />
+        <local:ChatImageConverter x:Key="ChatImageConverter" />
         <ContextMenu x:Key="ContextMenu">
             <ContextMenu.Items>
                 <MenuItem DataContext="{Binding}" Name="DeleteButton" Header="Delete"
@@ -19,67 +22,99 @@
         </ContextMenu>
     </UserControl.Resources>
     <Grid>
-        <ListView HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0" Name="ChatsListView" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"
+        <ListView Background="Transparent" BorderThickness="0" Name="ChatsListView" x:FieldModifier="public" SelectedItem="{Binding SelectedChat, ElementName=chatListComponent, Mode=TwoWay}"
                   SelectionMode="Single" ItemsSource="{Binding Chats ,ElementName=chatListComponent}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Width" Value="282"/>
+                    <Setter Property="Margin" Value="0 4 0 4"/>
                     <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border Name="border" Width="{Binding ElementName=ChatsListView, Path=Width}" CornerRadius="10" Height="70">
+
+                                    <Border.Background>
+                                        <SolidColorBrush Opacity=".3" Color="{StaticResource DarkSecondary}"/>
+                                    </Border.Background>
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="border">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                                    <GradientStop Color="{StaticResource DarkSecondary}" Offset="0.0" />
+                                                    <GradientStop Color="{StaticResource DarkSecondary}" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </MultiTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <!--<TextBlock Text="{Binding Path=., Converter={StaticResource NameConverter}}" />-->
-                    <Border Width="{Binding ElementName=ChatsListView, Path=Width}" CornerRadius="10" Height="70" Background="{StaticResource DarkSecondaryBrush}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Padding="10">
-                                <Border
-                                    Background="Red"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Padding="10" Name="border">
+                            <Border
+                                    Background="{Binding Path=., Converter={StaticResource ChatImageConverter}}"
                                     Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
                                     CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
                                 >
-                                    <TextBlock
+                                <TextBlock
                                         Style="{StaticResource LightTextStyle}"
+                                    FontSize="{StaticResource FontSizeMedium}"
                                         Foreground="{StaticResource LightPrimaryBrush}"
-                                        Text="AS"
+                                        Text="{Binding Path=., Converter={StaticResource ChatImageInitialsConverter}}"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
                                     />
-                                </Border>
                             </Border>
-                            <Border Padding="0 0 8 0" Grid.Column="1">
-                                <StackPanel  VerticalAlignment="Center">
-                                    <TextBlock
+                        </Border>
+                        <Border Padding="0 0 8 0" Grid.Column="1">
+                            <StackPanel  VerticalAlignment="Center">
+                                <Border Name="b" />
+                                <TextBlock
                                         Style="{StaticResource RegularTextStyle}"
                                         FontSize="{StaticResource FontSizeRegular}"
+                                        FontFamily="{StaticResource MontserratBold}"
+                                    Margin="0 0 0 7"
                                         Foreground="{StaticResource LightPrimaryBrush}"
+                                        TextTrimming="CharacterEllipsis"
+                                        Width="{Binding ElementName=b,Path=ActualWidth}"
                                         Text="{Binding Path=., Converter={StaticResource NameConverter}}"
                                     />
-                                    <Border Name="b" />
-                                    <TextBlock
+                                <TextBlock
                                         Style="{StaticResource RegularTextStyle}"
                                         FontSize="{StaticResource FontSizeSmall}"
                                         Foreground="{StaticResource LightPrimaryBrush}"
                                         TextTrimming="CharacterEllipsis"
                                         Width="{Binding ElementName=b,Path=ActualWidth}"
                                         Text="{Binding Path=., Converter={StaticResource LastMessageConverter}}"
-                                    />
-                                </StackPanel>
-                            </Border>
-                            <Border Grid.Column="2" VerticalAlignment="Center" Padding="0 0 5 10">
-                                <TextBlock
+                                />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" VerticalAlignment="Center" Padding="0 0 15 10">
+                            <TextBlock
                                     Style="{StaticResource LightTextStyle}"
                                     FontSize="{StaticResource FontSizeSmall}"
                                     Foreground="{StaticResource LightSecondaryBrush}"
-                                    Text="date"
+                                     Text="{Binding Path=., Converter={StaticResource LastMessageDateConverter}}"
                                  />
-                            </Border>
-                        </Grid>
-                    </Border>
+                        </Border>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
