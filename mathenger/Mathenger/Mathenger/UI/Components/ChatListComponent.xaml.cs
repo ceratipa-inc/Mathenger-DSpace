@@ -33,15 +33,13 @@ namespace Mathenger
             DependencyProperty.Register("SelectedChat",
                 typeof(Chat), typeof(ChatListComponent));
 
-        public ObservableCollection<Chat> Chats
-        {
-            get => (ObservableCollection<Chat>) GetValue(ChatsProperty);
+        public ObservableCollection<Chat> Chats {
+            get => (ObservableCollection<Chat>)GetValue(ChatsProperty);
             set => SetValue(ChatsProperty, value);
         }
 
-        public Chat SelectedChat
-        {
-            get => (Chat) GetValue(SelectedChatProperty);
+        public Chat SelectedChat {
+            get => (Chat)GetValue(SelectedChatProperty);
             set => SetValue(SelectedChatProperty, value);
         }
 
@@ -125,6 +123,27 @@ namespace Mathenger
         }
     }
 
+    public class LastMessageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return null;
+            var chat = value as Chat;
+            Debug.Assert(chat != null, nameof(chat) + " != null");
+            return chat.Messages.OrderByDescending(x => x.Time).FirstOrDefault()?.Text;
+        }
+
+        public string Convert(Chat chat)
+        {
+            return Convert(chat, chat.GetType(), null, null) as string;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class ChatLastMessageComparer : IComparer
     {
         public int Compare(Object x, Object y)
@@ -133,6 +152,9 @@ namespace Mathenger
             var chat2 = y as Chat;
             Debug.Assert(chat1 != null, nameof(chat1) + " != null");
             Debug.Assert(chat2 != null, nameof(chat2) + " != null");
+            if (chat1.Messages.Count == 0) { return -1; }
+            else if (chat2.Messages.Count == 0) { return 1; }
+
             return -chat1.Messages.ToList().Max(message => message.Time)
                 .CompareTo(chat2.Messages.ToList().Max(message => message.Time));
         }

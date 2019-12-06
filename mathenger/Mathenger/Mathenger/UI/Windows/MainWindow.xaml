@@ -9,6 +9,8 @@
         AllowsTransparency="True"
         mc:Ignorable="d"
         Name="mainWindow"
+        MinWidth="{Binding MinWidth, FallbackValue=950}"
+        MinHeight="{Binding MinHeight, FallbackValue=600}"
         Title="MainWindow" Height="700" Width="950">
     <Window.Resources>
         <Style TargetType="{x:Type local:MainWindow}">
@@ -42,8 +44,16 @@
                                             <Button 
                                                Margin="5 0"
                                                 Style="{StaticResource ContolButtonContainer}"
-                                                Command="{Binding MaximizeCommand}"
+                                                Command="{Binding MinimizeCommand}"
+                                                
                                         >
+                                                <Path VerticalAlignment="Bottom" Data="M9,0 1,0" Style="{StaticResource ContolButtonContent}" />
+                                            </Button> 
+                                            <Button 
+                                               Margin="5 0"
+                                                Style="{StaticResource ContolButtonContainer}"
+                                                Command="{Binding MaximizeCommand}"
+                                            >
                                                 <Path Data="M0,1 L9,1 L9,8 L0,8 Z" Style="{StaticResource ContolButtonContent}" />
                                             </Button>
                                             <Button 
@@ -78,8 +88,8 @@
     <Border Padding="0 20 20 20">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*" MinWidth="175" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="185"/>
+                <ColumnDefinition Width="300"  />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -87,8 +97,8 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0">
-                <Label Content="{Binding Account.FirstName}" />
-                <Label Content="{Binding Account.LastName}" />
+                <Label Content="{Binding Account.FirstName, ElementName=mainWindow}" />
+                <Label Content="{Binding Account.LastName, ElementName=mainWindow}" />
             </StackPanel>
             <local:SideMenuComponent Grid.Row="1" Grid.Column="0" />
             <local:ChatListComponent x:Name="ChatList"

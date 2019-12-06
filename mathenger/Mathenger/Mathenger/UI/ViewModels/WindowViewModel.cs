@@ -22,7 +22,7 @@ namespace Mathenger
                 OnPropertyChanged(nameof(WindowCornerRadius));
             };
 
-            MinimizeCommand = new RelayCommand(() => _window.WindowState = WindowState.Maximized);
+            MinimizeCommand = new RelayCommand(() => _window.WindowState = WindowState.Minimized);
             MaximizeCommand = new RelayCommand(() => _window.WindowState ^= WindowState.Maximized);
             CloseCommand = new RelayCommand(() => _window.Close());
             MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(_window, GetMousePosition()));
@@ -31,6 +31,8 @@ namespace Mathenger
 
         public int TitleHeight { get; set; } = 40;
         public int ResizeBorder { get; set; } = 6;
+        public int MinWidth { get; set; } = 950;
+        public int MinHeight { get; set; } = 650;
         public int OuterMarginSize {
             get => _window.WindowState == WindowState.Maximized ? 0 : _outerMarginSize;
             set => _outerMarginSize = value;

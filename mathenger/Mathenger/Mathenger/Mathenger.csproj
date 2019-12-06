@@ -105,6 +105,12 @@
     <Compile Include="Models\PrivateChat.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="UI\Behaviors\IgnoreMouseWheelBehavior.cs" />
+    <Compile Include="UI\Components\ChatListItemComponent.xaml.cs">
+      <DependentUpon>ChatListItemComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\ChatMessageComponent.xaml.cs">
+      <DependentUpon>ChatMessageComponent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\DataModels\ApplicationPage.cs" />
     <Compile Include="UI\ValueConverters\ApplicationPageConverter.cs" />
     <Compile Include="UI\ValueConverters\BaseValueConverter.cs" />
@@ -194,6 +200,14 @@
   <ItemGroup>
     <Page Include="UI\Components\ChatComponent.xaml" />
     <Page Include="UI\Components\ChatListComponent.xaml" />
+    <Page Include="UI\Components\ChatListItemComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Components\ChatMessageComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Components\SideMenuComponent.xaml" />
     <Page Include="UI\Pages\SignInPage.xaml">
       <SubType>Designer</SubType>
@@ -208,6 +222,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Styles\Fonts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Styles\Scroll.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
