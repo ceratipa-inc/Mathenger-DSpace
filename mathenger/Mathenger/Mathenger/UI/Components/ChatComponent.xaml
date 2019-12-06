@@ -13,6 +13,9 @@
         <local:ChatNameConverter x:Key="ChatNameConverter" />
         <local:ChatMembersCountConverter x:Key="ChatMembersCountConverter" />
         <local:SendByMeAlignmentConverter x:Key="SendByMeAlignmentConverter" />
+        <local:SendByMeFirstGradientColorConverter x:Key="SendByMeFirstGradientColorConverter" />
+        <local:SendByMeSecondGradientColorConverter x:Key="SendByMeSecondGradientColorConverter" />
+        <local:SendByMeOpacityConverter x:Key="SendByMeOpacityConverter" />
         <CollectionViewSource x:Key="MessagesSource" Source="{Binding Chat.Messages, ElementName=chatComponent}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Time" />
@@ -89,9 +92,9 @@
                                             Padding="15"
                                     >
                                         <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
-                                                <GradientStop Color="#027bbf" Offset="0.0" />
-                                                <GradientStop Color="#4150c1" Offset="1.0" />
+                                            <LinearGradientBrush Opacity="{Binding Path=., Converter={StaticResource SendByMeOpacityConverter}}" StartPoint="0,1" EndPoint="1,0">
+                                                <GradientStop Color="{Binding Path=., Converter={StaticResource SendByMeFirstGradientColorConverter}}" Offset="0.0" />
+                                                <GradientStop Color="{Binding Path=., Converter={StaticResource SendByMeSecondGradientColorConverter}}" Offset="1.0" />
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <TextBlock VerticalAlignment="Center"

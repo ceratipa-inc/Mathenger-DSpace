@@ -9,8 +9,8 @@
     <Style TargetType="{x:Type Button}" x:Key="ContolButtonContainer">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Width" Value="15"/>
-        <Setter Property="Height" Value="15"/>
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Height" Value="10"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
@@ -35,8 +35,8 @@
         <Setter Property="Stretch" Value="Fill"/>
         <Setter Property="Stroke" Value="{StaticResource LightSecondaryBrush}"/>
         <Setter Property="StrokeThickness" Value="2"/>
-        <Setter Property="Width" Value="15"/>
-        <Setter Property="Height" Value="15"/>
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Height" Value="10"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">

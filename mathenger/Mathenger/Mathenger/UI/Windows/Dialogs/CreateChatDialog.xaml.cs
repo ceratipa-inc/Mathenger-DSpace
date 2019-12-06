@@ -35,6 +35,7 @@ namespace Mathenger
         public CreateChatDialog(ObservableCollection<Account> contacts)
         {
             Contacts = contacts;
+            DataContext = new WindowViewModel(this);
             InitializeComponent();
         }
 

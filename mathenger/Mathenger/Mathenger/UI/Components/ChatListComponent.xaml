@@ -35,7 +35,7 @@
                                 <Border Name="border" Width="{Binding ElementName=ChatsListView, Path=Width}" CornerRadius="10" Height="70">
 
                                     <Border.Background>
-                                        <SolidColorBrush Opacity=".3" Color="{StaticResource DarkSecondary}"/>
+                                        <SolidColorBrush Opacity="0.5" Color="{StaticResource DarkSecondary}"/>
                                     </Border.Background>
                                     <ContentPresenter/>
                                 </Border>
@@ -52,7 +52,46 @@
                                                 </LinearGradientBrush>
                                             </Setter.Value>
                                         </Setter>
+                                        <Setter Property="Cursor" Value="Hand"/>
                                     </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                            <Condition Property="IsSelected" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="border">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                                    <GradientStop Color="#027bbf" Offset="0.0" />
+                                                    <GradientStop Color="{StaticResource DarkSecondary}" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                            <Condition Property="IsSelected" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="border">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                                    <GradientStop Color="#027bbf" Offset="0.0" />
+                                                    <GradientStop Color="{StaticResource DarkSecondary}" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </MultiTrigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" TargetName="border">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                                    <GradientStop Color="#027bbf" Offset="0.0" />
+                                                    <GradientStop Color="{StaticResource DarkSecondary}" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>

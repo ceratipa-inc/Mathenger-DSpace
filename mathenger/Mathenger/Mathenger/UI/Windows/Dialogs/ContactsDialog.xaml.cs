@@ -29,9 +29,9 @@ namespace Mathenger
 
         public ContactsDialog(ObservableCollection<Account> contacts)
         {
-            InitializeComponent();
-            DataContext = this;
             Contacts = contacts;
+            DataContext = new WindowViewModel(this);
+            InitializeComponent();
         }
 
         #endregion

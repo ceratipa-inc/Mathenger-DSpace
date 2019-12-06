@@ -29,7 +29,7 @@ namespace Mathenger
             WindowResizer resizer = new WindowResizer(_window);
         }
 
-        public int TitleHeight { get; set; } = 40;
+        public int TitleHeight { get; set; } = 30;
         public int ResizeBorder { get; set; } = 6;
         public int MinWidth { get; set; } = 950;
         public int MinHeight { get; set; } = 650;
