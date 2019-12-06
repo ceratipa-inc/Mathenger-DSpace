@@ -117,21 +117,23 @@ namespace Mathenger
 
         private readonly ApplicationProperties _applicationProperties = IoC.Get<ApplicationProperties>();
 
-        public enum HorizontalAlignment
-        {
-            Left = 0,
-            Center = 1,
-            Right = 2,
-            Stretch = 3
-        }
+        //public enum HorizontalAlignment
+        //{
+        //    Left = 0,
+        //    Center = 1,
+        //    Right = 2,
+        //    Stretch = 3
+        //}
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(value != null, nameof(value) + " != null");
             var author = (value as Message).Author as Account;
             bool sendByMe = _applicationProperties.MyAccount.Id == author.Id;
-            var alignment = sendByMe ? HorizontalAlignment.Left : HorizontalAlignment.Right;
-            return alignment;
+            if (value == null)
+                return sendByMe ? HorizontalAlignment.Left : HorizontalAlignment.Right;
+            else
+                return sendByMe ? HorizontalAlignment.Right : HorizontalAlignment.Left;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -25,75 +25,82 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <DockPanel Height="50" Grid.Row="0">
-            <TextBlock TextAlignment="Center" DockPanel.Dock="Top" FontSize="18" 
-                       Name="ChatNameBlock" x:FieldModifier="public"
-                       Text="{Binding ElementName=chatComponent, 
-                    Path=Chat, Converter={StaticResource ChatNameConverter}}"/>
-            <WrapPanel HorizontalAlignment="Center">
-                <TextBlock>
+        <Border CornerRadius="10" Margin="0 4 0 0" Height="70">
+            <Border.Background>
+                <SolidColorBrush Opacity=".7" Color="{StaticResource DarkSecondary}"/>
+            </Border.Background>
+            <StackPanel Height="50" Grid.Row="0" VerticalAlignment="Center">
+                <TextBlock 
+                        TextAlignment="Center"
+                        Name="ChatNameBlock" x:FieldModifier="public"
+                        Text="{Binding ElementName=chatComponent, Path=Chat, Converter={StaticResource ChatNameConverter}}"
+                        Style="{StaticResource LightTextStyle}"
+                        Foreground="{StaticResource LightPrimaryBrush}"
+                        FontSize="{StaticResource FontSizeLarge}"
+                    Margin="0 0 0 8"
+                 />
+                <WrapPanel HorizontalAlignment="Center">
+                    <TextBlock>
                     <Hyperlink Name="MembersBlock" Click="MembersBlock_OnClick">
-                        <TextBlock DockPanel.Dock="Bottom" Name="MembersCountTextBlock" x:FieldModifier="public"
+                        <TextBlock  Name="MembersCountTextBlock" x:FieldModifier="public"
                                    Text="{Binding ElementName=chatComponent, Path=Chat.Members.Count,
                            Converter={StaticResource ChatMembersCountConverter}}" />
                     </Hyperlink>
                 </TextBlock>
-            </WrapPanel>
-        </DockPanel>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
 
         <ScrollViewer HorizontalScrollBarVisibility="Hidden"  Grid.Row="1" Name="MessageScrollViewer" ScrollChanged="MessageScrollViewer_OnScrollChanged">
             <ListView Background="Transparent" BorderThickness="0" Name="MessagesListView" ItemsSource="{Binding Source={StaticResource MessagesSource}}">
                 <interactivity:Interaction.Behaviors>
                     <local:IgnoreMouseWheelBehavior/>
                 </interactivity:Interaction.Behaviors>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Margin" Value="0 5 0 5" />
+                        <Setter Property="HorizontalAlignment" Value="{Binding Path=., Converter={StaticResource SendByMeAlignmentConverter}}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Border HorizontalAlignment="{Binding Path=., Converter={StaticResource SendByMeAlignmentConverter}}">
-
-
-                            <Grid Margin="25 0 25 0"
-                              HorizontalAlignment="{Binding Path=., Converter={StaticResource SendByMeAlignmentConverter}}">
-
+                        <Border>
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <!-- Chat Message Text Bubble -->
-                                <Grid Width="100" Grid.Row="1" HorizontalAlignment="{Binding Path=., Converter={StaticResource SendByMeAlignmentConverter}}">
+                                <Grid MaxWidth="400" Grid.Row="1" HorizontalAlignment="{Binding Path=., Converter={StaticResource SendByMeAlignmentConverter}}">
 
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-
-                                    <!-- Speech bubble rectangle -->
                                     <Border CornerRadius="10"
-                                            Padding="15" 
-                                            Background="{StaticResource AccentBlueBrush}"
-                                            >
-
-                                        <!-- Message text -->
+                                            Padding="15"
+                                    >
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                                <GradientStop Color="#027bbf" Offset="0.0" />
+                                                <GradientStop Color="#4150c1" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
                                         <TextBlock VerticalAlignment="Center"
-                                       TextWrapping="Wrap"
-                                       FontFamily="{StaticResource MontserratRegular}"
-                                       Foreground="{StaticResource LightPrimaryBrush}"
-                                       Text="{Binding Text}"
-                    />
-
+                                                   TextWrapping="Wrap"
+                                                   FontFamily="{StaticResource MontserratRegular}"
+                                                   Foreground="{StaticResource LightPrimaryBrush}"
+                                                   Text="{Binding Text}"
+                                        />
                                     </Border>
-
-                                    <!-- Chat bubble anchor -->
-                                    <Path Grid.Row="1" 
-                                  Stroke="Black"
-                                  Panel.ZIndex="1"
-                                  Margin="15 -1 15 0"
-                                  Data="M 0,0 L 10,10 L 20,0 L 0,0" 
-                                  StrokeThickness="0"
-                                    Fill="{StaticResource AccentBlueBrush}"
-                                />
-
                                 </Grid>
 
                             </Grid>
@@ -107,10 +114,18 @@
             <Grid.ColumnDefinitions>
             </Grid.ColumnDefinitions>
             <Border Name="b"  Width="{Binding ElementName=a,Path=ActualWidth}" />
-            <TextBox MaxHeight="200"  TextWrapping="Wrap" Padding="15 15 45 15" Grid.Column="0" Style="{StaticResource RegularTextBox}" Text="{Binding NextMessage.Text, UpdateSourceTrigger=PropertyChanged, ElementName=chatComponent}" />
+            <TextBox Tag="Write a message" MaxHeight="200"  TextWrapping="Wrap" Padding="15 15 45 15" Grid.Column="0" Style="{StaticResource RegularTextBox}" Text="{Binding NextMessage.Text, UpdateSourceTrigger=PropertyChanged, ElementName=chatComponent}" >
+                <TextBox.Background>
+                    <SolidColorBrush Color="{StaticResource DarkSecondary}" Opacity=".5"/>
+                </TextBox.Background>
+            </TextBox>
             <Button IsDefault="True" Style="{StaticResource ContolButtonContainer}" Width="25" Height="25" BorderThickness="0" Margin="0 0 10 0" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="1" Name="SendButton" Click="SendButton_OnClick">
                 <Button.Content>
-                    <Path Style="{StaticResource ContolButtonContent}" Width="25" Height="25" StrokeThickness="0" Data="M2,21L23,12L2,3V10L17,12L2,14V21Z" Fill="{StaticResource LightSecondaryBrush}"/>
+                    <Path Style="{StaticResource ContolButtonContent}" Width="25" Height="25" StrokeThickness="0" Data="M2,21L23,12L2,3V10L17,12L2,14V21Z">
+                        <Path.Fill>
+                            <SolidColorBrush Color="{StaticResource LightSecondary}" Opacity="0.5"/>
+                        </Path.Fill>
+                    </Path>
                 </Button.Content>
             </Button>
         </Grid>
