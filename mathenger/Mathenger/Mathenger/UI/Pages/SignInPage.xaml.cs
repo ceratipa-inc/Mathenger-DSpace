@@ -12,8 +12,8 @@ namespace Mathenger
     {
         public User User { get; } = new User();
         public event Action NavigationLinkOnClick;
-        private AuthenticationService _authenticationService = IoC.Get<AuthenticationService>();
-        private ApplicationProperties _applicationProperties = IoC.Get<ApplicationProperties>();
+        private readonly AuthenticationService _authenticationService = IoC.Get<AuthenticationService>();
+        private readonly ApplicationProperties _applicationProperties = IoC.Get<ApplicationProperties>();
 
         public SignInPage()
         {
@@ -31,7 +31,7 @@ namespace Mathenger
             _authenticationService.SignIn(User, token =>
             {
                 _applicationProperties.AuthToken = token;
-                Dispatcher.Invoke(() =>
+                Dispatcher?.Invoke(() =>
                 {
                     IoC.Get<MainWindow>().Show();
                     Window.GetWindow(this)?.Close();

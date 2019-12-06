@@ -39,13 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 e.printStackTrace();
                 SecurityContextHolder.clearContext();
-                response.sendError(401,"Could not set user" + " authentication in security context while "
+                response.sendError(400,"Could not set user" + " authentication in security context while "
                         + "checking authentication token! Try to log out " + "and log in again.");
                 return;
             }
         } else {
             SecurityContextHolder.clearContext();
-            response.sendError(401, "Authentication token not valid! " +
+            response.sendError(400, "Authentication token not valid! " +
                     "Try to sign out and sign in again.");
             return;
         }

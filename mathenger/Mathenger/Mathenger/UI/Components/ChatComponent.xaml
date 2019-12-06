@@ -117,7 +117,7 @@
             <Grid.ColumnDefinitions>
             </Grid.ColumnDefinitions>
             <Border Name="b"  Width="{Binding ElementName=a,Path=ActualWidth}" />
-            <TextBox Tag="Write a message" MaxHeight="200"  TextWrapping="Wrap" Padding="15 15 45 15" Grid.Column="0" Style="{StaticResource RegularTextBox}" Text="{Binding NextMessage.Text, UpdateSourceTrigger=PropertyChanged, ElementName=chatComponent}" >
+            <TextBox AcceptsReturn="True" Tag="Write a message" MaxHeight="200"  TextWrapping="Wrap" Padding="15 15 45 15" Grid.Column="0" Style="{StaticResource RegularTextBox}" Text="{Binding NextMessage.Text, UpdateSourceTrigger=PropertyChanged, ElementName=chatComponent}" >
                 <TextBox.Background>
                     <SolidColorBrush Color="{StaticResource DarkSecondary}" Opacity=".5"/>
                 </TextBox.Background>
