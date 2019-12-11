@@ -52,9 +52,12 @@ namespace Mathenger.services
         public void GetOlderMessages(Chat chat, Action<ObservableCollection<Message>> messagesConsumer)
         {
             var request = new RestRequest($"/chats/{chat.Id}", Method.GET);
-            var time = chat.Messages.Min(message => message.Time).ToString("O");
-            request.Parameters.Add(new Parameter("time", time, ParameterType.QueryString));
-            _requestSender.Send(request, messagesConsumer);
+            if (chat.Messages.Count != 0)
+            {
+                var time = chat.Messages.Min(message => message.Time).ToString("O");
+                request.Parameters.Add(new Parameter("time", time, ParameterType.QueryString));
+                _requestSender.Send(request, messagesConsumer);
+            }
         }
     }
 }

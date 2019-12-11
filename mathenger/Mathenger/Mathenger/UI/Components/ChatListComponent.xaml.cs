@@ -183,11 +183,25 @@ namespace Mathenger
             var splittedChatName = chatName.Split(' ');
             if (chat.ChatType.Equals(ChatType.PRIVATE_CHAT))
             {
-                return $"{splittedChatName[0][0]}{splittedChatName[1][0]}".ToUpper();
+                try
+                {
+                    return $"{splittedChatName[0][0]}{splittedChatName[1][0]}".ToUpper();
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    return $"{splittedChatName[0][0]}".ToUpper();
+                }
             }
             else if (chat.ChatType.Equals(ChatType.GROUP_CHAT))
             {
-                return $"{splittedChatName[0][0]}{splittedChatName[splittedChatName.Length - 1][0]}".ToUpper();
+                try
+                {
+                    return $"{splittedChatName[0][0]}{splittedChatName[splittedChatName.Length - 1][0]}".ToUpper();
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    return "";
+                }
             }
             return "";
         }
@@ -210,6 +224,7 @@ namespace Mathenger
             if (value == null) return null;
             var chat = value as Chat;
             Debug.Assert(chat != null, nameof(chat) + " != null");
+            if (chat.Messages.Count == 0) return "";
             var date = chat.Messages.Max(x => x.Time);
             var difference = DateTime.Now - date;
             if (difference.TotalDays < 1)

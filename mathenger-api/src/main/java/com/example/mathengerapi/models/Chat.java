@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public abstract class Chat {
     @JsonIgnore
     @Transient
-    public static final int PAGE_SIZE = 100;
+    public static final int PAGE_SIZE = 60;
 
     @Id
     @GeneratedValue
