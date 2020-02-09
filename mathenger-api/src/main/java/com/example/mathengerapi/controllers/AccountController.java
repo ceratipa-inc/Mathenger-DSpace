@@ -35,17 +35,17 @@ public class AccountController {
         return new ResponseEntity<>(accountService.findContactsExcept(searchString, user.getId()), HttpStatus.OK);
     }
 
-    @PostMapping("/me/edit")
+    @PutMapping("/me")
     public ResponseEntity<Account> editAccount(@AuthenticationPrincipal User user, @RequestBody Account account) {
         return new ResponseEntity<>(accountService.editAccount(user.getId(), account), HttpStatus.OK);
     }
 
-    @PostMapping("/me/contacts/new/{contact}")
+    @PostMapping("/me/contacts/{contact}")
     public ResponseEntity<Account> addNewContact(@AuthenticationPrincipal User user, @PathVariable Account contact) {
         return new ResponseEntity<>(accountService.addContact(user.getId(), contact), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/me/contacts/delete/{contact}")
+    @DeleteMapping("/me/contacts/{contact}")
     public ResponseEntity deleteContact(@AuthenticationPrincipal User user, @PathVariable Account contact) {
         accountService.deleteContact(user.getId(), contact);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

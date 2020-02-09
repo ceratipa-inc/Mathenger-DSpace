@@ -36,13 +36,13 @@ namespace Mathenger.services
 
         public void AddContact(long id, Action<Account> contactConsumer)
         {
-            var request = new RestRequest($"/account/me/contacts/new/{id}", Method.POST);
+            var request = new RestRequest($"/account/me/contacts/{id}", Method.POST);
             _sender.Send(request, contactConsumer);
         }
 
         public void DeleteContact(long id, Action onSuccess)
         {
-            var request = new RestRequest($"/account/me/contacts/delete/{id}", Method.DELETE);
+            var request = new RestRequest($"/account/me/contacts/{id}", Method.DELETE);
             _sender.Send(request, onSuccess);
         }
     }
