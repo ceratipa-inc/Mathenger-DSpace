@@ -1,0 +1,35 @@
+version: '3'
+services: 
+    mathenger-api:
+        build: 
+            context: mathenger-api
+            dockerfile: Dockerfile
+        ports: 
+            - "8080:8080"
+        restart: always
+        depends_on: 
+            - db
+        environment: 
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mathenger
+            SPRING_DATASOURCE_USERNAME: admin
+            SPRING_DATASOURCE_PASSWORD: securepassword
+        networks: 
+            - backend
+    db:
+        image: mysql:8.0.19
+        ports: 
+            - "3305:3306"
+        restart: always
+        environment: 
+            MYSQL_DATABASE: mathenger
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: securepassword
+            MYSQL_ROOT_PASSWORD: rootpassword
+        volumes: 
+            - db-data:/var/lib/mysql
+        networks: 
+            - backend
+volumes: 
+    db-data:
+networks: 
+    backend:

@@ -34,11 +34,20 @@ public class MathService {
         writer.flush();
         writer.close();
         var filename = texFile.getName().replace(".tex", "");
-        var process = Runtime.getRuntime()
+        boolean isWindows = System.getProperty("os.name")
+                .toLowerCase().startsWith("windows");
+        var process = isWindows ? Runtime.getRuntime()
                 .exec(String.format("%s -c \"cd %s && %s %s.tex && %s -density 500 %s.pdf -quality 90 %s.png\"",
                         bashPath, localDir.getAbsolutePath().replaceAll("\\\\", "/"),
-                        latexPath, filename, imageMagickPath , filename, filename));
-            if (!process.waitFor(5, TimeUnit.SECONDS)) {
+                        latexPath, filename, imageMagickPath, filename, filename))
+                : Runtime.getRuntime()
+                .exec(new String[]{
+                        bashPath, "-c",
+                        String.format("cd %s; %s %s.tex; %s -density 500 %s.pdf -quality 90 %s.png",
+                                localDir.getAbsolutePath(), latexPath, filename, imageMagickPath,
+                                filename, filename)
+                });
+        if (!process.waitFor(5, TimeUnit.SECONDS)) {
             process.getInputStream().close();
             process.getErrorStream().close();
             process.descendants().forEach(ProcessHandle::destroy);
