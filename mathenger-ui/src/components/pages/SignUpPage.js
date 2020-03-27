@@ -1,17 +1,17 @@
-import {SignInForm} from "../forms/SignInForm";
-import React from "react";
-import {connect} from "react-redux";
 import {authenticationActions} from "../../actions";
+import {connect} from "react-redux";
 import {Redirect} from "react-router";
+import React from "react";
+import {SignUpForm} from "../forms/SignUpForm";
 
-function SignInPage(props) {
+function SignUpPage(props) {
     return (
         <>
             {props.authentication.signedIn && <Redirect to="/"/>}
             <div className="absolute-center top-40">
-                <SignInForm
+                <SignUpForm
                     isLoading={props.authentication.signingIn}
-                    onSubmit={props.signIn}
+                    onSubmit={props.signUp}
                     errorMessage={props.authentication.errorMessage}
                 />
             </div>
@@ -27,10 +27,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        signIn: user => {
-            dispatch(authenticationActions.signIn(user));
+        signUp: values => {
+            dispatch(authenticationActions.signUp(values));
         }
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpPage);

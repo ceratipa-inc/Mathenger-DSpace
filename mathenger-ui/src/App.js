@@ -5,6 +5,7 @@ import {BrowserRouter, Redirect} from "react-router-dom";
 import {Route, Switch} from "react-router";
 import {connect} from "react-redux";
 import Template from "./components/Template";
+import SignUpPage from "./components/pages/SignUpPage";
 
 function App({authentication}) {
     return (
@@ -12,6 +13,7 @@ function App({authentication}) {
             <BrowserRouter>
                 <Switch>
                     <Route path="/signin" component={SignInPage}/>
+                    <Route path="/signup" component={SignUpPage}/>
                     <Route path="/">
                         {(authentication.signedIn && <Main/>) || <Redirect to="/signin"/>}
                     </Route>

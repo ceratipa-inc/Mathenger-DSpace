@@ -9,19 +9,11 @@ import clsx from "clsx";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChatIcon from '@material-ui/icons/Chat';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import {Route, Switch} from "react-router";
+import Menu from "./Menu";
 
 const drawerWidth = 240;
 
@@ -134,31 +126,7 @@ export default function Template() {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>
-                    <ListItem button key="Create Chat">
-                        <ListItemIcon><ChatIcon/></ListItemIcon>
-                        <ListItemText primary="Create Chat"/>
-                    </ListItem>
-                    <ListItem button key="Add Contact">
-                        <ListItemIcon><PeopleAltIcon/></ListItemIcon>
-                        <ListItemText primary="Add Contact"/>
-                    </ListItem>
-                    <ListItem button key="Contacts">
-                        <ListItemIcon><PermContactCalendarIcon/></ListItemIcon>
-                        <ListItemText primary="Contacts"/>
-                    </ListItem>
-                    <ListItem button key="Notifications">
-                        <ListItemIcon><NotificationsIcon/></ListItemIcon>
-                        <ListItemText primary="Notifications"/>
-                    </ListItem>
-                </List>
-                <Divider />
-                <List>
-                    <ListItem button key="Sign Out">
-                        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                        <ListItemText primary="Sign Out"/>
-                    </ListItem>
-                </List>
+                <Menu/>
             </Drawer>
             <main
                 className={clsx(classes.content, {

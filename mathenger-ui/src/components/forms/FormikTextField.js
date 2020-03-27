@@ -6,10 +6,11 @@ export function FormikTextField(props) {
     const [field, meta, helpers] = useField(props);
     return (
         <>
-            <TextField {...field} {...props}/>
-            {meta.touched && meta.error ? (
-                <div className='error'>{meta.error}</div>
-            ) : null}
+            <TextField
+                error={meta.error && meta.touched}
+                helperText={meta.error} {...field}
+                {...props}
+            />
         </>
     )
 }

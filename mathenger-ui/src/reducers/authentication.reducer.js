@@ -10,12 +10,14 @@ const initialState = {
 function authenticationReducer(state = initialState, action) {
     switch (action.type) {
         case authenticationConstants.SIGN_IN_PENDING:
+        case authenticationConstants.SIGN_UP_PENDING:
             return {
                 ...state,
                 signedIn: false,
                 signingIn: true
             };
         case authenticationConstants.SIGN_IN_FULFILLED:
+        case authenticationConstants.SIGN_UP_FULFILLED:
             return {
                 ...state,
                 signedIn: true,
@@ -23,6 +25,7 @@ function authenticationReducer(state = initialState, action) {
                 errorMessage: null
             };
         case authenticationConstants.SIGN_IN_REJECTED:
+        case authenticationConstants.SIGN_UP_REJECTED:
             return {
                 ...state,
                 signingIn: false,
@@ -30,6 +33,7 @@ function authenticationReducer(state = initialState, action) {
                 errorMessage: action.payload.data.message
             };
         case authenticationConstants.SIGN_OUT:
+            tokenStorage.removeToken();
             return {
                 ...state,
                 signedIn: false,

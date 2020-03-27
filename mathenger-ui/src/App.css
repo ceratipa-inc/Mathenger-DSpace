@@ -1,5 +1,9 @@
 .absolute-center {
   position: absolute;
+  top: 50vh;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.top-40 {
   top: 40vh;
-  left: 45%;
 }
