@@ -9,7 +9,7 @@ import Main from "./components/MainPage";
 
 function App({authentication}) {
     return (
-        <div className="App">
+        <div className="App" style={{height: '100%'}}>
             <BrowserRouter>
                 <Switch>
                     <Route path="/signin" component={SignInPage}/>
