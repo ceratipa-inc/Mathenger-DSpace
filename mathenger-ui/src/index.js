@@ -8,7 +8,7 @@ import {Provider} from "react-redux";
 import store from "./store";
 import interceptRequests from "./services/requestInterceptor";
 
-
+interceptRequests();
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
@@ -22,4 +22,4 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-interceptRequests();
+

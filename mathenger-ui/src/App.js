@@ -4,8 +4,8 @@ import SignInPage from "./components/pages/SignInPage";
 import {BrowserRouter, Redirect} from "react-router-dom";
 import {Route, Switch} from "react-router";
 import {connect} from "react-redux";
-import Template from "./components/Template";
 import SignUpPage from "./components/pages/SignUpPage";
+import Main from "./components/MainPage";
 
 function App({authentication}) {
     return (
@@ -20,19 +20,6 @@ function App({authentication}) {
                 </Switch>
             </BrowserRouter>
         </div>
-    );
-}
-
-function Main() {
-    return (
-        <>
-            <div>Menu</div>
-            <Template>
-                <Switch>
-                    <Route path="/"><h2>App</h2></Route>
-                </Switch>
-            </Template>
-        </>
     );
 }
 

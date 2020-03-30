@@ -14,8 +14,9 @@ import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
 import {Route, Switch} from "react-router";
 import Menu from "./Menu";
+import Avatar from "./Avatar";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -74,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Template() {
+export default function Template(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -89,7 +90,7 @@ export default function Template() {
 
     return (
         <div className={classes.root}>
-            <CssBaseline />
+            <CssBaseline/>
             <AppBar
                 position="fixed"
                 className={clsx(classes.appBar, {
@@ -104,7 +105,7 @@ export default function Template() {
                         edge="start"
                         className={clsx(classes.menuButton, open && classes.hide)}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         Mathenger
@@ -121,11 +122,19 @@ export default function Template() {
                 }}
             >
                 <div className={classes.drawerHeader}>
+                    {props.currentAccount &&
+                    <>
+                        <Avatar account={props.currentAccount} className="mr-2 ml-1"/>
+                        <h6 className="mr-auto mt-2">
+                            {props.currentAccount.firstName}&nbsp;{props.currentAccount.lastName}
+                        </h6>
+                    </>
+                    }
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                     </IconButton>
                 </div>
-                <Divider />
+                <Divider/>
                 <Menu/>
             </Drawer>
             <main
@@ -134,7 +143,7 @@ export default function Template() {
                 })}
             >
 
-                <div className={classes.drawerHeader} />
+                <div className={classes.drawerHeader}/>
                 <Switch>
                     <Route path="/"><h2>App</h2></Route>
                 </Switch>
