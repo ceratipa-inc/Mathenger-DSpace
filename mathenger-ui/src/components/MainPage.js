@@ -6,6 +6,7 @@ import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
 import {makeStyles} from "@material-ui/core/styles";
 import ChatHeader from "./chat/ChatHeader";
+import ChatsList from "./chat/ChatsList";
 
 const useStyles = makeStyles(theme => ({
     drawerHeader: {
@@ -39,7 +40,7 @@ function MainPage(props) {
                 >
                     <div className="full-height">
                         <div className={classes.drawerHeader}/>
-
+                        <ChatsList/>
                     </div>
                     <div className="full-height">
                         <div className="top-content">
