@@ -2,7 +2,8 @@ import {chatConstants} from "../constants";
 import {chatUtils} from "../utils";
 
 const initialState = {
-    chats: []
+    chats: [],
+    selectedChatId: null
 }
 
 function chatReducer(state = initialState, action) {
@@ -12,6 +13,11 @@ function chatReducer(state = initialState, action) {
             return {
                 ...state,
                 chats: action.payload
+            }
+        case chatConstants.SELECT_CHAT:
+            return {
+                ...state,
+                selectedChatId: action.id
             }
         default:
             return state;

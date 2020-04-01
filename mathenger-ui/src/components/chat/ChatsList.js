@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function ChatsList({chats, setMyChats}) {
+function ChatsList({chats, selectedChatId, setMyChats, selectChat}) {
     const classes = useStyles();
 
     useEffect(() => {
@@ -22,7 +22,12 @@ function ChatsList({chats, setMyChats}) {
     return (
         <List className={classes.root}>
             {chats && chats.map(chat => {
-                return <ChatsListItem key={chat.id} chat={chat} isSelected={false}/>;
+                return (
+                    <ChatsListItem
+                        key={chat.id} chat={chat}
+                        selected={chat.id === selectedChatId}
+                        onClick={() => selectChat(chat.id)}
+                    />);
             })}
         </List>
     );
@@ -30,13 +35,15 @@ function ChatsList({chats, setMyChats}) {
 
 const mapStateToProps = state => {
     return {
-        chats: state.chat.chats
+        chats: state.chat.chats,
+        selectedChatId: state.chat.selectedChatId
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        setMyChats: () => dispatch(chatActions.setMyChats())
+        setMyChats: () => dispatch(chatActions.setMyChats()),
+        selectChat: id => dispatch(chatActions.selectChat(id))
     }
 }
 

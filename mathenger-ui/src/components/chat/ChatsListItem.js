@@ -16,11 +16,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function ChatsListItem({currentAccount, chat, isSelected}) {
+function ChatsListItem({currentAccount, chat, ...props}) {
     const classes = useStyles();
     return (
         <>
-            <ListItem alignItems="flex-start" selected={isSelected} button>
+            <ListItem {...props} alignItems="flex-start" button>
                 <ListItemAvatar>
                     <ChatAvatar chat={chat} currentAccount={currentAccount}/>
                 </ListItemAvatar>
