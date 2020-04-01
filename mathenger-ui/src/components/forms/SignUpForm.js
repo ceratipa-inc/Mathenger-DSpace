@@ -2,7 +2,7 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import {Form, Formik} from "formik";
 import {FormikTextField} from "./FormikTextField";
-import {Alert} from "react-bootstrap";
+import Alert from '@material-ui/lab/Alert';
 import Button from "@material-ui/core/Button";
 import {CircularProgress} from "@material-ui/core";
 import {Link} from "react-router-dom";
@@ -96,7 +96,7 @@ export const SignUpForm = props => {
                             fullWidth
                         />
                         {props.errorMessage &&
-                        <Alert variant="danger">
+                        <Alert severity="error">
                             {props.errorMessage}
                         </Alert>}
                         <div className="d-flex flex-row mt-3">

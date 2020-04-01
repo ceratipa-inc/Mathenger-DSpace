@@ -5,7 +5,7 @@ import {Form, Formik} from "formik";
 import {CircularProgress} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
-import {Alert} from "react-bootstrap";
+import Alert from '@material-ui/lab/Alert';
 import * as Yup from "yup";
 
 export const SignInForm = props => {
@@ -50,7 +50,7 @@ export const SignInForm = props => {
                             fullWidth
                         />
                         {props.errorMessage &&
-                        <Alert variant="danger">
+                        <Alert severity="error">
                             {props.errorMessage}
                         </Alert>}
                         <div className="d-flex flex-row mt-3">
