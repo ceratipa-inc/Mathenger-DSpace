@@ -1,12 +1,13 @@
-import Template from "./Template";
+import Template from "../Template";
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import {accountActions} from "../actions";
+import {accountActions} from "../../actions";
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
 import {makeStyles} from "@material-ui/core/styles";
-import ChatHeader from "./chat/ChatHeader";
-import ChatsList from "./chat/ChatsList";
+import ChatHeader from "../chat/ChatHeader";
+import ChatsList from "../chat/ChatsList";
+import ChatBody from "../chat/ChatBody";
 
 const useStyles = makeStyles(theme => ({
     drawerHeader: {
@@ -42,11 +43,12 @@ function MainPage(props) {
                         <div className={classes.drawerHeader}/>
                         <ChatsList/>
                     </div>
-                    <div className="full-height">
+                    <div className="full-height d-flex flex-column">
                         <div className="top-content">
                             <ChatHeader/>
                         </div>
                         <div className={classes.drawerHeader}/>
+                        <ChatBody/>
                     </div>
                 </SplitterLayout>
             </Template>

@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
+import './Material.css';
 import SignInPage from "./components/pages/SignInPage";
 import {BrowserRouter, Redirect} from "react-router-dom";
 import {Route, Switch} from "react-router";
 import {connect} from "react-redux";
 import SignUpPage from "./components/pages/SignUpPage";
-import Main from "./components/MainPage";
+import Main from "./components/pages/MainPage";
 
 function App({authentication}) {
     return (
