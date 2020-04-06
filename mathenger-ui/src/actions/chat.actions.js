@@ -1,5 +1,6 @@
 import {chatConstants} from "../constants";
 import {chatService} from "../services";
+import {stompActions} from "./stomp.actions";
 
 export const chatActions = {
     setMyChats,
@@ -7,9 +8,17 @@ export const chatActions = {
 }
 
 function setMyChats() {
-    return {
-        type: chatConstants.SET_CHATS,
-        payload: chatService.getMyChats()
+    return dispatch => {
+        dispatch({
+            type: chatConstants.SET_CHATS,
+            payload: chatService.getMyChats()
+                .then(chats => {
+                    chats.forEach(chat => {
+                        dispatch(stompActions.subscribe(`/topic/chat/${chat.id}`));
+                    });
+                    return chats;
+                })
+        });
     }
 }
 

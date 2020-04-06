@@ -1,4 +1,4 @@
-import {chatConstants} from "../constants";
+import {chatConstants, messageConstants} from "../constants";
 import {chatUtils} from "../utils";
 
 const initialState = {
@@ -19,6 +19,13 @@ function chatReducer(state = initialState, action) {
                 ...state,
                 selectedChatId: action.id
             }
+        case messageConstants.NEW_MESSAGE:
+            let chat = state.chats.find(chat => chat.id === action.chatId);
+            chat.messages = [action.message, ...chat.messages];
+            return {
+                ...state,
+                chats: [chat, ...state.chats.filter(oldChat => oldChat.id !== chat.id)]
+            };
         default:
             return state;
     }

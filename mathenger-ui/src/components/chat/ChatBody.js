@@ -18,14 +18,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function ChatBody({chat, account}) {
+function ChatBody({chat, account, messages}) {
     const classes = useStyles();
-    const messages = chat?.messages.map((message, index) => {
+    const messagesList = messages?.map((message, index) => {
         return (
-            <>
+            <React.Fragment key={message.id}>
                 <Message currentAccount={account} message={message}/>
                 <MessageDate messages={chat.messages} index={index}/>
-            </>
+            </React.Fragment>
         );
     });
     return (
@@ -34,7 +34,7 @@ function ChatBody({chat, account}) {
             <div className="d-flex flex-grow-1 flex-shrink-1 flex-column justify-content-between mr-2">
                 <div className={`flex-grow-1 d-flex flex-column-reverse 
                 align-items-start justify-content-start mb-2 mt-2 ${classes.messages}`}>
-                    {messages}
+                    {messagesList}
                 </div>
                 <div className="d-flex justify-content-between ml-3 mr-3 mb-2">
                     <TextField
@@ -78,7 +78,8 @@ function isSameDay(date1, date2) {
 const mapStateToProps = state => {
     const selectedChatId = state.chat.selectedChatId;
     return {
-        chat: selectedChatId ? state.chat.chats.find(chat => chat.id === selectedChatId) : null,
+        chat: state.chat.chats.find(chat => chat.id === selectedChatId),
+        messages: state.chat.chats.find(chat => chat.id === selectedChatId)?.messages,
         account: state.account.currentAccount
     };
 };

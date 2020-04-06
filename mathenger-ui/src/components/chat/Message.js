@@ -28,11 +28,9 @@ export default function Message({currentAccount, message}) {
                     </Link>
                 </Typography>
                 <div>
-                    <Typography variant="body1" classNane="text-break">
+                    <Typography variant="body1" className="text-break">
                         {message.text}
-                        <Typography variant="caption" display="inline-block"
-                                    className="align-bottom ml-2 mr-1"
-                        >
+                        <Typography variant="caption" className="align-bottom ml-2 mr-1">
                             {format2Digits(time.getHours())}:{format2Digits(time.getMinutes())}
                         </Typography>
                     </Typography>

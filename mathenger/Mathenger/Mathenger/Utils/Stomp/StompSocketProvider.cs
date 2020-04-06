@@ -103,7 +103,7 @@ namespace Mathenger.utils.stomp
             var connect = new StompMessage(StompFrame.CONNECT);
             connect["accept-version"] = "1.2";
             connect["host"] = "";
-            connect.Headers.Add("Authorization", _properties.AuthToken);
+            // connect.Headers.Add("Authorization", _properties.AuthToken);
             _socket.Send(_serializer.Serialize(connect));
         }
     }

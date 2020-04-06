@@ -1,7 +1,7 @@
 import Template from "../Template";
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import {accountActions} from "../../actions";
+import {accountActions, stompActions} from "../../actions";
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
 import {makeStyles} from "@material-ui/core/styles";
@@ -24,7 +24,11 @@ function MainPage(props) {
     const classes = useStyles();
 
     useEffect(() => {
+        props.connectWebsocketClient();
         props.setCurrentAccount();
+        return () => {
+            props.disconnectWebsocketClient();
+        };
     }, []);
 
     return (
@@ -64,7 +68,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        setCurrentAccount: () => dispatch(accountActions.setCurrentAccount())
+        setCurrentAccount: () => dispatch(accountActions.setCurrentAccount()),
+        connectWebsocketClient: () => dispatch(stompActions.connect()),
+        disconnectWebsocketClient: () => dispatch(stompActions.disconnect())
     };
 };
 
