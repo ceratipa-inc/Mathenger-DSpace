@@ -7,7 +7,8 @@ import Link from "@material-ui/core/Link";
 const useStyles = makeStyles(theme => ({
     message: {
         maxWidth: '85%',
-        wordBreak: 'break-word'
+        wordBreak: 'break-word',
+        whiteSpace: 'pre'
     },
     myMessage: {
         backgroundColor: '#b3e5fc'

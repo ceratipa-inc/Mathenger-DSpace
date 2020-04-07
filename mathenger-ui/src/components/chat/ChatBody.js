@@ -1,17 +1,11 @@
 import {connect} from "react-redux";
 import React from "react";
-import TextField from "@material-ui/core/TextField";
 import {makeStyles} from "@material-ui/core/styles";
-import SendIcon from '@material-ui/icons/Send';
-import IconButton from "@material-ui/core/IconButton";
 import Message from "./Message";
 import Chip from "@material-ui/core/Chip";
+import MessageField from "./MessageField";
 
 const useStyles = makeStyles(theme => ({
-    sendButton: {
-        marginLeft: '-55px',
-        marginRight: '7px'
-    },
     messages: {
         height: '0px',
         overflowY: 'scroll'
@@ -36,20 +30,7 @@ function ChatBody({chat, account, messages}) {
                 align-items-start justify-content-start mb-2 mt-2 ${classes.messages}`}>
                     {messagesList}
                 </div>
-                <div className="d-flex justify-content-between ml-3 mr-3 mb-2">
-                    <TextField
-                        id="outlined-multiline-flexible"
-                        label="Write a message"
-                        multiline
-                        rowsMax="10"
-                        className="flex-grow-1"
-                        variant="outlined"
-                        inputProps={{className: classes.text}}
-                    />
-                    <IconButton className={`align-self-center ${classes.sendButton}`} aria-label="Send">
-                        <SendIcon/>
-                    </IconButton>
-                </div>
+                <MessageField/>
             </div>
             }
         </>
