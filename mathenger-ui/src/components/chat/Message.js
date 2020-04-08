@@ -3,23 +3,34 @@ import {Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import MathJax from 'react-mathjax2'
 
 const useStyles = makeStyles(theme => ({
     message: {
         maxWidth: '85%',
-        wordBreak: 'break-word',
-        whiteSpace: 'pre'
     },
     myMessage: {
         backgroundColor: '#b3e5fc'
+    },
+    mathExpr: {
+        fontSize: '30px',
+        overflowX: 'auto'
     }
 }));
+
+const tex = `f(x) = \\int_{-\\infty}^\\infty\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}\\,d\\xi = y(x) = \\int_{-\\infty}^\\infty\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}\\,d\\xi`
 
 export default function Message({currentAccount, message}) {
     const classes = useStyles();
     const isMyMessage = currentAccount.id === message.author.id;
     const classNamePart = isMyMessage ? `${classes.myMessage} align-self-end` : `align-self-start`;
     const time = new Date(message.time);
+    const text = message.text?.split("\n").map(line =>
+        <>
+            <span>{line}</span>
+            <br/>
+        </>
+    );
     return (
         <>
             <Paper elevation={3} className={`${classNamePart} ${classes.message} ml-3 mr-3 p-2 mb-2 rounded `}>
@@ -30,11 +41,16 @@ export default function Message({currentAccount, message}) {
                 </Typography>
                 <div>
                     <Typography variant="body1" className="text-break">
-                        {message.text}
+                        {text}
                         <Typography variant="caption" className="align-bottom ml-2 mr-1">
                             {format2Digits(time.getHours())}:{format2Digits(time.getMinutes())}
                         </Typography>
                     </Typography>
+                    <MathJax.Context input='tex'>
+                        <div className={classes.mathExpr}>
+                            <MathJax.Node>{tex}</MathJax.Node>
+                        </div>
+                    </MathJax.Context>
                 </div>
             </Paper>
         </>

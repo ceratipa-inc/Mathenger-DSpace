@@ -27,7 +27,9 @@ function MessageField({nextMessage = {}, selectedChatId, setNextMessage, sendMes
 
     function handleSubmit(event) {
         event.preventDefault();
-        sendMessage(nextMessage, selectedChatId);
+        if (nextMessage.text && nextMessage.text.trim() !== '') {
+            sendMessage(nextMessage, selectedChatId);
+        }
     }
 
     function handleTextFieldKeyDown(event) {
