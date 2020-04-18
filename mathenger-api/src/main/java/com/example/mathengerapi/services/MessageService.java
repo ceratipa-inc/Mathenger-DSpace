@@ -42,11 +42,15 @@ public class MessageService {
         message.setSender(sender);
         message.setTime(LocalDateTime.now());
         if (message.getMathFormula() != null && message.getMathFormula().getInputFormula() != null) {
-            message.getMathFormula().setLatex(
-                    mathCompilerService.toLatex(
-                            message.getMathFormula().getInputFormula()
-                    )
-            );
+            try {
+                message.getMathFormula().setLatex(
+                        mathCompilerService.toLatex(
+                                message.getMathFormula().getInputFormula()
+                        )
+                );
+            } catch (Exception e) {
+                message.getMathFormula().setLatex(message.getMathFormula().getInputFormula());
+            }
         }
         message = messageRepository.save(message);
         chat.getMessages().add(message);

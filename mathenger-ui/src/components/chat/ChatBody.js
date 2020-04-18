@@ -3,7 +3,7 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Message from "./Message";
 import Chip from "@material-ui/core/Chip";
-import MessageField from "./MessageField";
+import MessageField from "./input/MessageField";
 
 const useStyles = makeStyles(theme => ({
     messages: {

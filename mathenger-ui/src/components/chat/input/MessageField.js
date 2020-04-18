@@ -4,30 +4,40 @@ import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
 import React from "react";
 import {connect} from "react-redux";
-import {messageActions} from "../../actions";
+import {messageActions} from "../../../actions";
+import {MathInputPopover} from "./MathInputPopover";
 
 const useStyles = makeStyles(theme => ({
-    sendButton: {
-        marginLeft: '-55px',
+    buttonsPanel: {
+        marginLeft: '-95px',
         marginRight: '7px'
     },
     text: {
-        paddingRight: '55px'
+        paddingRight: '85px'
     }
 }));
 
 function MessageField({nextMessage = {}, selectedChatId, setNextMessage, sendMessage}) {
     const classes = useStyles();
     let sendButton;
+    let textField;
 
     function handleMessageTextChange(event) {
         nextMessage.text = event.target.value;
         setNextMessage(nextMessage, selectedChatId);
     }
 
+    function handleFormulaChange(event) {
+        nextMessage.mathFormula = {
+            formula: event.target.value
+        };
+        setNextMessage(nextMessage, selectedChatId);
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
-        if (nextMessage.text && nextMessage.text.trim() !== '') {
+        if (nextMessage.text && nextMessage.text.trim() !== ''
+            || nextMessage.mathFormula?.formula && nextMessage.mathFormula.formula.trim() !== '') {
             sendMessage(nextMessage, selectedChatId);
         }
     }
@@ -39,11 +49,18 @@ function MessageField({nextMessage = {}, selectedChatId, setNextMessage, sendMes
         }
     }
 
+    function handlePopoverClose() {
+        setTimeout(() => {
+            textField.focus()
+        }, 1);
+    }
+
     return (
         <form onSubmit={handleSubmit}>
-            <div className="d-flex justify-content-between ml-3 mr-3 mb-2">
+            <div className="d-flex position-relative justify-content-between ml-3 mr-3 mb-2">
                 <TextField
                     id="outlined-multiline-flexible"
+                    inputRef={field => textField = field}
                     label="Write a message"
                     multiline
                     rowsMax="10"
@@ -54,14 +71,22 @@ function MessageField({nextMessage = {}, selectedChatId, setNextMessage, sendMes
                     onChange={handleMessageTextChange}
                     onKeyDown={handleTextFieldKeyDown}
                 />
-                <IconButton
-                    type="submit"
-                    className={`align-self-center ${classes.sendButton}`}
-                    aria-label="Send"
-                    ref={b => sendButton = b}
+                <span
+                    className={`align-self-center ${classes.buttonsPanel}`}
                 >
-                    <SendIcon/>
-                </IconButton>
+                    <MathInputPopover
+                        value={nextMessage?.mathFormula?.formula || ""}
+                        onChange={handleFormulaChange}
+                        onClose={handlePopoverClose}
+                    />
+                    <IconButton
+                        type="submit"
+                        aria-label="Send"
+                        ref={b => sendButton = b}
+                    >
+                        <SendIcon/>
+                    </IconButton>
+                </span>
             </div>
         </form>
     );
