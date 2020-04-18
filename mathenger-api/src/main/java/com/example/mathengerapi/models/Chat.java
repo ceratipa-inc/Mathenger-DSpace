@@ -1,6 +1,7 @@
 package com.example.mathengerapi.models;
 
 import com.example.mathengerapi.models.enums.ChatType;
+import com.example.mathengerapi.models.message.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

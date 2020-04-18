@@ -13,22 +13,22 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#b3e5fc'
     },
     mathExpr: {
-        fontSize: '30px',
+        fontSize: '18px',
         overflowX: 'auto'
     }
 }));
 
-const tex = `f(x) = \\int_{-\\infty}^\\infty\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}\\,d\\xi = y(x) = \\int_{-\\infty}^\\infty\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}\\,d\\xi`
 
 export default function Message({currentAccount, message}) {
     const classes = useStyles();
     const isMyMessage = currentAccount.id === message.author.id;
     const classNamePart = isMyMessage ? `${classes.myMessage} align-self-end` : `align-self-start`;
     const time = new Date(message.time);
-    const text = message.text?.split("\n").map(line =>
+    const lines = message.text?.split("\n");
+    const text = lines?.map((line, index) =>
         <>
             <span>{line}</span>
-            <br/>
+            {index !== lines.length - 1 && <br/>}
         </>
     );
     return (
@@ -46,11 +46,13 @@ export default function Message({currentAccount, message}) {
                             {format2Digits(time.getHours())}:{format2Digits(time.getMinutes())}
                         </Typography>
                     </Typography>
+                    {message.mathFormula &&
                     <MathJax.Context input='tex'>
                         <div className={classes.mathExpr}>
-                            <MathJax.Node>{tex}</MathJax.Node>
+                            <MathJax.Node>{message.mathFormula.latex}</MathJax.Node>
                         </div>
                     </MathJax.Context>
+                    }
                 </div>
             </Paper>
         </>

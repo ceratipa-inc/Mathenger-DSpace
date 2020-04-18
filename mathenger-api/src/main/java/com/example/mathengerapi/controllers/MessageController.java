@@ -1,8 +1,8 @@
 package com.example.mathengerapi.controllers;
 
 import com.example.mathengerapi.models.Chat;
-import com.example.mathengerapi.models.Message;
 import com.example.mathengerapi.models.User;
+import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.services.AuthenticationService;
 import com.example.mathengerapi.services.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,7 +1,11 @@
 package com.example.mathengerapi.services;
 
-import com.example.mathengerapi.models.*;
+import com.example.mathengerapi.models.Account;
+import com.example.mathengerapi.models.Chat;
+import com.example.mathengerapi.models.GroupChat;
+import com.example.mathengerapi.models.PrivateChat;
 import com.example.mathengerapi.models.enums.ChatType;
+import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.ChatRepository;
 import com.example.mathengerapi.repositories.GroupChatRepository;
@@ -94,7 +98,8 @@ public class ChatService {
             accountRepository.save(creator);
         }
         var creationMessage = new Message(0L, creator, creator, LocalDateTime.now(),
-                creator.getFirstName() + " " + creator.getLastName() + " started chat " + chat.getName());
+                creator.getFirstName() + " " + creator.getLastName() + " started chat " + chat.getName(),
+                null);
         messageService.sendMessage(creator.getId(), creationMessage, chat.getId());
         return chat;
     }
@@ -148,7 +153,7 @@ public class ChatService {
                     : String.format("%s %s added %s %s to the chat",
                     account.getFirstName(), account.getLastName(), newMembers.get(0).getFirstName(),
                     newMembers.get(0).getLastName());
-            var message = new Message(0L, account, account, LocalDateTime.now(), messageText);
+            var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null);
             messageService.sendMessage(userId, message, updatedChat.getId());
             notificationService.notifyChatUpdate(updatedChat, account);
         }
@@ -171,7 +176,7 @@ public class ChatService {
         var messageText = String.format("%s %s removed %s %s from the chat",
                 account.getFirstName(), account.getLastName(),
                 member.getFirstName(), member.getLastName());
-        var message = new Message(0L, account, account, LocalDateTime.now(), messageText);
+        var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null);
         messageService.sendMessage(userId, message, updatedChat.getId());
         notificationService.notifyChatUpdate(updatedChat, account);
         return updatedChat;
@@ -194,7 +199,7 @@ public class ChatService {
         if (!chat.getMembers().contains(account))
             throw new IllegalArgumentException("You are not member of the chat");
         var leaveMessage = new Message(0L, account, account, LocalDateTime.now(),
-                account.getFirstName() + " " + account.getLastName() + " has left the chat!");
+                account.getFirstName() + " " + account.getLastName() + " has left the chat!", null);
         messageService.sendMessage(userId, leaveMessage, chat.getId());
         chat.getMembers().remove(account);
         account.getChats().remove(chat);

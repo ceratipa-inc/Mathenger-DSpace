@@ -2,10 +2,11 @@ package com.example.mathengerapi.services;
 
 import com.example.mathengerapi.models.Account;
 import com.example.mathengerapi.models.Chat;
-import com.example.mathengerapi.models.Message;
+import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.ChatRepository;
 import com.example.mathengerapi.repositories.MessageRepository;
+import com.example.mathengerapi.services.mathCompiler.MathCompilerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class MessageService {
     private SimpMessagingTemplate messagingTemplate;
     private ObjectMapper objectMapper;
     private NotificationService notificationService;
+    private MathCompilerService mathCompilerService;
 
     @Transactional
     public void sendMessage(Long userId, Message message, Long chatId) throws JsonProcessingException {
@@ -39,6 +41,13 @@ public class MessageService {
         message.setAuthor(sender);
         message.setSender(sender);
         message.setTime(LocalDateTime.now());
+        if (message.getMathFormula() != null && message.getMathFormula().getInputFormula() != null) {
+            message.getMathFormula().setLatex(
+                    mathCompilerService.toLatex(
+                            message.getMathFormula().getInputFormula()
+                    )
+            );
+        }
         message = messageRepository.save(message);
         chat.getMessages().add(message);
         chatRepository.save(chat);

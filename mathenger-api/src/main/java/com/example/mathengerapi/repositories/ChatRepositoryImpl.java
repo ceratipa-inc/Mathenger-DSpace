@@ -1,6 +1,6 @@
 package com.example.mathengerapi.repositories;
 
-import com.example.mathengerapi.models.Message;
+import com.example.mathengerapi.models.message.Message;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
