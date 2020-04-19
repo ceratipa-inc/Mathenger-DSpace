@@ -17,21 +17,21 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function MessageField({nextMessage = {}, selectedChatId, setNextMessage, sendMessage}) {
+function MessageField({
+                          nextMessage = {}, selectedChatId, sendMessage,
+                          setNextMessageText, setNextMessageFormula
+                      }) {
     const classes = useStyles();
     let sendButton;
     let textField;
 
     function handleMessageTextChange(event) {
-        nextMessage.text = event.target.value;
-        setNextMessage(nextMessage, selectedChatId);
+        setNextMessageText(event.target.value, selectedChatId);
     }
 
     function handleFormulaChange(event) {
-        nextMessage.mathFormula = {
-            formula: event.target.value
-        };
-        setNextMessage(nextMessage, selectedChatId);
+        const formula = event.target.value;
+        setNextMessageFormula(formula, selectedChatId);
     }
 
     function handleSubmit(event) {
@@ -78,6 +78,9 @@ function MessageField({nextMessage = {}, selectedChatId, setNextMessage, sendMes
                         value={nextMessage?.mathFormula?.formula || ""}
                         onChange={handleFormulaChange}
                         onClose={handlePopoverClose}
+                        error={!!nextMessage?.mathFormula?.error}
+                        helperText={nextMessage?.mathFormula?.error}
+                        nextMessage={nextMessage}
                     />
                     <IconButton
                         type="submit"
@@ -103,7 +106,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        setNextMessage: (message, chatId) => dispatch(messageActions.setNextMessage(message, chatId)),
+        setNextMessageText: (text, chatId) => dispatch(messageActions.setNextMessageText(text, chatId)),
+        setNextMessageFormula: (formula, chatId) =>
+            dispatch(messageActions.setNextMessageFormula(formula, chatId)),
         sendMessage: (message, chatId) => dispatch(messageActions.sendMessage(message, chatId))
     };
 }
