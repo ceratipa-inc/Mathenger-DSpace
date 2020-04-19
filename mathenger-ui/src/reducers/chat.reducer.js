@@ -26,6 +26,27 @@ function chatReducer(state = initialState, action) {
                 ...state,
                 chats: [chat, ...state.chats.filter(oldChat => oldChat.id !== chat.id)]
             };
+        case chatConstants.ADD_CHAT:
+            return {
+                ...state,
+                chats: [action.chat, ...state.chats]
+            };
+        case chatConstants.REMOVE_CHAT:
+            return {
+                ...state,
+                chats: state.chats.filter(chat => chat.id !== action.chatId)
+            }
+        case chatConstants.UPDATE_CHAT:
+            return {
+                ...state,
+                chats: state.chats.map(chat => {
+                    if (chat.id === action.chat.id) {
+                        action.chat.messages = chat.messages;
+                        return action.chat;
+                    }
+                    return chat;
+                })
+            }
         default:
             return state;
     }

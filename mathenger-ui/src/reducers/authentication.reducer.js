@@ -30,7 +30,7 @@ function authenticationReducer(state = initialState, action) {
                 ...state,
                 signingIn: false,
                 signedIn: false,
-                errorMessage: action.payload.data.message
+                errorMessage: action.payload?.data?.message
             };
         case authenticationConstants.SIGN_OUT:
             tokenStorage.removeToken();

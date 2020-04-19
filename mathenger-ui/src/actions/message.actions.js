@@ -49,7 +49,7 @@ function setNextMessageFormula(formula, chatId) {
                 mathService.transformToLatex(formula)
                     .then(latex => {
                         if (getCurrentFormula(getState, chatId) === formula) {
-                            dispatch(setLatexPreview(latex, chatId))
+                            dispatch(setLatexPreview(latex.toString(), chatId))
                         }
                     }, error => {
                         dispatch(setNextMessageFormulaError(error.data?.message, chatId));

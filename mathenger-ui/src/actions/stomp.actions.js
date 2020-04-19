@@ -1,5 +1,6 @@
-import {stompConstants} from "../constants";
+import {notificationTypes, stompConstants} from "../constants";
 import {messageActions} from "./message.actions";
+import {chatActions} from "./chat.actions";
 
 export const stompActions = {
     connect,
@@ -23,10 +24,31 @@ function disconnect() {
 }
 
 function receiveMessage(message, topic) {
-    return dispatch => {
+    return (dispatch, getState) => {
+        const userId = getState().account?.currentAccount?.id;
         if (topic.includes("/chat/")) {
             const [chatId] = topic.split("/").slice(-1);
             dispatch(messageActions.addMessage(JSON.parse(message), parseInt(chatId)));
+        }
+        if (topic === `/topic/user/${userId}/notifications`) {
+            const notification = JSON.parse(message);
+            let chat;
+            switch (notification.type) {
+                case notificationTypes.NEW_CHAT:
+                    chat = JSON.parse(notification.text);
+                    dispatch(chatActions.addChat(chat));
+                    break;
+                case notificationTypes.CHAT_UNSUBSCRIBE:
+                    const chatId = parseInt(notification.text);
+                    dispatch(chatActions.removeChat(chatId));
+                    break;
+                case notificationTypes.CHAT_UPDATE:
+                    chat = JSON.parse(notification.text);
+                    dispatch(chatActions.updateChat(chat));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

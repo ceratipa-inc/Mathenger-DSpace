@@ -28,6 +28,11 @@ const stompMiddleware = store => {
 
         client.onConnect = frame => {
             console.log(frame);
+            Object.keys(topicSubscriptions).forEach(topic => {
+               topicSubscriptions[topic] = client.subscribe(topic, message => {
+                   store.dispatch(stompActions.receiveMessage(message.body, topic));
+               });
+            });
         };
 
         client.onStompError = frame => {
@@ -57,10 +62,13 @@ const stompMiddleware = store => {
                 return;
             case stompConstants.SUBSCRIBE:
                 unsubscribe(topicSubscriptions, action);
-                let subscription = client?.subscribe(action.topic, message => {
-                    store.dispatch(stompActions.receiveMessage(message.body, action.topic));
-                });
-                topicSubscriptions[action.topic] = subscription;
+                if (client.connected) {
+                    topicSubscriptions[action.topic] = client?.subscribe(action.topic, message => {
+                        store.dispatch(stompActions.receiveMessage(message.body, action.topic));
+                    });
+                } else {
+                    topicSubscriptions[action.topic] = null;
+                }
                 return;
             case stompConstants.UNSUBSCRIBE:
                 unsubscribe(topicSubscriptions, action);

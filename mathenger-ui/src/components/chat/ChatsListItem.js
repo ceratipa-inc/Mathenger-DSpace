@@ -55,7 +55,7 @@ function getLastMessageAuthorString(chat, currentAccount) {
         return null;
     }
     const message = chatUtils.getLastMessage(chat);
-    return message.author.id === currentAccount.id ? 'You'
+    return message.author.id === currentAccount?.id ? 'You'
         : `${message.author.firstName} ${message.author.lastName}`;
 }
 

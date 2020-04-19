@@ -4,7 +4,10 @@ import {stompActions} from "./stomp.actions";
 
 export const chatActions = {
     setMyChats,
-    selectChat
+    selectChat,
+    addChat,
+    removeChat,
+    updateChat
 }
 
 function setMyChats() {
@@ -19,6 +22,33 @@ function setMyChats() {
                     return chats;
                 })
         });
+    }
+}
+
+function addChat(chat) {
+    return dispatch => {
+        dispatch({
+            type: chatConstants.ADD_CHAT,
+            chat
+        });
+        dispatch(stompActions.subscribe(`/topic/chat/${chat.id}`));
+    }
+}
+
+function removeChat(chatId) {
+    return dispatch => {
+        dispatch({
+            type: chatConstants.REMOVE_CHAT,
+            chatId
+        });
+        dispatch(stompActions.unsubscribe(`/topic/chat/${chatId}`));
+    }
+}
+
+function updateChat(chat) {
+    return {
+        type: chatConstants.UPDATE_CHAT,
+        chat
     }
 }
 

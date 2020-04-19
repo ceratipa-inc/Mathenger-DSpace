@@ -12,7 +12,7 @@ function getName(chat, currentAccount) {
     if (chat.chatType === chatConstants.types.GROUP_CHAT) {
         return chat.name;
     }
-    const contact = chat.members.find(account => account.id !== currentAccount.id);
+    const contact = chat.members.find(account => account.id !== currentAccount?.id);
     return `${contact.firstName} ${contact.lastName}`;
 }
 
@@ -20,7 +20,7 @@ function getColor(chat, currentAccount) {
     if (chat.chatType === chatConstants.types.GROUP_CHAT) {
         return chat.color;
     }
-    const contact = chat.members.find(account => account.id !== currentAccount.id);
+    const contact = chat.members.find(account => account.id !== currentAccount?.id);
     return contact.color;
 }
 

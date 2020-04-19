@@ -26,10 +26,10 @@ export default function Message({currentAccount, message}) {
     const time = new Date(message.time);
     const lines = message.text?.split("\n");
     const text = lines?.map((line, index) =>
-        <>
+        <React.Fragment key={index}>
             <span>{line}</span>
             {index !== lines.length - 1 && <br/>}
-        </>
+        </React.Fragment>
     );
     return (
         <>
