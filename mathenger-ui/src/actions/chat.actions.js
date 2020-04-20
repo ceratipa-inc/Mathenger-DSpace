@@ -7,7 +7,8 @@ export const chatActions = {
     selectChat,
     addChat,
     removeChat,
-    updateChat
+    updateChat,
+    addAndSelectIfNotExists
 }
 
 function setMyChats() {
@@ -56,5 +57,12 @@ function selectChat(id) {
     return {
         type: chatConstants.SELECT_CHAT,
         id
+    }
+}
+
+function addAndSelectIfNotExists(chat) {
+    return {
+        type: chatConstants.ADD_AND_SELECT_IF_NOT_EXISTS,
+        chat
     }
 }

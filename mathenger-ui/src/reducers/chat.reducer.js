@@ -13,12 +13,12 @@ function chatReducer(state = initialState, action) {
             return {
                 ...state,
                 chats: action.payload
-            }
+            };
         case chatConstants.SELECT_CHAT:
             return {
                 ...state,
                 selectedChatId: action.id
-            }
+            };
         case messageConstants.NEW_MESSAGE:
             let chat = state.chats.find(chat => chat.id === action.chatId);
             chat.messages = [action.message, ...chat.messages];
@@ -35,7 +35,7 @@ function chatReducer(state = initialState, action) {
             return {
                 ...state,
                 chats: state.chats.filter(chat => chat.id !== action.chatId)
-            }
+            };
         case chatConstants.UPDATE_CHAT:
             return {
                 ...state,
@@ -46,6 +46,13 @@ function chatReducer(state = initialState, action) {
                     }
                     return chat;
                 })
+            };
+        case chatConstants.ADD_AND_SELECT_IF_NOT_EXISTS:
+            return {
+                ...state,
+                selectedChatId: action.chat.id,
+                chats: state.chats.filter(chat => chat.id === action.chat.id).length > 0 ?
+                    state.chats : chatUtils.insertSorted(action.chat, state.chats)
             }
         default:
             return state;

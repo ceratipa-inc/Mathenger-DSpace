@@ -5,7 +5,8 @@ export const chatUtils = {
     getColor,
     getInitials,
     getLastMessage,
-    sortByLastMessageDate
+    sortByLastMessageDate,
+    insertSorted
 }
 
 function getName(chat, currentAccount) {
@@ -42,7 +43,24 @@ function getLastMessage(chat) {
 }
 
 function sortByLastMessageDate(chats) {
-    chats.sort((first, second) => {
-        return new Date(getLastMessage(second).time).getTime() - new Date(getLastMessage(first).time).getTime();
-    });
+    chats.sort(lastMessageTimeComparator);
+}
+
+function insertSorted(chat, chats) {
+    chats = [chat, ...chats];
+    let i = 0;
+    while (i < chats.length - 1 && lastMessageTimeComparator(chat, chats[i + 1]) > 0) {
+        chats[i] = chats[i + 1];
+        i++;
+    }
+    chats[i] = chat;
+    return chats;
+}
+
+function lastMessageTimeComparator(first, second) {
+    const firstLastMessage = getLastMessage(first);
+    const secondLastMessage = getLastMessage(second);
+    if (firstLastMessage === null) return -1;
+    if (secondLastMessage === null) return 1;
+    return new Date(secondLastMessage.time).getTime() - new Date(firstLastMessage.time).getTime();
 }

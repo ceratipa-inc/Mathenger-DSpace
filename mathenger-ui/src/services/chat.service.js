@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export const chatService = {
-    getMyChats
+    getMyChats,
+    startPrivateChat
 }
 
 function getMyChats() {
@@ -12,4 +13,9 @@ function getMyChats() {
             let groupChats = data.groupChats;
             return privateChats.concat(groupChats);
         });
+}
+
+function startPrivateChat(contactId) {
+    return axios.post(`/chats/contacts/${contactId}`)
+        .then(response => response.data);
 }

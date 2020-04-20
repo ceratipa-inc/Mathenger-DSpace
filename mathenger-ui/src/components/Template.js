@@ -12,7 +12,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
-import Menu from "./Menu";
+import Menu from "./menu/Menu";
 import Avatar from "./Avatar";
 
 const drawerWidth = 280;
@@ -136,7 +136,7 @@ export default function Template(props) {
                     </IconButton>
                 </div>
                 <Divider/>
-                <Menu/>
+                <Menu onClose={handleDrawerClose}/>
             </Drawer>
             <main
                 className={clsx(classes.content, {
