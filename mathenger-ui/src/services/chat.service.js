@@ -2,7 +2,9 @@ import axios from 'axios';
 
 export const chatService = {
     getMyChats,
-    startPrivateChat
+    startPrivateChat,
+    deleteChat,
+    leaveGroupChat
 }
 
 function getMyChats() {
@@ -18,4 +20,12 @@ function getMyChats() {
 function startPrivateChat(contactId) {
     return axios.post(`/chats/contacts/${contactId}`)
         .then(response => response.data);
+}
+
+function deleteChat(id) {
+    return axios.delete(`/chats/${id}`);
+}
+
+function leaveGroupChat(id) {
+    return axios.put(`/chats/${id}/leave`);
 }

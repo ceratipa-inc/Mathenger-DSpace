@@ -3,12 +3,19 @@ import {makeStyles} from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
-import React from "react";
+import React, {useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import {chatUtils} from "../../utils";
 import ChatAvatar from "./ChatAvatar";
 import Truncate from 'react-truncate';
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import {Fade} from "@material-ui/core";
+import {chatConstants} from "../../constants";
+import {chatActions} from "../../actions";
+import {chatService} from "../../services";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
     inline: {
@@ -16,11 +23,53 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function ChatsListItem({currentAccount, chat, ...props}) {
+function ChatsListItem({currentAccount, chat, removeChat, ...props}) {
     const classes = useStyles();
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const contextMenuOpen = Boolean(anchorEl);
+
+    const handleContextMenuOpen = event => {
+        event.preventDefault();
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleContextMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleDeleteMenuItem = () => {
+        setLoading(true);
+        chatService.deleteChat(chat.id)
+            .then(() => {
+               removeChat(chat.id);
+            }, error => {
+                setLoading(false);
+            });
+        handleContextMenuClose();
+    };
+
+    const handleLeaveMenuItem = () => {
+        setLoading(true);
+        chatService.leaveGroupChat(chat.id)
+            .then(() => {
+                removeChat(chat.id);
+            }, error => {
+                setLoading(false);
+            });
+        handleContextMenuClose();
+    };
+
     return (
         <>
-            <ListItem {...props} alignItems="flex-start" button>
+            <ListItem
+                alignItems="flex-start"
+                button
+                onContextMenu={handleContextMenuOpen}
+                aria-controls="fade-menu" aria-haspopup="true"
+                {...props}
+            >
                 <ListItemAvatar>
                     <ChatAvatar chat={chat} currentAccount={currentAccount}/>
                 </ListItemAvatar>
@@ -44,7 +93,31 @@ function ChatsListItem({currentAccount, chat, ...props}) {
                         </React.Fragment>
                     }
                 />
+                {loading &&
+                <CircularProgress size={14}/>
+                }
             </ListItem>
+            <Menu
+                id="fade-menu"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                open={contextMenuOpen}
+                onClose={handleContextMenuClose}
+                TransitionComponent={Fade}
+            >
+                <MenuItem onClick={handleDeleteMenuItem}>Delete chat</MenuItem>
+                {chat.chatType === chatConstants.types.GROUP_CHAT &&
+                <MenuItem onClick={handleLeaveMenuItem}>Leave group</MenuItem>
+                }
+            </Menu>
             <Divider variant="inset" component="li"/>
         </>
     );
@@ -62,7 +135,13 @@ function getLastMessageAuthorString(chat, currentAccount) {
 const mapStateToProps = state => {
     return {
         currentAccount: state.account.currentAccount
-    }
+    };
 };
 
-export default connect(mapStateToProps)(ChatsListItem);
+const mapDispatchToProps = dispatch => {
+    return {
+        removeChat: id => dispatch(chatActions.removeChat(id))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatsListItem);
