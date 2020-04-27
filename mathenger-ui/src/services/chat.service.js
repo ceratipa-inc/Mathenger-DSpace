@@ -4,7 +4,8 @@ export const chatService = {
     getMyChats,
     startPrivateChat,
     deleteChat,
-    leaveGroupChat
+    leaveGroupChat,
+    createGroupChat
 }
 
 function getMyChats() {
@@ -28,4 +29,9 @@ function deleteChat(id) {
 
 function leaveGroupChat(id) {
     return axios.put(`/chats/${id}/leave`);
+}
+
+function createGroupChat(chat) {
+    return axios.post('/chats', chat)
+        .then(response => response.data);
 }

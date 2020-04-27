@@ -88,7 +88,7 @@ public class ChatService {
             throw new IllegalArgumentException("Only contacts can be added to chat");
         members.add(creator);
         chat.setMembers(new HashSet<>(members));
-        chat.setAdmins(Collections.singletonList(creator));
+        chat.setAdmins(new ArrayList<>(Collections.singletonList(creator)));
         chat.setColor(colorProvider.getRandomColor());
         chat.setCreator(creator);
         chat.setMessages(new LinkedList<>());

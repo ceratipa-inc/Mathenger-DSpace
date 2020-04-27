@@ -18,6 +18,10 @@ export const useStyles = makeStyles((theme) => ({
         minWidth: '50vw',
         minHeight: '300px',
     },
+    paperBackground: {
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+    },
     root: {
         width: '100%',
         overflowY: "auto",
