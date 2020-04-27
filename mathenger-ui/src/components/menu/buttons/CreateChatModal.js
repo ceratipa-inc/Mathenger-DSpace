@@ -40,7 +40,9 @@ function CreateChatModal({onOpen, addChat}) {
     const [members, setMembers] = useState([]);
     const [name, setName] = useState('');
     const [submitting, setSubmitting] = useState(false);
+    const [attemptedSubmit, setAttemptedSubmit] = useState(false);
     const loading = open && contacts.length === 0;
+    const error = attemptedSubmit && name.trim() === '';
 
     React.useEffect(() => {
         let active = true;
@@ -66,16 +68,24 @@ function CreateChatModal({onOpen, addChat}) {
             setName('');
             setContacts([]);
             setMembers([]);
+            setAttemptedSubmit(false);
         }
     }, [open]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (name.trim() === '') {
+            setAttemptedSubmit(true);
+            return;
+        }
         setSubmitting(true);
-        const chat = await chatService.createGroupChat({name, members});
-        addChat(chat);
-        setSubmitting(false);
-        handleClose();
+        try {
+            const chat = await chatService.createGroupChat({name, members});
+            addChat(chat);
+            handleClose();
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const handleOpen = () => {
@@ -128,6 +138,8 @@ function CreateChatModal({onOpen, addChat}) {
                                         placeholder="Name"
                                         fullWidth
                                         className="mb-2"
+                                        error={error}
+                                        helperText={error && "Name can't be empty"}
                                         value={name}
                                         onChange={e => setName(e.target.value)}
                                     />
