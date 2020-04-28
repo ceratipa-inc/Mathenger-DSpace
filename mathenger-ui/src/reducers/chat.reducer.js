@@ -3,7 +3,8 @@ import {chatUtils} from "../utils";
 
 const initialState = {
     chats: [],
-    selectedChatId: null
+    selectedChatId: null,
+    loading: true
 }
 
 function chatReducer(state = initialState, action) {
@@ -12,7 +13,8 @@ function chatReducer(state = initialState, action) {
             chatUtils.sortByLastMessageDate(action.payload);
             return {
                 ...state,
-                chats: action.payload
+                chats: action.payload,
+                loading: false
             };
         case chatConstants.SELECT_CHAT:
             return {

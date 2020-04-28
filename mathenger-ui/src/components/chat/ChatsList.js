@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import {chatActions} from "../../actions";
 import {connect} from "react-redux";
 import ChatsListItem from "./ChatsListItem";
+import {LinearProgress} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function ChatsList({chats, selectedChatId, setMyChats, selectChat}) {
+function ChatsList({chats, selectedChatId, loading, setMyChats, selectChat}) {
     const classes = useStyles();
 
     useEffect(() => {
@@ -20,23 +21,27 @@ function ChatsList({chats, selectedChatId, setMyChats, selectChat}) {
     }, []);
 
     return (
-        <List className={classes.root}>
-            {chats && chats.map(chat => {
-                return (
-                    <ChatsListItem
-                        key={chat.id} chat={chat}
-                        selected={chat.id === selectedChatId}
-                        onClick={() => selectChat(chat.id)}
-                    />);
-            })}
-        </List>
+        <>
+            {loading && <LinearProgress/>}
+            <List className={classes.root}>
+                {chats && chats.map(chat => {
+                    return (
+                        <ChatsListItem
+                            key={chat.id} chat={chat}
+                            selected={chat.id === selectedChatId}
+                            onClick={() => selectChat(chat.id)}
+                        />);
+                })}
+            </List>
+        </>
     );
 }
 
 const mapStateToProps = state => {
     return {
         chats: state.chat.chats,
-        selectedChatId: state.chat.selectedChatId
+        selectedChatId: state.chat.selectedChatId,
+        loading: state.chat.loading
     }
 };
 
