@@ -22,7 +22,7 @@ function messageReducer(state = initialState, action) {
                 chatsNextMessages: {
                     ...state.chatsNextMessages,
                     [action.chatId]: {
-                        ...state.chatsNextMessages[action.id],
+                        ...state.chatsNextMessages[action.chatId],
                         text: action.text
                     }
                 }
