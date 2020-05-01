@@ -1,9 +1,12 @@
 import {connect} from "react-redux";
-import React, {useEffect, useRef} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Message from "./Message";
 import Chip from "@material-ui/core/Chip";
 import MessageField from "./input/MessageField";
+import {messageActions} from "../../actions";
+import {LinearProgress} from "@material-ui/core";
+import {chatService} from "../../services";
 
 const useStyles = makeStyles(theme => ({
     messages: {
@@ -12,9 +15,32 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function ChatBody({chat, account, messages, selectedChatId}) {
+function ChatBody({chat, account, messages, selectedChatId, addOlderMessages}) {
+    const PAGE_SIZE = 20;
     const classes = useStyles();
-    const messagesRef = useRef(null);
+    const messagesRef = useRef();
+    const messageObserver = useRef();
+    const [loading, setLoading] = useState(false);
+
+    const loadingTriggerMessageRef = useCallback(node => {
+        if (loading) return;
+        if (messageObserver.current) messageObserver.current.disconnect();
+        messageObserver.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && !chat?.loadedAllMessages) {
+                setLoading(true);
+                chatService.getOlderMessages(chat.id, chat.messages[chat.messages.length - 1].time)
+                    .then(messages => {
+                        addOlderMessages(messages, chat.id);
+                        setLoading(false);
+                    }, error => {
+                        setLoading(false);
+                    });
+            }
+        });
+        if (node) {
+            messageObserver.current.observe(node);
+        }
+    }, [loading, chat?.loadedAllMessages, chat]);
 
     const resetScrollBar = () => {
         if (messagesRef.current) {
@@ -25,8 +51,7 @@ function ChatBody({chat, account, messages, selectedChatId}) {
     useEffect(resetScrollBar, [selectedChatId]);
 
     useEffect(() => {
-        if (messages && messages[0]?.author.id === account.id
-            || messagesRef.current?.scrollHeight - messagesRef.current?.scrollTop < 350) {
+        if (messagesRef.current?.scrollHeight - messagesRef.current?.scrollTop < 350) {
             resetScrollBar();
         }
     }, [messages])
@@ -34,6 +59,9 @@ function ChatBody({chat, account, messages, selectedChatId}) {
     const messagesList = messages?.map((message, index) => {
         return (
             <React.Fragment key={message.id}>
+                {(messages.length >= PAGE_SIZE && index === messages.length - 1) &&
+                <div ref={loadingTriggerMessageRef}/>
+                }
                 <Message currentAccount={account} message={message}/>
                 <MessageDate messages={chat.messages} index={index}/>
             </React.Fragment>
@@ -43,6 +71,7 @@ function ChatBody({chat, account, messages, selectedChatId}) {
         <>
             {chat &&
             <div className="d-flex flex-grow-1 flex-shrink-1 flex-column justify-content-between mr-2">
+                {loading && <LinearProgress/>}
                 <div
                     ref={messagesRef}
                     className={`flex-grow-1 d-flex flex-column-reverse 
@@ -87,7 +116,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        addOlderMessages: (messages, chatId) =>
+            dispatch(messageActions.addOlderMessages(messages, chatId))
+    };
 }
 
-export default connect(mapStateToProps)(ChatBody);
+export default connect(mapStateToProps, mapDispatchToProps)(ChatBody);

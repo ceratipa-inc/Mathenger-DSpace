@@ -33,7 +33,7 @@ public class MessageController {
         messageService.sendMessage(authenticationService.getUserId(token.replace("Bearer ", "")), message, chatId);
     }
 
-    @GetMapping("chats/{chat}")
+    @GetMapping("chats/{chat}/messages")
     public ResponseEntity<List<Message>> getOlderMessages(@PathVariable Chat chat, @AuthenticationPrincipal User user,
                                                           @RequestParam @DateTimeFormat(iso =
                                                                   DateTimeFormat.ISO.DATE_TIME) LocalDateTime time) {

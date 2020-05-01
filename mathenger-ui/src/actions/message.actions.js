@@ -9,7 +9,8 @@ export const messageActions = {
     setNextMessageFormula,
     setLatexPreview,
     setNextMessageFormulaError,
-    sendMessage
+    sendMessage,
+    addOlderMessages
 };
 
 function addMessage(message, chatId) {
@@ -17,7 +18,7 @@ function addMessage(message, chatId) {
         type: messageConstants.NEW_MESSAGE,
         chatId,
         message
-    }
+    };
 }
 
 function setNextMessage(message, chatId) {
@@ -25,7 +26,7 @@ function setNextMessage(message, chatId) {
         type: messageConstants.SET_NEXT_MESSAGE,
         message,
         chatId
-    }
+    };
 }
 
 function setNextMessageText(text, chatId) {
@@ -33,7 +34,7 @@ function setNextMessageText(text, chatId) {
         type: messageConstants.SET_NEXT_MESSAGE_TEXT,
         text,
         chatId
-    }
+    };
 }
 
 function setNextMessageFormula(formula, chatId) {
@@ -56,7 +57,7 @@ function setNextMessageFormula(formula, chatId) {
                     });
             }
         }, 600);
-    }
+    };
 }
 
 function setNextMessageFormulaError(error, chatId) {
@@ -64,7 +65,7 @@ function setNextMessageFormulaError(error, chatId) {
         type: messageConstants.SET_NEXT_FORMULA_ERROR,
         error,
         chatId
-    }
+    };
 }
 
 function setLatexPreview(latex, chatId) {
@@ -72,14 +73,22 @@ function setLatexPreview(latex, chatId) {
         type: messageConstants.SET_LATEX_PREVIEW,
         latex,
         chatId,
-    }
+    };
 }
 
 function sendMessage(message, chatId) {
     return dispatch => {
         dispatch(stompActions.sendMessage(message, `/app/chats/${chatId}/send`));
         dispatch(setNextMessage(null, chatId));
-    }
+    };
+}
+
+function addOlderMessages(messages, chatId) {
+    return {
+        type: messageConstants.ADD_OLDER_MESSAGES,
+        messages,
+        chatId
+    };
 }
 
 function getCurrentFormula(getState, chatId) {

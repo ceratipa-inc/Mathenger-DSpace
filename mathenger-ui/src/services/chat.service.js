@@ -5,7 +5,8 @@ export const chatService = {
     startPrivateChat,
     deleteChat,
     leaveGroupChat,
-    createGroupChat
+    createGroupChat,
+    getOlderMessages
 }
 
 function getMyChats() {
@@ -34,4 +35,12 @@ function leaveGroupChat(id) {
 function createGroupChat(chat) {
     return axios.post('/chats', chat)
         .then(response => response.data);
+}
+
+function getOlderMessages(chatId, time) {
+    return axios.get(`/chats/${chatId}/messages`, {
+        params: {
+            time
+        }
+    }).then(response => response.data);
 }

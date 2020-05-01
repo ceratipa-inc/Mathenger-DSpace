@@ -56,6 +56,22 @@ function chatReducer(state = initialState, action) {
                 chats: state.chats.filter(chat => chat.id === action.chat.id).length > 0 ?
                     state.chats : chatUtils.insertSorted(action.chat, state.chats)
             }
+        case messageConstants.ADD_OLDER_MESSAGES:
+            let chats = [...state.chats];
+            chats.filter(chat => chat.id === action.chatId)
+                .forEach(chat => {
+                    const oldMessageIds = chat.messages.map(message => message.id);
+                    const newMessages = action.messages
+                        .filter(message => !oldMessageIds.includes(message.id));
+                    chat.messages = [...chat.messages, ...newMessages];
+                    if (newMessages.length === 0) {
+                        chat.loadedAllMessages = true;
+                    }
+                });
+            return {
+                ...state,
+                chats
+            }
         default:
             return state;
     }

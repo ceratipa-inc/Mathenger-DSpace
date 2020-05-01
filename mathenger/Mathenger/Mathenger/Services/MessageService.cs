@@ -51,7 +51,7 @@ namespace Mathenger.services
 
         public void GetOlderMessages(Chat chat, Action<ObservableCollection<Message>> messagesConsumer)
         {
-            var request = new RestRequest($"/chats/{chat.Id}", Method.GET);
+            var request = new RestRequest($"/chats/{chat.Id}/messages", Method.GET);
             if (chat.Messages.Count != 0)
             {
                 var time = chat.Messages.Min(message => message.Time).ToString("O");
