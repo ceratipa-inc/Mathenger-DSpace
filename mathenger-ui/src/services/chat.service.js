@@ -6,7 +6,12 @@ export const chatService = {
     deleteChat,
     leaveGroupChat,
     createGroupChat,
-    getOlderMessages
+    getOlderMessages,
+    updateGroupChat,
+    addMembers,
+    removeMember,
+    addAdmin,
+    removeAdmin
 }
 
 function getMyChats() {
@@ -44,3 +49,30 @@ function getOlderMessages(chatId, time) {
         }
     }).then(response => response.data);
 }
+
+function updateGroupChat(chat) {
+    return axios.put(`/chats/${chat.id}`, chat)
+        .then(response => response.data);
+}
+
+function addMembers(chatId, members) {
+    return axios.post(`/chats/${chatId}/members`, members)
+        .then(response => response.data);
+}
+
+function removeMember(chatId, memberId) {
+    return axios.delete(`/chats/${chatId}/members/${memberId}`)
+        .then(response => response.data);
+}
+
+function addAdmin(chatId, memberId) {
+    return axios.post(`/chats/${chatId}/admins/${memberId}`)
+        .then(response => response.data);
+}
+
+function removeAdmin(chatId, adminId) {
+    return axios.delete(`/chats/${chatId}/admins/${adminId}`)
+        .then(response => response.data);
+}
+
+

@@ -22,6 +22,9 @@ export const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
     },
+    widthHalfScreen: {
+        width: '50vw',
+    },
     root: {
         width: '100%',
         overflowY: "auto",

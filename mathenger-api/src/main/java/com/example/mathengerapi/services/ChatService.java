@@ -52,7 +52,7 @@ public class ChatService {
 
     private PrivateChat newChatWithMembers(Account account, Account account2) {
         var chat = new PrivateChat();
-        chat.setMembers(new LinkedHashSet<>());
+        chat.setMembers(new LinkedList<>());
         chat.setMessages(new LinkedList<>());
         chat.getMembers().add(account);
         chat.getMembers().add(account2);
@@ -87,7 +87,7 @@ public class ChatService {
         if (!contacts.containsAll(members))
             throw new IllegalArgumentException("Only contacts can be added to chat");
         members.add(creator);
-        chat.setMembers(new HashSet<>(members));
+        chat.setMembers(new ArrayList<>(members));
         chat.setAdmins(new ArrayList<>(Collections.singletonList(creator)));
         chat.setColor(colorProvider.getRandomColor());
         chat.setCreator(creator);

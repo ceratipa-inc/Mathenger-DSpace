@@ -153,7 +153,6 @@ function AddContactsModal({onOpen}) {
                                     return (
                                         <ListItem
                                             key={account.id}
-                                            button
                                         >
                                             <ListItemAvatar>
                                                 <Avatar account={account}/>
