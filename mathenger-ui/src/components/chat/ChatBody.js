@@ -48,13 +48,13 @@ function ChatBody({chat, account, messages, selectedChatId, addOlderMessages}) {
         }
     }
 
-    useEffect(resetScrollBar, [selectedChatId]);
-
     useEffect(() => {
-        if (messagesRef.current?.scrollHeight - messagesRef.current?.scrollTop < 350) {
+        let ref = messagesRef.current;
+        if (messages && messages[0]?.author.id === account.id
+            || ref?.scrollHeight - ref?.scrollTop - ref?.clientHeight < 350) {
             resetScrollBar();
         }
-    }, [messages])
+    }, [messages ? messages[0]?.id : null]);
 
     const messagesList = messages?.map((message, index) => {
         return (
