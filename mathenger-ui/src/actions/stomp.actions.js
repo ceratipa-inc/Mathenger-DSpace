@@ -1,6 +1,7 @@
 import {notificationTypes, stompConstants} from "../constants";
 import {messageActions} from "./message.actions";
 import {chatActions} from "./chat.actions";
+import addNotification from "react-push-notification";
 
 export const stompActions = {
     connect,
@@ -45,6 +46,13 @@ function receiveMessage(message, topic) {
                 case notificationTypes.CHAT_UPDATE:
                     chat = JSON.parse(notification.text);
                     dispatch(chatActions.updateChat(chat));
+                    break;
+                case notificationTypes.TEXT:
+                    addNotification({
+                        title: 'New Notification',
+                        message: notification.text,
+                        native: true,
+                    });
                     break;
                 default:
                     break;

@@ -1,6 +1,8 @@
 import {chatConstants} from "../constants";
 import {chatService} from "../services";
 import {stompActions} from "./stomp.actions";
+import addNotification from "react-push-notification";
+import {chatUtils} from "../utils";
 
 export const chatActions = {
     setMyChats,
@@ -27,7 +29,13 @@ function setMyChats() {
 }
 
 function addChat(chat) {
-    return dispatch => {
+    return (dispatch, getState) => {
+        const state = getState();
+        addNotification({
+            title: chatUtils.getName(chat, state.account.currentAccount),
+            message: 'New chat',
+            native: true,
+        });
         dispatch({
             type: chatConstants.ADD_CHAT,
             chat

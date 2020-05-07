@@ -60,7 +60,7 @@ function ChatBody({chat, account, messages, selectedChatId, addOlderMessages}) {
         return (
             <React.Fragment key={message.id}>
                 {(messages.length >= PAGE_SIZE && index === messages.length - 1) &&
-                <div ref={loadingTriggerMessageRef}/>
+                <button ref={loadingTriggerMessageRef}/>
                 }
                 <Message currentAccount={account} message={message}/>
                 <MessageDate messages={chat.messages} index={index}/>

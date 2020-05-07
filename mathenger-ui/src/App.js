@@ -7,10 +7,12 @@ import {Route, Switch} from "react-router";
 import {connect} from "react-redux";
 import SignUpPage from "./components/pages/SignUpPage";
 import Main from "./components/pages/MainPage";
+import Notifications from "react-push-notification/dist/notifications/Notifications";
 
 function App({authentication}) {
     return (
         <div className="App" style={{height: '100%'}}>
+            <Notifications/>
             <BrowserRouter>
                 <Switch>
                     <Route path="/signin" component={SignInPage}/>

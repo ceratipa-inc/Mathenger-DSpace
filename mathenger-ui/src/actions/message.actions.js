@@ -1,6 +1,8 @@
 import {messageConstants} from "../constants";
 import {stompActions} from "./stomp.actions";
 import {mathService} from "../services";
+import addNotification from "react-push-notification";
+import {chatUtils} from "../utils";
 
 export const messageActions = {
     addMessage,
@@ -14,10 +16,23 @@ export const messageActions = {
 };
 
 function addMessage(message, chatId) {
-    return {
-        type: messageConstants.NEW_MESSAGE,
-        chatId,
-        message
+    return (dispatch, getState) => {
+        const state = getState();
+        const chat = state.chat.chats.find(c => c.id === chatId);
+        if (state.account.currentAccount?.id !== message.author.id
+            && (document.hidden || state.selectedChatId !== chatId)) {
+            addNotification({
+                title: chatUtils.getName(chat, state.account.currentAccount),
+                message: `${message.author.firstName} ${message.author.lastName}: ${message.text}`,
+                native: true,
+                silent: state.chat?.chats[0]?.id === chatId
+            });
+        }
+        dispatch({
+            type: messageConstants.NEW_MESSAGE,
+            chatId,
+            message
+        });
     };
 }
 
