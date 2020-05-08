@@ -2,7 +2,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import Divider from "@material-ui/core/Divider";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import * as React from "react";
@@ -11,6 +10,7 @@ import {connect} from "react-redux";
 import ContactsModal from "./buttons/ContactsModal";
 import AddContactsModal from "./buttons/AddContactsModal";
 import CreateChatModal from "./buttons/CreateChatModal";
+import NotificationsModal from "./buttons/NotificaionsModal";
 
 function Menu({signOut, onClose}) {
     return (
@@ -19,10 +19,7 @@ function Menu({signOut, onClose}) {
                 <CreateChatModal onOpen={onClose}/>
                 <AddContactsModal onOpen={onClose}/>
                 <ContactsModal onOpen={onClose}/>
-                <ListItem button key="Notifications">
-                    <ListItemIcon><NotificationsIcon/></ListItemIcon>
-                    <ListItemText primary="Notifications"/>
-                </ListItem>
+                <NotificationsModal onOpen={onClose}/>
             </List>
             <Divider/>
             <List>
