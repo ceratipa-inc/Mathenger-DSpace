@@ -71,6 +71,11 @@ public class Lexer {
                 return new Token(EVAL_TO_DEGREE, "^");
             }
 
+            if (character == '_') {
+                nextChar();
+                return new Token(INDEX, "_");
+            }
+
             if (character == '=') {
                 nextChar();
                 return new Token(EQUALS, "=");

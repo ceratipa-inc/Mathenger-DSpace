@@ -54,7 +54,7 @@ public class LatexParser {
     }
 
     private LatexNode expr() {
-        // expr : 1stPrExpr (BINARY_OPERATION 1stPrExpr)*
+        // expr : 2ndPrExpr (BINARY_OPERATION 2ndPrExpr)*
 
         if (currentToken() == null) {
             return null;
@@ -63,9 +63,30 @@ public class LatexParser {
         var lowPriorityBinaryTokenTypes = Arrays.asList(PLUS, MINUS, EQUALS,
                 NOT_EQUALS, MORE, LESS, MORE_EQUALS, LESS_EQUALS);
 
-        var node = firstPriorityExpr();
+        var node = secondPriorityExpr();
 
         while (currentToken() != null && lowPriorityBinaryTokenTypes.contains(currentToken().getType())) {
+            var token = currentToken();
+            eat(token.getType());
+            node = new BinaryOperationNode(node, secondPriorityExpr(), token);
+        }
+
+        return node;
+    }
+
+    private LatexNode secondPriorityExpr() {
+        // 2ndPrExpr : 1stPrExpr (2ND_PRIORITY_BINARY_OPERATION 1stPrExpr)*
+
+        if (currentToken() == null) {
+            return null;
+        }
+
+        var secondPriorityBinaryTokenTypes = Arrays.asList(MUL, DIV, EVAL_TO_DEGREE);
+
+        var node = firstPriorityExpr();
+
+        while (currentToken() != null &&
+                secondPriorityBinaryTokenTypes.contains(currentToken().getType())) {
             var token = currentToken();
             eat(token.getType());
             node = new BinaryOperationNode(node, firstPriorityExpr(), token);
@@ -75,23 +96,19 @@ public class LatexParser {
     }
 
     private LatexNode firstPriorityExpr() {
-        // 1stPrExpr : element (1ST_PRIORITY_BINARY_OPERATION element)*
-
+        // 1stPrExpr: element (INDEX element)?
         if (currentToken() == null) {
             return null;
         }
-
-        var firstPriorityBinaryTokenTypes = Arrays.asList(MUL, DIV, EVAL_TO_DEGREE);
-
         var node = element();
-
-        while (currentToken() != null &&
-                firstPriorityBinaryTokenTypes.contains(currentToken().getType())) {
+        if (currentToken() != null && currentToken().getType().equals(INDEX)) {
             var token = currentToken();
             eat(token.getType());
             node = new BinaryOperationNode(node, element(), token);
         }
-
+        if (currentToken() != null && currentToken().getType().equals(INDEX)) {
+            error();
+        }
         return node;
     }
 

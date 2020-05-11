@@ -112,4 +112,19 @@ public class MathCompilerServiceSimpleExpressionsTest {
         assertEqualsIgnoreWhiteSpaces(expected, result);
     }
 
+    @Test
+    public void compilesVariablesWithIndexes() {
+        var expr = "a^variable_i + variable_i^k";
+        var expected = "a^{variable_{i}} + variable_{i}^{k}";
+        var result = compilerService.toLatex(expr);
+        assertEqualsIgnoreWhiteSpaces(expected, result);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesNotCompileVariablesWithSeveralUnderscores() {
+        var expr = "variable_index_index2";
+        var result = compilerService.toLatex(expr);
+        System.out.println(result);
+    }
+
 }
