@@ -96,4 +96,20 @@ public class MathCompilerServiceSimpleExpressionsTest {
         assertEqualsIgnoreWhiteSpaces(expected, result);
     }
 
+    @Test
+    public void compilesSimpleExprWithUnaryOperators() {
+        var expr = "5 - (-(2)) = 5 - (-2) = 7";
+        var expected = "5 - (-(2)) = 5 - (-2) = 7";
+        var result = compilerService.toLatex(expr);
+        assertEqualsIgnoreWhiteSpaces(expected, result);
+    }
+
+    @Test
+    public void compilesExprWithUnaryOperators() {
+        var expr = "+--a*(--b+-+-c) = --a*b +- a*(-c)";
+        var expected = "+--a \\cdot ( --b +-+- c ) = --a \\cdot b +- a \\cdot (-c)";
+        var result = compilerService.toLatex(expr);
+        assertEqualsIgnoreWhiteSpaces(expected, result);
+    }
+
 }
