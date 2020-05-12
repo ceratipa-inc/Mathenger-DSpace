@@ -1,9 +1,6 @@
 package com.example.mathengerapi.services.mathCompiler;
 
-import com.example.mathengerapi.services.mathCompiler.nodes.BinaryOperationNode;
-import com.example.mathengerapi.services.mathCompiler.nodes.ParenthesisNode;
-import com.example.mathengerapi.services.mathCompiler.nodes.UnaryOperationNode;
-import com.example.mathengerapi.services.mathCompiler.nodes.VariableNode;
+import com.example.mathengerapi.services.mathCompiler.nodes.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
@@ -24,7 +21,7 @@ public class LatexParser {
     }
 
     private LatexNode element() {
-        // element : (UNARY OPERATOR) element | VARIABLE | LPAREN expr RPAREN
+        // element : (UNARY OPERATOR) element | VARIABLE | LPAREN expr RPAREN | INNER_LATEX
         var token = currentToken();
 
         if (token == null) {
@@ -47,6 +44,11 @@ public class LatexParser {
             eat(token.getType());
             var node = element();
             return new UnaryOperationNode(token, node);
+        }
+
+        if (token.getType().equals(INNER_LATEX)) {
+            eat(token.getType());
+            return new InnerLatexNode(token);
         }
 
         error();

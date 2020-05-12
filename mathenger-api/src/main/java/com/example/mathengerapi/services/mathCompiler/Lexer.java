@@ -108,6 +108,10 @@ public class Lexer {
                 nextChar();
                 return new Token(LESS, "<");
             }
+
+            if (character == '$') {
+                return innerLatex();
+            }
             error();
         }
         return null;
@@ -119,9 +123,20 @@ public class Lexer {
         while (character != null &&
                 (Character.isLetterOrDigit(character) || character == '.' || character == ',')) {
             value.append(character);
-            character = this.nextChar();
+            character = nextChar();
         }
         return new Token(VARIABLE, value.toString());
+    }
+
+    private Token innerLatex() {
+        var character = nextChar();
+        var value = new StringBuilder();
+        while (character != null && character != '$') {
+            value.append(character);
+            character = nextChar();
+        }
+        nextChar();
+        return new Token(INNER_LATEX, value.toString());
     }
 
     private Character currentChar() {
