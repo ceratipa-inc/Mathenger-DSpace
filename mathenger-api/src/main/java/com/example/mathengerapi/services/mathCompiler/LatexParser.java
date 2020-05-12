@@ -4,6 +4,7 @@ import com.example.mathengerapi.services.mathCompiler.nodes.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.example.mathengerapi.services.mathCompiler.TokenType.*;
@@ -17,7 +18,11 @@ public class LatexParser {
     public LatexNode parse() {
         tokens = lexer.tokenize();
         pos = 0;
-        return expr();
+        List<LatexNode> nodes = new LinkedList<>();
+        while (currentToken() != null) {
+            nodes.add(expr());
+        }
+        return new ExpressionNode(nodes);
     }
 
     private LatexNode element() {

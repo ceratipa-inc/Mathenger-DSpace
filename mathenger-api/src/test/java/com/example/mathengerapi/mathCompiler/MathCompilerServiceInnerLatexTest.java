@@ -32,4 +32,20 @@ public class MathCompilerServiceInnerLatexTest {
         assertEqualsIgnoreWhiteSpaces(expected, result);
     }
 
+    @Test
+    public void compilesInnerLatexInsteadOfBinaryOperation() {
+        var expr = "5 $\\cdot$ 2 = 10";
+        var expected = "5 \\cdot 2 = 10";
+        var result = compilerService.toLatex(expr);
+        assertEqualsIgnoreWhiteSpaces(expected, result);
+    }
+
+    @Test
+    public void compilesMultipleInnerLatexInsertionsInsteadOfBinaryOperation() {
+        var expr = "5 $\\cdot$ 2 $\\sim$ 9 ";
+        var expected = "5 \\cdot 2 \\sim 9";
+        var result = compilerService.toLatex(expr);
+        assertEqualsIgnoreWhiteSpaces(expected, result);
+    }
+
 }
