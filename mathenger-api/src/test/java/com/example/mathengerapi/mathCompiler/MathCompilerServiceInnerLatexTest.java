@@ -48,4 +48,12 @@ public class MathCompilerServiceInnerLatexTest {
         assertEqualsIgnoreWhiteSpaces(expected, result);
     }
 
+    @Test
+    public void compilesInnerExprInsideInnerLatex() {
+        var expr = "$\\intop\\nolimits_{#(a+b)/2#}^{a}$ $\\sim$ $\\sqrt{#a^var#}$";
+        var expected = "\\intop\\nolimits_{\\frac{a+b}{2}}^{a} \\sim \\sqrt{a^{var}}";
+        var result = compilerService.toLatex(expr);
+        assertEqualsIgnoreWhiteSpaces(expected, result);
+    }
+
 }
