@@ -85,6 +85,13 @@ public class BinaryOperationNode implements LatexNode {
             fillWithLatexSkipParenthesis(right, stringBuilder);
             stringBuilder.append("} ");
         }
+
+        if (token.getType().equals(INDEX)) {
+            left.fillWithLatex(stringBuilder);
+            stringBuilder.append("_{");
+            fillWithLatexSkipParenthesis(right, stringBuilder);
+            stringBuilder.append("} ");
+        }
     }
 
     @Override

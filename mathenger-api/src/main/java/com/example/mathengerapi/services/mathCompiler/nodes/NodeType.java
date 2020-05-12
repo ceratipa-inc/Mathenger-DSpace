@@ -1,5 +1,6 @@
 package com.example.mathengerapi.services.mathCompiler.nodes;
 
 public enum NodeType {
-    BINARY_OPERATION, PARENTHESIS, VARIABLE
+    UNARY_OPERATION, BINARY_OPERATION, PARENTHESIS, VARIABLE,
+    INNER_LATEX, EXPRESSION
 }
