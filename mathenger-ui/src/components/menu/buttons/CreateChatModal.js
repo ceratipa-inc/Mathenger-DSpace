@@ -6,7 +6,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Modal from "@material-ui/core/Modal";
-import {Backdrop, TextField} from "@material-ui/core";
+import {Backdrop, TextField, Tooltip, Zoom} from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -105,10 +105,12 @@ function CreateChatModal({onOpen, addChat}) {
 
     return (
         <>
-            <ListItem button key="Create Chat" onClick={handleOpen}>
-                <ListItemIcon><ChatIcon/></ListItemIcon>
-                <ListItemText primary="Create Chat"/>
-            </ListItem>
+            <Tooltip TransitionComponent={Zoom} placement="right" title="Start new chat and invite your contacts">
+                <ListItem button key="Create Chat" onClick={handleOpen}>
+                    <ListItemIcon><ChatIcon/></ListItemIcon>
+                    <ListItemText primary="Create Chat"/>
+                </ListItem>
+            </Tooltip>
             <Modal
                 className={modalClasses.modal}
                 open={open}

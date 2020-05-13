@@ -4,7 +4,7 @@ import ListItem from "@material-ui/core/ListItem";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import Modal from "@material-ui/core/Modal";
-import {Avatar, Backdrop} from "@material-ui/core";
+import {Avatar, Backdrop, Tooltip, Zoom} from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import List from "@material-ui/core/List";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -67,10 +67,16 @@ function NotificationsModal({onOpen}) {
 
     return (
         <>
-            <ListItem button key="Notifications" onClick={handleOpen}>
-                <ListItemIcon><NotificationsIcon/></ListItemIcon>
-                <ListItemText primary="Notifications"/>
-            </ListItem>
+            <Tooltip
+                TransitionComponent={Zoom}
+                placement="right"
+                title="Check your notification. You could've missed something important."
+            >
+                <ListItem button key="Notifications" onClick={handleOpen}>
+                    <ListItemIcon><NotificationsIcon/></ListItemIcon>
+                    <ListItemText primary="Notifications"/>
+                </ListItem>
+            </Tooltip>
             <Modal
                 className={classes.modal}
                 open={open}
@@ -109,14 +115,20 @@ function NotificationsModal({onOpen}) {
                                                           secondary={notification.time}
                                             />
                                             <ListItemSecondaryAction>
-                                                <IconButton
-                                                    className="ml-4"
-                                                    edge="end"
-                                                    onClick={() => deleteNotification(notification.id)}
-                                                    disabled={deleting}
+                                                <Tooltip
+                                                    TransitionComponent={Zoom}
+                                                    placement="right"
+                                                    title="delete notification"
                                                 >
-                                                    <DeleteIcon/>
-                                                </IconButton>
+                                                    <IconButton
+                                                        className="ml-4"
+                                                        edge="end"
+                                                        onClick={() => deleteNotification(notification.id)}
+                                                        disabled={deleting}
+                                                    >
+                                                        <DeleteIcon/>
+                                                    </IconButton>
+                                                </Tooltip>
                                             </ListItemSecondaryAction>
                                         </ListItem>
                                     );

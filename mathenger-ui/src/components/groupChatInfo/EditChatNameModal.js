@@ -1,5 +1,5 @@
 import {useStyles} from "../menu/buttons/modal.styles";
-import {Backdrop, TextField} from "@material-ui/core";
+import {Backdrop, TextField, Tooltip, Zoom} from "@material-ui/core";
 import Modal from "@material-ui/core/Modal";
 import * as React from "react";
 import {useState} from "react";
@@ -43,9 +43,14 @@ export default function EditChatNameModal({chat}) {
 
     return (
         <>
-            <IconButton onClick={() => setOpen(true)} edge="end" aria-label="edit">
-                <EditIcon/>
-            </IconButton>
+            <Tooltip
+                TransitionComponent={Zoom}
+                title="edit the chat name"
+            >
+                <IconButton onClick={() => setOpen(true)} edge="end" aria-label="edit">
+                    <EditIcon/>
+                </IconButton>
+            </Tooltip>
             <Modal
                 className={classes.modal}
                 open={open}

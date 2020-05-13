@@ -5,7 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Modal from "@material-ui/core/Modal";
-import {Backdrop} from "@material-ui/core";
+import {Backdrop, Zoom} from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -23,6 +23,7 @@ import Button from "@material-ui/core/Button";
 import {connect} from "react-redux";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import {accountService} from "../../../services";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -41,7 +42,7 @@ function loadingReducer(loadings, action) {
 function AddContactsModal({onOpen}) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    let [loadings, dispatchLoadings] = useReducer(loadingReducer,0);
+    let [loadings, dispatchLoadings] = useReducer(loadingReducer, 0);
     const [accounts, setAccounts] = useState([]);
     const [search, setSearch] = useState('');
 
@@ -106,10 +107,12 @@ function AddContactsModal({onOpen}) {
 
     return (
         <>
-            <ListItem button key="Add Contacts" onClick={handleOpen}>
-                <ListItemIcon><PeopleAltIcon/></ListItemIcon>
-                <ListItemText primary="Add Contacts"/>
-            </ListItem>
+            <Tooltip TransitionComponent={Zoom} placement="right" title="Find people you'd like to chat with">
+                <ListItem button key="Add Contacts" onClick={handleOpen}>
+                    <ListItemIcon><PeopleAltIcon/></ListItemIcon>
+                    <ListItemText primary="Add Contacts"/>
+                </ListItem>
+            </Tooltip>
             <Modal
                 className={classes.modal}
                 open={open}
@@ -160,14 +163,20 @@ function AddContactsModal({onOpen}) {
                                             <ListItemText className="mr-2"
                                                           primary={`${account.firstName} ${account.lastName}`}/>
                                             <ListItemSecondaryAction>
-                                                <IconButton
-                                                    className="ml-4"
-                                                    edge="end"
-                                                    onClick={() => addContact(account.id)}
-                                                    disabled={!!loadings}
+                                                <Tooltip
+                                                    TransitionComponent={Zoom}
+                                                    placement="right"
+                                                    title={`add ${account.firstName} to your contacts list`}
                                                 >
-                                                    <AddIcon/>
-                                                </IconButton>
+                                                    <IconButton
+                                                        className="ml-4"
+                                                        edge="end"
+                                                        onClick={() => addContact(account.id)}
+                                                        disabled={!!loadings}
+                                                    >
+                                                        <AddIcon/>
+                                                    </IconButton>
+                                                </Tooltip>
                                             </ListItemSecondaryAction>
                                         </ListItem>
                                     );

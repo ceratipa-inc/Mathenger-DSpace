@@ -6,6 +6,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {messageActions} from "../../../actions";
 import {MathInputPopover} from "./MathInputPopover";
+import {Tooltip, Zoom} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     buttonsPanel: {
@@ -82,13 +83,15 @@ function MessageField({
                         helperText={nextMessage?.mathFormula?.error}
                         nextMessage={nextMessage}
                     />
-                    <IconButton
-                        type="submit"
-                        aria-label="Send"
-                        ref={b => sendButton = b}
-                    >
-                        <SendIcon/>
-                    </IconButton>
+                    <Tooltip TransitionComponent={Zoom} placement="top" title="Send message">
+                        <IconButton
+                            type="submit"
+                            aria-label="Send"
+                            ref={b => sendButton = b}
+                        >
+                            <SendIcon/>
+                        </IconButton>
+                    </Tooltip>
                 </span>
             </div>
         </form>

@@ -5,7 +5,7 @@ import Popover from "@material-ui/core/Popover";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import TextField from "@material-ui/core/TextField";
 import MathJax from "react-mathjax2";
-import {Paper} from "@material-ui/core";
+import {Paper, Tooltip, Zoom} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     popover: {
@@ -57,13 +57,15 @@ export function MathInputPopover({nextMessage, onClose, ...props}) {
 
     return (
         <>
-            <IconButton
-                aria-label="Formula"
-                aria-describedby={id}
-                onClick={handleClick}
-            >
-                <FunctionsIcon/>
-            </IconButton>
+            <Tooltip TransitionComponent={Zoom} placement="top" title="Include formula">
+                <IconButton
+                    aria-label="Formula"
+                    aria-describedby={id}
+                    onClick={handleClick}
+                >
+                    <FunctionsIcon/>
+                </IconButton>
+            </Tooltip>
             <Popover
                 id={id}
                 open={open}

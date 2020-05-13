@@ -4,7 +4,7 @@ import ListItem from "@material-ui/core/ListItem";
 import * as React from "react";
 import {useState} from "react";
 import Modal from "@material-ui/core/Modal";
-import {Backdrop} from "@material-ui/core";
+import {Backdrop, Tooltip, Zoom} from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import List from "@material-ui/core/List";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -56,13 +56,18 @@ function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, canManage
         }
     }
 
-    const ChangeRoleButton = ({memberId}) => isAdmin(memberId) ?
-        <IconButton className="ml-4" edge="end" disabled={loading} onClick={() => removeAdmin(memberId)}>
-            <ArrowDownwardIcon/>
-        </IconButton> :
-        <IconButton className="ml-4" edge="end" disabled={loading} onClick={() => addAdmin(memberId)}>
-            <ArrowUpwardIcon/>
-        </IconButton>
+    const ChangeRoleButton = ({member}) => isAdmin(member.id) ?
+        <Tooltip TransitionComponent={Zoom} placement="left" title={`Demote ${member.firstName} to regular member`}>
+            <IconButton className="ml-4" edge="end" disabled={loading} onClick={() => removeAdmin(member.id)}>
+                <ArrowDownwardIcon/>
+            </IconButton>
+        </Tooltip> :
+        <Tooltip TransitionComponent={Zoom} placement="left" title={`Promote ${member.firstName} to administrator`}>
+            <IconButton className="ml-4" edge="end" disabled={loading} onClick={() => addAdmin(member.id)}>
+                <ArrowUpwardIcon/>
+            </IconButton>
+        </Tooltip>;
+
 
     return (
         <>
@@ -113,14 +118,20 @@ function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, canManage
                                             <ListItemSecondaryAction>
                                                 {canManageMember(member.id) &&
                                                 <>
-                                                    <ChangeRoleButton memberId={member.id}/>
-                                                    <IconButton onClick={() => removeMember(member.id)}
-                                                                className="ml-4"
-                                                                edge="end"
-                                                                disabled={loading}
+                                                    <ChangeRoleButton member={member}/>
+                                                    <Tooltip
+                                                        TransitionComponent={Zoom}
+                                                        placement="right"
+                                                        title={`remove ${member.firstName} from this chat`}
                                                     >
-                                                        <DeleteIcon/>
-                                                    </IconButton>
+                                                        <IconButton onClick={() => removeMember(member.id)}
+                                                                    className="ml-4"
+                                                                    edge="end"
+                                                                    disabled={loading}
+                                                        >
+                                                            <DeleteIcon/>
+                                                        </IconButton>
+                                                    </Tooltip>
                                                 </>
                                                 }
                                             </ListItemSecondaryAction>

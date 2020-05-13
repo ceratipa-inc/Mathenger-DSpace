@@ -6,7 +6,7 @@ import ListItem from "@material-ui/core/ListItem";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import Modal from "@material-ui/core/Modal";
-import {Backdrop} from "@material-ui/core";
+import {Backdrop, Tooltip, Zoom} from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import List from "@material-ui/core/List";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -105,10 +105,12 @@ function ContactsModal({onOpen, addPrivateChat}) {
 
     return (
         <>
-            <ListItem button key="Contacts" onClick={handleOpen}>
-                <ListItemIcon><PermContactCalendarIcon/></ListItemIcon>
-                <ListItemText primary="Contacts"/>
-            </ListItem>
+            <Tooltip TransitionComponent={Zoom} placement="right" title="Start chatting with your contacts">
+                <ListItem button key="Contacts" onClick={handleOpen}>
+                    <ListItemIcon><PermContactCalendarIcon/></ListItemIcon>
+                    <ListItemText primary="Contacts"/>
+                </ListItem>
+            </Tooltip>
             <Modal
                 className={classes.modal}
                 open={open}
@@ -150,28 +152,39 @@ function ContactsModal({onOpen, addPrivateChat}) {
                             <List dense className={`${classes.root} flex-grow-1 flex-shrink-1`}>
                                 {contacts.filter(contact => matchesSearch(contact)).map(contact => {
                                     return (
-                                        <ListItem
-                                            key={contact.id}
-                                            disabled={startingChat || deleting}
-                                            onClick={() => startChat(contact.id)}
-                                            button
+                                        <Tooltip
+                                            TransitionComponent={Zoom}
+                                            title={`Click to start a conversation with ${contact.firstName}`}
                                         >
-                                            <ListItemAvatar>
-                                                <Avatar account={contact}/>
-                                            </ListItemAvatar>
-                                            <ListItemText className="mr-2"
-                                                          primary={`${contact.firstName} ${contact.lastName}`}/>
-                                            <ListItemSecondaryAction>
-                                                <IconButton
-                                                    className="ml-4"
-                                                    edge="end"
-                                                    onClick={() => deleteContact(contact.id)}
-                                                    disabled={startingChat || deleting}
-                                                >
-                                                    <DeleteIcon/>
-                                                </IconButton>
-                                            </ListItemSecondaryAction>
-                                        </ListItem>
+                                            <ListItem
+                                                key={contact.id}
+                                                disabled={startingChat || deleting}
+                                                onClick={() => startChat(contact.id)}
+                                                button
+                                            >
+                                                <ListItemAvatar>
+                                                    <Avatar account={contact}/>
+                                                </ListItemAvatar>
+                                                <ListItemText className="mr-2"
+                                                              primary={`${contact.firstName} ${contact.lastName}`}/>
+                                                <ListItemSecondaryAction>
+                                                    <Tooltip
+                                                        TransitionComponent={Zoom}
+                                                        placement="right"
+                                                        title={`Remove ${contact.firstName} from your contacts list`}
+                                                    >
+                                                        <IconButton
+                                                            className="ml-4"
+                                                            edge="end"
+                                                            onClick={() => deleteContact(contact.id)}
+                                                            disabled={startingChat || deleting}
+                                                        >
+                                                            <DeleteIcon/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </ListItemSecondaryAction>
+                                            </ListItem>
+                                        </Tooltip>
                                     );
                                 })}
                             </List>
