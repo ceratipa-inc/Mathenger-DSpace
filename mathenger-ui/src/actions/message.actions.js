@@ -59,9 +59,12 @@ function setNextMessageFormula(formula, chatId) {
             formula,
             chatId
         });
+        if (formula?.trim() === '') {
+            dispatch(setLatexPreview('', chatId));
+            return;
+        }
         setTimeout(() => {
             if (getCurrentFormula(getState, chatId) === formula) {
-                console.log('request');
                 mathService.transformToLatex(formula)
                     .then(latex => {
                         if (getCurrentFormula(getState, chatId) === formula) {

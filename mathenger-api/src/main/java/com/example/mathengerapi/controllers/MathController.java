@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class MathController {
     private MathCompilerService mathCompilerService;
 
     @PostMapping(value = "/latex/transform/png", produces = MediaType.IMAGE_PNG_VALUE)
+    @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public ResponseEntity<byte[]> transformToPng(@RequestBody String latex) throws IOException, InterruptedException {
         var file = mathService.texToPng(latex);
@@ -30,6 +32,7 @@ public class MathController {
     }
 
     @PostMapping(value = "/transform/latex")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> transformToLatex(@RequestBody String formula) {
         return new ResponseEntity<>(mathCompilerService.toLatex(formula), HttpStatus.OK);
     }
