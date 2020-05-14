@@ -1,4 +1,4 @@
 export const apiConstants = {
-    BASE_URL: 'http://localhost:8080',
-    WEB_SOCKET_CONNECTION_URL: "ws://localhost:8080/socket"
+    BASE_URL: process.env.REACT_APP_API_BASE_URL,
+    WEB_SOCKET_CONNECTION_URL: process.env.REACT_APP_WEB_SOCKET_CONNECTION_URL
 }

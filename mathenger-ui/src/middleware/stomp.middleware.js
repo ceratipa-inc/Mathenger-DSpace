@@ -21,13 +21,15 @@ const stompMiddleware = store => {
             connectHeaders: {
                 Authorization: tokenStorage.getToken()
             },
-            debug: str => console.log(str)
+            debug: process.env.NODE_ENV !== 'production' ? str => console.log(str) : null
         });
 
         topicSubscriptions = {};
 
         client.onConnect = frame => {
-            console.log(frame);
+            if (process.env.NODE_ENV !== 'production') {
+                console.log(frame);
+            }
             Object.keys(topicSubscriptions).forEach(topic => {
                topicSubscriptions[topic] = client.subscribe(topic, message => {
                    store.dispatch(stompActions.receiveMessage(message.body, topic));
@@ -36,7 +38,9 @@ const stompMiddleware = store => {
         };
 
         client.onStompError = frame => {
-            console.log(frame);
+            if (process.env.NODE_ENV !== 'production') {
+                console.log(frame);
+            }
         };
 
         client.activate();

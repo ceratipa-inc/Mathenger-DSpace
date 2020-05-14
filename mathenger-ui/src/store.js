@@ -5,12 +5,14 @@ import promiseMiddleware from 'redux-promise-middleware';
 import stompMiddleware from "./middleware/stomp.middleware";
 import thunk from "redux-thunk";
 
+const middleware = [
+    stompMiddleware,
+    thunk,
+    promiseMiddleware,
+    process.env.NODE_ENV !== 'production' && createLogger()
+]
+
 export default createStore(
     rootReducer,
-    applyMiddleware(
-        stompMiddleware,
-        thunk,
-        promiseMiddleware,
-        createLogger()
-    )
+    applyMiddleware(...middleware)
 );
