@@ -33,6 +33,10 @@ html, body {
   height: 100%;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .top-content {
   position: absolute;
   z-index: 1120;

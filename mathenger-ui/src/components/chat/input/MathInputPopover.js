@@ -6,6 +6,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import TextField from "@material-ui/core/TextField";
 import MathJax from "react-mathjax2";
 import {Paper, Tooltip, Zoom} from "@material-ui/core";
+import MathTutorialModal from "./MathTutorialModal";
 
 const useStyles = makeStyles((theme) => ({
     popover: {
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '18px',
         overflowX: 'auto',
         backgroundColor: 'rgba(0, 0, 0, 0.09)'
+    },
+    infoIcon: {
+        marginLeft: '-50px'
     }
 }));
 
@@ -104,6 +108,9 @@ export function MathInputPopover({nextMessage, onClose, ...props}) {
                         {...props}
                         onKeyDown={handleKeyDown}
                     />
+                    <span className={classes.infoIcon}>
+                        <MathTutorialModal/>
+                    </span>
                 </div>
             </Popover>
         </>
