@@ -12,7 +12,7 @@ import List from "@material-ui/core/List";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from '@material-ui/icons/Delete';
+import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from "@material-ui/core/InputBase";
 import Box from "@material-ui/core/Box";
@@ -179,7 +179,7 @@ function ContactsModal({onOpen, addPrivateChat}) {
                                                             onClick={() => deleteContact(contact.id)}
                                                             disabled={startingChat || deleting}
                                                         >
-                                                            <DeleteIcon/>
+                                                            <ClearIcon/>
                                                         </IconButton>
                                                     </Tooltip>
                                                 </ListItemSecondaryAction>

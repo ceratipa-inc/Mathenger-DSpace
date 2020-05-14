@@ -18,9 +18,9 @@ import {chatUtils} from "../../utils";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "../Avatar";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ClearIcon from '@material-ui/icons/Clear';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import TrendingDownIcon from '@material-ui/icons/TrendingDown';
 import EditChatNameModal from "./EditChatNameModal";
 import AddMembersToChatModal from "./AddMembersToChatModal";
 import {chatService} from "../../services";
@@ -63,12 +63,12 @@ function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, isCreator
     const ChangeRoleButton = ({member}) => isAdmin(member.id) ?
         <Tooltip TransitionComponent={Zoom} placement="left" title={`Demote ${member.firstName} to regular member`}>
             <IconButton className="ml-4" edge="end" disabled={loading} onClick={() => removeAdmin(member.id)}>
-                <ArrowDownwardIcon/>
+                <TrendingDownIcon/>
             </IconButton>
         </Tooltip> :
         <Tooltip TransitionComponent={Zoom} placement="left" title={`Promote ${member.firstName} to administrator`}>
             <IconButton className="ml-4" edge="end" disabled={loading} onClick={() => addAdmin(member.id)}>
-                <ArrowUpwardIcon/>
+                <TrendingUpIcon/>
             </IconButton>
         </Tooltip>;
 
@@ -135,7 +135,7 @@ function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, isCreator
                                                                     edge="end"
                                                                     disabled={loading}
                                                         >
-                                                            <DeleteIcon/>
+                                                            <ClearIcon/>
                                                         </IconButton>
                                                     </Tooltip>
                                                 </>
