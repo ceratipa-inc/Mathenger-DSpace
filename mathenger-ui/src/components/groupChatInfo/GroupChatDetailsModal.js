@@ -168,7 +168,7 @@ const mapStateToProps = state => {
     const account = state.account.currentAccount;
     const adminIds = chat.admins?.map(a => a.id);
     const isAdmin = memberId => adminIds?.includes(memberId);
-    const isCreator = memberId => chat.creator.id === memberId;
+    const isCreator = memberId => chat?.creator?.id === memberId;
     return {
         chat,
         account,
