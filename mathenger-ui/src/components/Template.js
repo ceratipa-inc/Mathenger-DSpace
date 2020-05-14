@@ -99,18 +99,22 @@ export default function Template(props) {
                 })}
             >
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, open && classes.hide)}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Mathenger
-                    </Typography>
+                    {props.showContent &&
+                        <>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                className={clsx(classes.menuButton, open && classes.hide)}
+                            >
+                                <MenuIcon/>
+                            </IconButton>
+                            <Typography variant="h6" noWrap>
+                                Mathenger
+                            </Typography>
+                        </>
+                    }
                 </Toolbar>
             </AppBar>
             <Drawer

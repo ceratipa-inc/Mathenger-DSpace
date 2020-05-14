@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import ChatHeader from "../chat/ChatHeader";
 import ChatsList from "../chat/ChatsList";
 import ChatBody from "../chat/ChatBody";
+import {useMediaQuery} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     drawerHeader: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 function MainPage(props) {
     const classes = useStyles();
+    const smallScreen = !useMediaQuery('(min-width:750px)');
 
     useEffect(() => {
         props.connectWebsocketClient();
@@ -31,9 +33,29 @@ function MainPage(props) {
         };
     }, []);
 
+    if (smallScreen) {
+        return (
+            <Template showContent={!props.isChatSelected} currentAccount={props.account.currentAccount}>
+                {props.isChatSelected &&
+                <div className="full-height d-flex flex-column">
+                    <div className="top-content">
+                        <ChatHeader/>
+                    </div>
+                    <div className={classes.drawerHeader}/>
+                    <ChatBody/>
+                </div> ||
+                <div className="full-height">
+                    <div className={classes.drawerHeader}/>
+                    <ChatsList/>
+                </div>
+                }
+            </Template>
+        )
+    }
+
     return (
         <>
-            <Template currentAccount={props.account.currentAccount}>
+            <Template showContent={true} currentAccount={props.account.currentAccount}>
                 <SplitterLayout
                     split="vertical"
                     className="flex-grow-1"
@@ -61,8 +83,11 @@ function MainPage(props) {
 }
 
 const mapStateToProps = state => {
+    const selectedChatId = state.chat.selectedChatId;
+    const chat = state.chat.chats.find(chat => chat.id === selectedChatId);
     return {
-        account: state.account
+        account: state.account,
+        isChatSelected: !!chat
     };
 };
 

@@ -39,7 +39,7 @@ export default function Message({currentAccount, message}) {
                         {message.author.firstName}&nbsp;{message.author.lastName}
                     </Link>
                 </Typography>
-                <div>
+                <div style={{maxWidth:'85vw'}}>
                     <Typography variant="body1" className="text-break">
                         {text}
                         <Typography variant="caption" className="align-bottom ml-2 mr-1">

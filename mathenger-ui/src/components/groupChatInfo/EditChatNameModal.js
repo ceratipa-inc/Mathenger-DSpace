@@ -65,7 +65,7 @@ export default function EditChatNameModal({chat}) {
                     <div className={classes.window}>
                         <form onSubmit={handleSubmit}>
                             <div
-                                className={`${classes.paperBackground} ${classes.widthHalfScreen} d-flex flex-column`}>
+                                className={`${classes.paperBackground} ${classes.modalMinWidth} ${classes.widthHalfScreen} d-flex flex-column`}>
                                 <Box className="p-3" bgcolor="info.main" color="info.contrastText">
                                     <Typography variant="h5" gutterBottom>
                                         Edit Chat Name

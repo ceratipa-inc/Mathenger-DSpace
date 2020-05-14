@@ -15,7 +15,8 @@ export const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         height: '400px',
-        minWidth: '50vw',
+        minWidth: '300px',
+        width: '50vw',
         minHeight: '300px',
     },
     paperBackground: {
@@ -24,6 +25,9 @@ export const useStyles = makeStyles((theme) => ({
     },
     widthHalfScreen: {
         width: '50vw',
+    },
+    modalMinWidth: {
+        minWidth: '300px'
     },
     root: {
         width: '100%',
