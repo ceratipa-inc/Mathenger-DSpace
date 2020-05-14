@@ -25,7 +25,7 @@ import EditChatNameModal from "./EditChatNameModal";
 import AddMembersToChatModal from "./AddMembersToChatModal";
 import {chatService} from "../../services";
 
-function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, canManageMember}) {
+function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, isCreator, canManageMember}) {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
 
@@ -54,6 +54,10 @@ function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, canManage
         } finally {
             setLoading(false);
         }
+    }
+
+    const getRole = memberId => {
+        return isCreator(memberId) ? 'Creator' : isAdmin(memberId) ? 'Administrator' : '';
     }
 
     const ChangeRoleButton = ({member}) => isAdmin(member.id) ?
@@ -114,7 +118,9 @@ function GroupChatDetailsModal({open, onClose, chat, account, isAdmin, canManage
                                                 <Avatar account={member}/>
                                             </ListItemAvatar>
                                             <ListItemText className="mr-2"
-                                                          primary={`${member.firstName} ${member.lastName}`}/>
+                                                          primary={`${member.firstName} ${member.lastName}`}
+                                                          secondary={getRole(member.id)}
+                                            />
                                             <ListItemSecondaryAction>
                                                 {canManageMember(member.id) &&
                                                 <>
@@ -162,10 +168,12 @@ const mapStateToProps = state => {
     const account = state.account.currentAccount;
     const adminIds = chat.admins?.map(a => a.id);
     const isAdmin = memberId => adminIds?.includes(memberId);
+    const isCreator = memberId => chat.creator.id === memberId;
     return {
         chat,
         account,
         isAdmin,
+        isCreator,
         canManageMember: memberId => {
             if (account.id === chat?.creator?.id) {
                 return memberId !== chat?.creator?.id;
