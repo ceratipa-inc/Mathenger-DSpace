@@ -1,6 +1,7 @@
 package com.example.mathengerapi.models;
 
 import com.example.mathengerapi.models.enums.ChatType;
+import com.example.mathengerapi.models.message.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public abstract class Chat {
     @JsonIgnore
     @Transient
-    public static final int PAGE_SIZE = 60;
+    public static final int PAGE_SIZE = 20;
 
     @Id
     @GeneratedValue
@@ -31,7 +31,7 @@ public abstract class Chat {
     @JoinTable(name = "chat_member",
             joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")})
-    private Set<Account> members;
+    private List<Account> members;
     @JsonIgnore
     @OneToMany
     @JoinTable(name = "chat_message",

@@ -1,7 +1,7 @@
 package com.example.mathengerapi.repositories;
 
 import com.example.mathengerapi.models.Chat;
-import com.example.mathengerapi.models.Message;
+import com.example.mathengerapi.models.message.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

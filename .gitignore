@@ -1,7 +1,8 @@
 # Java
 *.class
 
-#dev properties
+#properties
+application-prod.properties
 application-dev.properties
 
 # Mobile Tools for Java (J2ME)

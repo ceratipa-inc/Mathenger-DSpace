@@ -32,13 +32,13 @@ namespace Mathenger.services
 
         public void StartPrivateChat(long contactId, Action<Chat> chatConsumer)
         {
-            var request = new RestRequest($"/chats/new/{contactId}", Method.POST);
+            var request = new RestRequest($"/chats/contacts/{contactId}", Method.POST);
             _sender.Send(request, chatConsumer);
         }
 
         public void StartGroupChat(GroupChat chat, Action<GroupChat> chatConsumer)
         {
-            var request = new RestRequest("/chats/new", Method.POST);
+            var request = new RestRequest("/chats", Method.POST);
             request.AddJsonBody(chat);
             _sender.Send(request, chatConsumer);
         }
@@ -58,32 +58,32 @@ namespace Mathenger.services
 
         public void AddMembers(GroupChat chat,IList<Account> newMembers, Action<GroupChat> chatConsumer)
         {
-            var request = new RestRequest($"/chats/{chat.Id}/addMembers", Method.PUT);
+            var request = new RestRequest($"/chats/{chat.Id}/members", Method.POST);
             request.AddJsonBody(newMembers);
             _sender.Send(request, chatConsumer);
         }
 
         public void RemoveMember(GroupChat chat, Account member, Action<GroupChat> chatConsumer)
         {
-            var request = new RestRequest($"/chats/{chat.Id}/remove/{member.Id}", Method.PUT);
+            var request = new RestRequest($"/chats/{chat.Id}/members/{member.Id}", Method.DELETE);
             _sender.Send(request, chatConsumer);
         }
 
         public void AddAdmin(GroupChat chat, Account member, Action<GroupChat> chatConsumer)
         {
-            var request = new RestRequest($"/chats/{chat.Id}/addAdmin/{member.Id}", Method.PUT);
+            var request = new RestRequest($"/chats/{chat.Id}/admins/{member.Id}", Method.POST);
             _sender.Send(request, chatConsumer);
         }
 
         public void RemoveAdmin(GroupChat chat, Account admin, Action<GroupChat> chatConsumer)
         {
-            var request = new RestRequest($"chats/{chat.Id}/removeAdmin/{admin.Id}", Method.PUT);
+            var request = new RestRequest($"chats/{chat.Id}/admins/{admin.Id}", Method.DELETE);
             _sender.Send(request, chatConsumer);
         }
 
         public void DeleteChat(long chatId, Action onSuccess)
         {
-            var request = new RestRequest($"/chats/delete/{chatId}", Method.DELETE);
+            var request = new RestRequest($"/chats/{chatId}", Method.DELETE);
             _sender.Send(request, onSuccess);
         }
     }

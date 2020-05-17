@@ -1,0 +1,4 @@
+export const accountConstants = {
+    SET_ACCOUNT: 'ACCOUNT_SET_ACCOUNT',
+    SET_ACCOUNT_FULFILLED: 'ACCOUNT_SET_ACCOUNT_FULFILLED'
+}

@@ -1,8 +1,8 @@
 package com.example.mathengerapi.controllers;
 
 import com.example.mathengerapi.models.Chat;
-import com.example.mathengerapi.models.Message;
 import com.example.mathengerapi.models.User;
+import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.services.AuthenticationService;
 import com.example.mathengerapi.services.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,7 +33,7 @@ public class MessageController {
         messageService.sendMessage(authenticationService.getUserId(token.replace("Bearer ", "")), message, chatId);
     }
 
-    @GetMapping("chats/{chat}")
+    @GetMapping("chats/{chat}/messages")
     public ResponseEntity<List<Message>> getOlderMessages(@PathVariable Chat chat, @AuthenticationPrincipal User user,
                                                           @RequestParam @DateTimeFormat(iso =
                                                                   DateTimeFormat.ISO.DATE_TIME) LocalDateTime time) {
