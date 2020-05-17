@@ -20,8 +20,7 @@ const stompMiddleware = store => {
             brokerURL: apiConstants.WEB_SOCKET_CONNECTION_URL,
             connectHeaders: {
                 Authorization: tokenStorage.getToken()
-            },
-            debug: process.env.NODE_ENV !== 'production' ? str => console.log(str) : null
+            }
         });
 
         topicSubscriptions = {};
