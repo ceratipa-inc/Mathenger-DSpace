@@ -33,10 +33,7 @@ public abstract class Chat {
             inverseJoinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")})
     private List<Account> members;
     @JsonIgnore
-    @OneToMany
-    @JoinTable(name = "chat_message",
-            joinColumns = {@JoinColumn(name = "chat_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "message_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
 
     @Transient

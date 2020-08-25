@@ -99,7 +99,7 @@ public class ChatService {
         }
         var creationMessage = new Message(0L, creator, creator, LocalDateTime.now(),
                 creator.getFirstName() + " " + creator.getLastName() + " started chat " + chat.getName(),
-                null);
+                null, chat);
         messageService.sendMessage(creator.getId(), creationMessage, chat.getId());
         return chat;
     }
@@ -153,7 +153,7 @@ public class ChatService {
                     : String.format("%s %s added %s %s to the chat",
                     account.getFirstName(), account.getLastName(), newMembers.get(0).getFirstName(),
                     newMembers.get(0).getLastName());
-            var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null);
+            var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null, chat);
             messageService.sendMessage(userId, message, updatedChat.getId());
             notificationService.notifyChatUpdate(updatedChat, account);
         }
@@ -176,7 +176,7 @@ public class ChatService {
         var messageText = String.format("%s %s removed %s %s from the chat",
                 account.getFirstName(), account.getLastName(),
                 member.getFirstName(), member.getLastName());
-        var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null);
+        var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null, updatedChat);
         messageService.sendMessage(userId, message, updatedChat.getId());
         notificationService.notifyChatUpdate(updatedChat, account);
         return updatedChat;
@@ -199,7 +199,7 @@ public class ChatService {
         if (!chat.getMembers().contains(account))
             throw new IllegalArgumentException("You are not member of the chat");
         var leaveMessage = new Message(0L, account, account, LocalDateTime.now(),
-                account.getFirstName() + " " + account.getLastName() + " has left the chat!", null);
+                account.getFirstName() + " " + account.getLastName() + " has left the chat!", null, chat);
         messageService.sendMessage(userId, leaveMessage, chat.getId());
         chat.getMembers().remove(account);
         account.getChats().remove(chat);
