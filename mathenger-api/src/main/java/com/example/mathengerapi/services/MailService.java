@@ -24,7 +24,7 @@ public class MailService {
             context.setVariable("firstName", user.getAccount().getFirstName());
             context.setVariable("lastName", user.getAccount().getLastName());
             context.setVariable("passwordResetUrl",
-                    baseUrl + "password/reset/" + user.getPasswordRecoveryCode());
+                    baseUrl + "/password/reset/" + user.getPasswordRecoveryCode());
             var html = templateEngine.process("resetPasswordEmail", context);
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(user.getEmail());
