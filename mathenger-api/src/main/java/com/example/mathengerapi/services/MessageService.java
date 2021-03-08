@@ -41,6 +41,7 @@ public class MessageService {
         message.setAuthor(sender);
         message.setSender(sender);
         message.setTime(LocalDateTime.now());
+        message.setChat(chat);
         if (message.getMathFormula() != null && message.getMathFormula().getInputFormula() != null) {
             try {
                 message.getMathFormula().setLatex(
@@ -53,8 +54,6 @@ public class MessageService {
             }
         }
         message = messageRepository.save(message);
-        chat.getMessages().add(message);
-        chatRepository.save(chat);
 
         messagingTemplate.convertAndSend("/topic/chat/" + chat.getId(),
                 objectMapper.writeValueAsString(message));

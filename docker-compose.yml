@@ -1,5 +1,19 @@
 version: '3'
-services: 
+services:
+    mathenger-ui:
+        build:
+            context: mathenger-ui
+            dockerfile: Dockerfile
+            args:
+                REACT_APP_API_BASE_URL: http://127.0.0.1:8080
+                REACT_APP_WEB_SOCKET_CONNECTION_URL: ws://127.0.0.1:8080/socket
+        ports:
+        - "80:80"
+        restart: always
+        depends_on:
+          - mathenger-api
+        networks:
+            - frontend
     mathenger-api:
         build: 
             context: mathenger-api
@@ -13,12 +27,14 @@ services:
             SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mathenger
             SPRING_DATASOURCE_USERNAME: admin
             SPRING_DATASOURCE_PASSWORD: securepassword
+            MATHENGER_BASE_URL: http://localhost:8080/
         networks: 
             - backend
+            - frontend
     db:
         image: mysql:8.0.19
         ports: 
-            - "3305:3306"
+            - "3306:3306"
         restart: always
         environment: 
             MYSQL_DATABASE: mathenger
@@ -33,3 +49,4 @@ volumes:
     db-data:
 networks: 
     backend:
+    frontend:

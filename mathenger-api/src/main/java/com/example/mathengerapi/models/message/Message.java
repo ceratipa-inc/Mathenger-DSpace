@@ -1,6 +1,8 @@
 package com.example.mathengerapi.models.message;
 
 import com.example.mathengerapi.models.Account;
+import com.example.mathengerapi.models.Chat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +32,7 @@ public class Message {
     private String text;
     @Embedded
     private MathFormula mathFormula;
+    @ManyToOne
+    @JsonIgnore
+    private Chat chat;
 }
