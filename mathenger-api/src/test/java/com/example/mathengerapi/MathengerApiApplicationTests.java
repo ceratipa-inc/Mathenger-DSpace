@@ -1,16 +1,13 @@
 package com.example.mathengerapi;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import com.example.mathengerapi.config.MathengerTest;
+import org.junit.jupiter.api.Test;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@MathengerTest
 public class MathengerApiApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @Test
+    public void contextLoads() {
+    }
 
 }

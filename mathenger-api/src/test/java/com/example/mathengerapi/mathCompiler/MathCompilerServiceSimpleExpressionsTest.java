@@ -1,9 +1,10 @@
 package com.example.mathengerapi.mathCompiler;
 
 import com.example.mathengerapi.services.mathCompiler.MathCompilerService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.example.mathengerapi.utils.StringUtils.assertEqualsIgnoreWhiteSpaces;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class MathCompilerServiceSimpleExpressionsTest {
     private final MathCompilerService compilerService = new MathCompilerService();
@@ -120,11 +121,13 @@ public class MathCompilerServiceSimpleExpressionsTest {
         assertEqualsIgnoreWhiteSpaces(expected, result);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesNotCompileVariablesWithSeveralUnderscores() {
         var expr = "variable_index_index2";
-        var result = compilerService.toLatex(expr);
-        System.out.println(result);
+
+        assertThatThrownBy(() -> {
+            var result = compilerService.toLatex(expr);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
 }

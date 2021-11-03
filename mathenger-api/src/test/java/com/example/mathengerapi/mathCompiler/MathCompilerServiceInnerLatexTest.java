@@ -1,7 +1,7 @@
 package com.example.mathengerapi.mathCompiler;
 
 import com.example.mathengerapi.services.mathCompiler.MathCompilerService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.example.mathengerapi.utils.StringUtils.assertEqualsIgnoreWhiteSpaces;
 
