@@ -26,7 +26,7 @@ services:
         environment: 
             SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mathenger
             SPRING_DATASOURCE_USERNAME: admin
-            SPRING_DATASOURCE_PASSWORD: securepassword
+            SPRING_DATASOURCE_PASSWORD: password
             MATHENGER_BASE_URL: http://localhost:8080/
         networks: 
             - backend
@@ -39,8 +39,8 @@ services:
         environment: 
             MYSQL_DATABASE: mathenger
             MYSQL_USER: admin
-            MYSQL_PASSWORD: securepassword
-            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: password
         volumes: 
             - db-data:/var/lib/mysql
         networks: 
