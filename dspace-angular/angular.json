@@ -1,0 +1,242 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "dspace-angular": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "ds",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "extractCss": true,
+            "preserveSymlinks": true,
+            "customWebpackConfig": {
+              "path": "./webpack/webpack.browser.ts",
+              "mergeStrategies": {
+                "loaders": "prepend"
+              }
+            },
+            "allowedCommonJsDependencies": [
+              "angular2-text-mask",
+              "cerialize",
+              "core-js",
+              "lodash",
+              "jwt-decode",
+              "url-parse",
+              "uuid",
+              "webfontloader",
+              "zone.js"
+            ],
+            "outputPath": "dist/browser",
+            "index": "src/index.html",
+            "main": "src/main.browser.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "src/assets",
+              "src/robots.txt"
+            ],
+            "styles": [
+              "src/styles/startup.scss",
+              {
+                "input": "src/styles/base-theme.scss",
+                "inject": false,
+                "bundleName": "base-theme"
+              },
+              {
+                "input": "src/themes/custom/styles/theme.scss",
+                "inject": false,
+                "bundleName": "custom-theme"
+              },
+              {
+                "input": "src/themes/dspace/styles/theme.scss",
+                "inject": false,
+                "bundleName": "dspace-theme"
+              }
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "200kb",
+                  "maximumError": "300kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "dspace-angular:build",
+            "port": 4000
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "dspace-angular:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "dspace-angular:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/custom-webpack:karma",
+          "options": {
+            "customWebpackConfig": {
+              "path": "./webpack/webpack.test.ts",
+              "mergeStrategies": {
+                "loaders": "prepend"
+              }
+            },
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "sourceMap": {
+              "scripts": false,
+              "styles": false,
+              "hidden": false,
+              "vendor": false
+            },
+            "assets": [
+              "src/assets"
+            ],
+            "styles": [
+              {
+                "input": "src/styles/base-theme.scss",
+                "inject": false,
+                "bundleName": "base-theme"
+              }
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "cypress/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "dspace-angular:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "dspace-angular:serve:production"
+            }
+          }
+        },
+        "server": {
+          "builder": "@angular-builders/custom-webpack:server",
+          "options": {
+            "customWebpackConfig": {
+              "path": "./webpack/webpack.prod.ts",
+              "mergeStrategies": {
+                "loaders": "prepend"
+              }
+            },
+            "outputPath": "dist/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            }
+          }
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "dspace-angular:build",
+            "serverTarget": "dspace-angular:server",
+            "port": 4000
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "dspace-angular:build:production",
+              "serverTarget": "dspace-angular:server:production"
+            }
+          }
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "browserTarget": "dspace-angular:build:production",
+            "serverTarget": "dspace-angular:server:production",
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "dspace-angular:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "dspace-angular:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "dspace-angular"
+}
