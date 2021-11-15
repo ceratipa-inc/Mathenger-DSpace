@@ -20,8 +20,7 @@ services:
             dockerfile: Dockerfile
         ports: 
             - "8081:8081"
-        restart: always
-        depends_on: 
+        depends_on:
             - db
         environment: 
             SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mathenger
