@@ -18,8 +18,6 @@ public interface TestAccountRepository extends AccountRepository {
 
     Account findByAccountTypeAndFirstName(AccountType accountType, String firstName);
 
-    Account findByUserEmail(String email);
-
     @Query("select a.contacts from Account a join a.user u where u.email = :email")
     List<Account> findContactsByEmail(String email);
 }
