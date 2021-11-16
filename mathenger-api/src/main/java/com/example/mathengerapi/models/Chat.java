@@ -25,7 +25,7 @@ public abstract class Chat {
     public static final int PAGE_SIZE = 20;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToMany
     @JoinTable(name = "chat_member",
