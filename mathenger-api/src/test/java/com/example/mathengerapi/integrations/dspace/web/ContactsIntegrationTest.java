@@ -63,7 +63,6 @@ public class ContactsIntegrationTest {
                 .when().post("/account/me/contacts/{id}", Map.of("id", botId))
                 .then().statusCode(HttpStatus.SC_CREATED);
 
-        Account account = accountRepository.findByUserEmail(USER_EMAIL);
         List<Account> contacts = accountRepository.findContactsByEmail(USER_EMAIL);
 
         assertThat(contacts).hasSize(1);
