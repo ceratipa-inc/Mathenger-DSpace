@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 public class Notification {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(length = 25, nullable = false)
