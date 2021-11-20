@@ -4,7 +4,6 @@ import com.example.mathengerapi.models.Account;
 import com.example.mathengerapi.models.Chat;
 import com.example.mathengerapi.models.GroupChat;
 import com.example.mathengerapi.models.PrivateChat;
-import com.example.mathengerapi.models.enums.ChatType;
 import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.repositories.AccountRepository;
 import com.example.mathengerapi.repositories.ChatRepository;
@@ -15,7 +14,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,24 +36,15 @@ public class ChatService {
         return chatRepository.findChatsByAccountId(userId);
     }
 
-    public Chat startPrivateChat(Long userId, Account contact) {
-        if (contact == null) {
-            throw new IllegalArgumentException("Account with such id not found!");
-        }
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        if (!account.getContacts().contains(contact))
-            throw new IllegalArgumentException("Can't start chatting with user! Add him as contact first.");
-        var chat = privateChatRepository.findByMembersContainingAndMembersContaining(account, contact)
-                .or(() -> Optional.of(newChatWithMembers(account, contact))).get();
-        if (!account.getChats().contains(chat)) {
-            account.getChats().add(chat);
-            accountRepository.save(account);
-        }
-        return chat;
+    public Optional<PrivateChat> findPrivateChatWithMembers(Account contact, Account account) {
+        return privateChatRepository.findByMembersContainingAndMembersContaining(account, contact);
     }
 
-    private PrivateChat newChatWithMembers(Account account, Account account2) {
+    public void save(Chat chat) {
+        chatRepository.save(chat);
+    }
+
+    public PrivateChat createPrivateChat(Account account, Account account2) {
         var chat = new PrivateChat();
         chat.setMembers(new LinkedList<>());
         chat.setMessages(new LinkedList<>());
@@ -59,25 +53,7 @@ public class ChatService {
         return privateChatRepository.save(chat);
     }
 
-    public void delete(Long userId, Chat chat) {
-        if (chat == null) {
-            throw new IllegalArgumentException("Chat not found!");
-        }
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        account.getChats().remove(chat);
-        // delete chat from DB if all members removed it from their lists
-        if (chat.getChatType().equals(ChatType.GROUP_CHAT)) {
-            chat.getMembers().stream()
-                    .filter(member -> member.getChats().contains(chat))
-                    .findFirst().ifPresentOrElse(member -> {
-                    },
-                    () -> chatRepository.delete(chat));
-        }
-        accountRepository.save(account);
-    }
-
-    public GroupChat startGroupChat(Long userId, GroupChat chat) throws JsonProcessingException {
+    public GroupChat createGroupChat(Long userId, GroupChat chat) throws JsonProcessingException {
         var creator = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         var contacts = creator.getContacts();
@@ -104,85 +80,7 @@ public class ChatService {
         return chat;
     }
 
-    public GroupChat addAdmin(Long userId, GroupChat chat, Account member) throws JsonProcessingException {
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        if (!chat.getAdmins().contains(account))
-            throw new IllegalArgumentException("You are not an administrator of this chat");
-        if (!chat.getMembers().contains(member))
-            throw new IllegalArgumentException("User is not a member of chat");
-        if (chat.getAdmins().contains(member))
-            throw new IllegalArgumentException("Member is already an administrator");
-        chat.getAdmins().add(member);
-        var updatedChat = groupChatRepository.save(chat);
-        notificationService.notifyChatUpdate(updatedChat, account);
-        return updatedChat;
-    }
-
-    public GroupChat removeAdmin(Long userId, GroupChat chat, Account member) throws JsonProcessingException {
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        if (!chat.getCreator().equals(account))
-            throw new IllegalArgumentException("You are not creator of this chat!");
-        if (!chat.getMembers().contains(member))
-            throw new IllegalArgumentException("User is not a member of chat");
-        if (!chat.getAdmins().contains(member))
-            throw new IllegalArgumentException("Member is not an administrator");
-        chat.getAdmins().remove(member);
-        var updatedChat = groupChatRepository.save(chat);
-        notificationService.notifyChatUpdate(updatedChat, account);
-        return updatedChat;
-    }
-
-    public GroupChat addMembers(Long userId, GroupChat chat, List<Account> newMembers) throws JsonProcessingException {
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        if (!chat.getMembers().contains(account))
-            throw new IllegalArgumentException("You are not member of this chat");
-        newMembers = accountRepository.findByIdIsIn(newMembers
-                .stream().map(Account::getId).collect(Collectors.toList()))
-                .stream().filter(member -> !chat.getMembers().contains(member))
-                .filter(member -> account.getContacts().contains(member))
-                .collect(Collectors.toList());
-        chat.getMembers().addAll(newMembers);
-        var updatedChat = groupChatRepository.save(chat);
-        if (!newMembers.isEmpty()) {
-            var messageText = newMembers.size() > 1
-                    ? String.format("%s %s added %d members to the chat",
-                    account.getFirstName(), account.getLastName(), newMembers.size())
-                    : String.format("%s %s added %s %s to the chat",
-                    account.getFirstName(), account.getLastName(), newMembers.get(0).getFirstName(),
-                    newMembers.get(0).getLastName());
-            var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null, chat);
-            messageService.sendMessage(userId, message, updatedChat.getId());
-            notificationService.notifyChatUpdate(updatedChat, account);
-        }
-        return updatedChat;
-    }
-
-    public GroupChat removeMember(Long userId, GroupChat chat, Account member) throws JsonProcessingException {
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        if (!chat.getMembers().contains(member))
-            throw new IllegalArgumentException("This user is not member of the chat");
-        if ((chat.getAdmins().contains(member) && !chat.getCreator().equals(account))
-                || !chat.getAdmins().contains(account))
-            throw new IllegalArgumentException("You are not authorized to remove this member");
-        chat.getMembers().remove(member);
-        member.getChats().remove(chat);
-        accountRepository.save(member);
-        notificationService.notifyRemovalFromChat(chat, account, member);
-        var updatedChat = groupChatRepository.save(chat);
-        var messageText = String.format("%s %s removed %s %s from the chat",
-                account.getFirstName(), account.getLastName(),
-                member.getFirstName(), member.getLastName());
-        var message = new Message(0L, account, account, LocalDateTime.now(), messageText, null, updatedChat);
-        messageService.sendMessage(userId, message, updatedChat.getId());
-        notificationService.notifyChatUpdate(updatedChat, account);
-        return updatedChat;
-    }
-
-    public GroupChat updateGroupChat(Long userId, GroupChat chat, GroupChat newChat) throws JsonProcessingException {
+    public GroupChat updateChatDetails(Long userId, GroupChat chat, GroupChat newChat) throws JsonProcessingException {
         var account = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         if (!chat.getAdmins().contains(account))
@@ -193,18 +91,27 @@ public class ChatService {
         return updatedChat;
     }
 
-    public void leave(Long userId, GroupChat chat) throws JsonProcessingException {
-        var account = accountRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
-        if (!chat.getMembers().contains(account))
-            throw new IllegalArgumentException("You are not member of the chat");
-        var leaveMessage = new Message(0L, account, account, LocalDateTime.now(),
-                account.getFirstName() + " " + account.getLastName() + " has left the chat!", null, chat);
-        messageService.sendMessage(userId, leaveMessage, chat.getId());
-        chat.getMembers().remove(account);
-        account.getChats().remove(chat);
-        groupChatRepository.save(chat);
-        accountRepository.save(account);
-        notificationService.notifyChatUpdate(chat, account);
+    public GroupChat addMembersToChat(GroupChat chat, List<Account> newMembers) {
+        chat.getMembers().addAll(newMembers);
+        return groupChatRepository.save(chat);
+    }
+
+    public GroupChat removeMemberFromChat(GroupChat chat, Account member) {
+        chat.getMembers().remove(member);
+        return groupChatRepository.save(chat);
+    }
+
+    public GroupChat addAdminToChat(GroupChat chat, Account member) {
+        chat.getAdmins().add(member);
+        return groupChatRepository.save(chat);
+    }
+
+    public GroupChat removeAdminFromChat(GroupChat chat, Account member) {
+        chat.getAdmins().remove(member);
+        return groupChatRepository.save(chat);
+    }
+
+    public void deleteChat(Chat chat) {
+        chatRepository.delete(chat);
     }
 }
