@@ -30,7 +30,7 @@ public class MessageService {
     private MathCompilerService mathCompilerService;
 
     @Transactional
-    public void sendMessage(Long userId, Message message, Long chatId) throws JsonProcessingException {
+    public Message sendMessage(Long userId, Message message, Long chatId) throws JsonProcessingException {
         var sender = accountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         var chat = chatRepository.findById(chatId)
@@ -59,7 +59,7 @@ public class MessageService {
                 objectMapper.writeValueAsString(message));
 
         notificationService.remindMembersAboutChat(sender, chat);
-
+        return message;
     }
 
     public List<Message> getOlderMessages(Long userId, Chat chat, LocalDateTime time) {
