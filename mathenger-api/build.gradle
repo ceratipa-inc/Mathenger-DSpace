@@ -56,7 +56,6 @@ dependencies {
 	testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
 	testImplementation "org.testcontainers:mysql:$testContainersVersion"
 	testImplementation "org.awaitility:awaitility:3.0.0"
-	//testImplementation "com.github.tomakehurst:wiremock-jre8:2.31.0"
 
 }
 
