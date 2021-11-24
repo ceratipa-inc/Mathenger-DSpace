@@ -35,7 +35,7 @@ public class MessageService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
         var chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found!"));
-        if (!sender.getChats().contains(chat)) {
+        if (isNotMemberOfChat(sender, chat)) {
             throw new IllegalArgumentException("You are not member of this chat!");
         }
         message.setAuthor(sender);
@@ -68,5 +68,9 @@ public class MessageService {
             throw new IllegalArgumentException("You are not member of this chat");
         }
         return chatRepository.findOlderMessages(time, Chat.PAGE_SIZE, chat.getId());
+    }
+
+    private boolean isNotMemberOfChat(Account sender, Chat chat) {
+        return chat.getMembers().stream().noneMatch(member -> member.getId().equals(sender.getId()));
     }
 }
