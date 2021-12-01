@@ -10,6 +10,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Async
 @Component
 @RequiredArgsConstructor
@@ -31,5 +33,10 @@ public class DSpaceMessageHandler {
         if ("/community".equals(message)) {
             botCommandsHandler.handleAllCommunities(event.getChatId());
         }
+        else if(message.startsWith("/community_{")){
+            UUID collectionId =UUID.fromString(message.substring(12,message.length()-1));
+            botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), collectionId);
+        }
+
     }
 }
