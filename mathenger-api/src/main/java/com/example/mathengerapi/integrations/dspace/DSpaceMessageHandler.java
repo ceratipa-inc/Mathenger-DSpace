@@ -18,7 +18,7 @@ import java.util.UUID;
 public class DSpaceMessageHandler {
     private final ChatStatusService chatStatusService;
     private final BotCommandsHandler botCommandsHandler;
-
+    private final BotInfoHolder botInfoHolder;
 
     @EventListener
     public void onNewMessage(MessageSent event) {
@@ -30,13 +30,20 @@ public class DSpaceMessageHandler {
     private void handleBotMessage(MessageSent event) {
         // TODO refactor to support many different commands without bunch of "if" blocks
         var message = event.getText();
-        if ("/community".equals(message)) {
-            botCommandsHandler.handleAllCommunities(event.getChatId());
+        if (!event.getAuthorId().equals(botInfoHolder.getBotAccount().getId())) {
+            if ("/community".equals(message)) {
+                botCommandsHandler.handleAllCommunities(event.getChatId());
+            } else if (message.matches("/community_(?i)[a-f\\d]{8}-([a-f\\d]{4}-){3}[a-f\\d]{12}")) {
+                UUID communityId = UUID.fromString(message.substring(11, message.length()));
+                botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
+            } else if (message.matches("/colpublications_(?i)[a-f\\d]{8}-([a-f\\d]{4}-){3}[a-f\\d]{12}")) {
+                UUID collectionId = UUID.fromString(message.substring(17, message.length()));
+                botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
+            } else if ("/help".equals(message)) {
+                botCommandsHandler.handleAllCommands(event.getChatId());
+            } else {
+                botCommandsHandler.handleIfErrorCommand(event.getChatId(), message);
+            }
         }
-        else if(message.startsWith("/community_{")){
-            UUID collectionId =UUID.fromString(message.substring(12,message.length()-1));
-            botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), collectionId);
-        }
-
     }
 }

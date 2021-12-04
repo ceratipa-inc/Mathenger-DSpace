@@ -15,7 +15,10 @@ public class BotMessageService {
     private final BotInfoHolder dSpaceBotHolder;
     private final MessageService messageService;
 
-    public static final String COMMANDS = Stream.of("/community - display a list of all communities")
+    public static final String COMMANDS = Stream.of("/community - display a list of all communities",
+                    "/community_{id} - display a list of collections that are in the selected community",
+                    "/colpublications_{id} - display the list of all works in the collection",
+                    "/help - display a list of all commands")
             .map(command -> command + "\n")
             .collect(Collectors.joining());
 
@@ -24,6 +27,10 @@ public class BotMessageService {
         String message = "Hello, I am DSpace chatbot. I'll help you to interact with DSpace. " +
                 "You can talk to me with these commands:" + "\n" + COMMANDS;
         send(message, chatId);
+    }
+    public static String AllCommands() {
+        String message = COMMANDS;
+        return message;
     }
 
     @SneakyThrows

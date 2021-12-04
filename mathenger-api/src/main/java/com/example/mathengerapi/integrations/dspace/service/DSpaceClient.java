@@ -2,6 +2,7 @@ package com.example.mathengerapi.integrations.dspace.service;
 
 import com.example.mathengerapi.integrations.dspace.model.Collection;
 import com.example.mathengerapi.integrations.dspace.model.Community;
+import com.example.mathengerapi.integrations.dspace.model.Item;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,4 +17,11 @@ public interface DSpaceClient {
 
     @GetMapping("/communities/{communityId}/collections")
     List<Collection> getCollectionsOfCommunity(@PathVariable("communityId") UUID communityId);
+
+    @GetMapping("/collections")
+    List<Collection> getCollections();
+
+    @GetMapping("/collections/{collectionId}/items")
+    List<Item> getItemsOfCollection(@PathVariable("collectionId") UUID collectionId);
+
 }
