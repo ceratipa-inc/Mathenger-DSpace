@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +44,12 @@ public class DSpaceMessageHandlerTest {
     private static final Long CHAT_ID = 1L;
     private static final Long MEMBER_ID = 10L;
 
+    private static final String COMMANDS = Stream.of("/community - display a list of all communities",
+                    "/community_{id} - display a list of collections that are in the selected community",
+                    "/colpublications_{id} - display the list of all works in the collection",
+                    "/help - display a list of all commands")
+            .map(command -> command + "\n")
+            .collect(Collectors.joining());
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -88,11 +96,9 @@ public class DSpaceMessageHandlerTest {
     @Test
     void shouldHandleAllCollectionsOfCommunityWithoutIntroductoryCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
-        List<Community> communities = List.of(
-                createCommunity(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st community", "", ""),
-                createCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd community", "2nd introductoryText", "2nd shortDescription")
-        );
-        when(dSpaceClient.getCommunities()).thenReturn(communities);
+        Community community = createCommunity(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st community", "", "");
+
+        when(dSpaceClient.getCommunityById(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(community);
         List<Collection> collections = List.of(
                 createCollection(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "1st introductoryText", "1st shortDescription"),
                 createCollection(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription")
@@ -113,11 +119,10 @@ public class DSpaceMessageHandlerTest {
     @Test
     void shouldHandleAllCollectionsOfCommunityWithIntroductoryCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
-        List<Community> communities = List.of(
-                createCommunity(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st community", "", ""),
-                createCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd community", "2nd introductoryText", "2nd shortDescription")
-        );
-        when(dSpaceClient.getCommunities()).thenReturn(communities);
+        Community community = createCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd community", "2nd introductoryText", "2nd shortDescription");
+
+        when(dSpaceClient.getCommunityById(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(community);
+
         List<Collection> collections = List.of(
                 createCollection(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "1st introductoryText", "1st shortDescription"),
                 createCollection(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription")
@@ -141,11 +146,9 @@ public class DSpaceMessageHandlerTest {
     @Test
     void shouldHandleAllItemsOfCollectionWithoutIntroductoryCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
-        List<Collection> collections = List.of(
-                createCollection(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "", ""),
-                createCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription")
-        );
-        when(dSpaceClient.getCollections()).thenReturn(collections);
+        Collection collection = createCollection(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "", "");
+
+        when(dSpaceClient.getCollectionById(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(collection);
         List<Item> items = List.of(
                 createItem(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st item"),
                 createItem(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd item")
@@ -167,11 +170,10 @@ public class DSpaceMessageHandlerTest {
     @Test
     void shouldHandleAllItemsOfCollectionWithIntroductoryCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
-        List<Collection> collections = List.of(
-                createCollection(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "", ""),
-                createCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription")
-        );
-        when(dSpaceClient.getCollections()).thenReturn(collections);
+        Collection collection = createCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription");
+
+        when(dSpaceClient.getCollectionById(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(collection);
+
         List<Item> items = List.of(
                 createItem(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st item"),
                 createItem(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd item")
@@ -179,7 +181,7 @@ public class DSpaceMessageHandlerTest {
         var expectedMessage = "About this collection:\n\n"
                 + "2nd introductoryText\n"
                 + "2nd shortDescription\n" + "\n"
-                +"Here you can view a list of publications in the selected collection:\n\n"
+                + "Here you can view a list of publications in the selected collection:\n\n"
                 + "1st item /id:33d93fd6-5eb0-4952-9bbb-4b6e417e1160\n"
                 + "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160\n\n"
                 + "If you want to read one, use the command “/publication_{id}";
@@ -197,10 +199,7 @@ public class DSpaceMessageHandlerTest {
     @Test
     void shouldHandleHelpCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
-        var expectedMessage = "/community - display a list of all communities\n" +
-                "/community_{id} - display a list of collections that are in the selected community\n" +
-                "/colpublications_{id} - display the list of all works in the collection\n" +
-                "/help - display a list of all commands";
+        var expectedMessage = COMMANDS;
 
 
         send("/help");
@@ -212,15 +211,11 @@ public class DSpaceMessageHandlerTest {
     }
 
     @Test
-    void shouldErrorCommand() {
+    void shouldInvalidCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
         var expectedMessage = "Sorry, I can’t understand errorCommand.\n" +
                 "You can talk to me with these commands:\n" +
-                "\n" +
-                "/community - display a list of all communities\n" +
-                "/community_{id} - display a list of collections that are in the selected community\n" +
-                "/colpublications_{id} - display the list of all works in the collection\n" +
-                "/help - display a list of all commands";
+                "\n" + COMMANDS;
 
 
         send("errorCommand");

@@ -28,10 +28,7 @@ public class BotMessageService {
                 "You can talk to me with these commands:" + "\n" + COMMANDS;
         send(message, chatId);
     }
-    public static String AllCommands() {
-        String message = COMMANDS;
-        return message;
-    }
+
 
     @SneakyThrows
     public void send(String message, Long chatId) {

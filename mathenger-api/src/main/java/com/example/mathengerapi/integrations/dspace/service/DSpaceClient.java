@@ -15,11 +15,17 @@ public interface DSpaceClient {
     @GetMapping("/communities")
     List<Community> getCommunities();
 
+    @GetMapping("/communities/{communityId}")
+    Community getCommunityById(@PathVariable("communityId") UUID communityId);
+
     @GetMapping("/communities/{communityId}/collections")
     List<Collection> getCollectionsOfCommunity(@PathVariable("communityId") UUID communityId);
 
     @GetMapping("/collections")
     List<Collection> getCollections();
+
+    @GetMapping("/collections/{collectionId}")
+    Collection getCollectionById(@PathVariable("collectionId") UUID collectionId);
 
     @GetMapping("/collections/{collectionId}/items")
     List<Item> getItemsOfCollection(@PathVariable("collectionId") UUID collectionId);
