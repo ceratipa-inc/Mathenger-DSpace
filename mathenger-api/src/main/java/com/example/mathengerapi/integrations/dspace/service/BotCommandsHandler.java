@@ -25,13 +25,13 @@ public class BotCommandsHandler {
     public void handleAllCollectionsOfCommunity(Long chatId, UUID uuid) {
         var informationAboutCommunity = new StringBuilder("About this community:\n\n");
         Community community = dSpaceClient.getCommunityById(uuid);
-        if (!community.getIntroductoryText().equals("")) {
+        if (!community.getIntroductoryText().isBlank()) {
             informationAboutCommunity.append(community.getIntroductoryText() + "\n");
         }
-        if (!community.getShortDescription().equals("")) {
+        if (!community.getShortDescription().isBlank()) {
             informationAboutCommunity.append(community.getShortDescription() + "\n");
         }
-        if (informationAboutCommunity.toString().equals("About this community:\n\n")) {
+        if (community.getIntroductoryText().isBlank() && community.getShortDescription().isBlank()) {
             informationAboutCommunity.replace(0, informationAboutCommunity.length(), "");
         } else {
             informationAboutCommunity.append("\n");
@@ -50,13 +50,13 @@ public class BotCommandsHandler {
     public void handleAllItemsOfCollection(Long chatId, UUID uuid) {
         var informationAboutCollection = new StringBuilder("About this collection:\n\n");
         Collection collection = dSpaceClient.getCollectionById(uuid);
-        if (!collection.getIntroductoryText().equals("")) {
+        if (!collection.getIntroductoryText().isBlank()) {
             informationAboutCollection.append(collection.getIntroductoryText() + "\n");
         }
-        if (!collection.getShortDescription().equals("")) {
+        if (!collection.getShortDescription().isBlank()) {
             informationAboutCollection.append(collection.getShortDescription() + "\n");
         }
-        if (informationAboutCollection.toString().equals("About this collection:\n\n")) {
+        if (collection.getIntroductoryText().isBlank() && collection.getShortDescription().isBlank()) {
             informationAboutCollection.replace(0, informationAboutCollection.length(), "");
         } else {
             informationAboutCollection.append("\n");
