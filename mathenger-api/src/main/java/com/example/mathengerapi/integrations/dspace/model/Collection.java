@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class Community {
+public class Collection {
     private UUID uuid;
     private String name;
     private String introductoryText;
@@ -13,6 +13,6 @@ public class Community {
 
     @Override
     public String toString() {
-        return name +" /id:"+uuid;
+        return name + " /id:" + uuid;
     }
 }
