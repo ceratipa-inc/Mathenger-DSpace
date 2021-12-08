@@ -36,10 +36,10 @@ public class DSpaceMessageHandler {
         if ("/community".equals(message)) {
             botCommandsHandler.handleAllCommunities(event.getChatId());
         } else if (message.matches("/community_" + UUID_REGEX)) {
-            UUID communityId = UUID.fromString(message.substring(11, message.length()));
+            UUID communityId = UUID.fromString(message.substring(message.length() - UUID.randomUUID().toString().length(), message.length()));
             botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
         } else if (message.matches("/colpublications_" + UUID_REGEX)) {
-            UUID collectionId = UUID.fromString(message.substring(17, message.length()));
+            UUID collectionId = UUID.fromString(message.substring(message.length() - UUID.randomUUID().toString().length(), message.length()));
             botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
         } else if ("/help".equals(message)) {
             botCommandsHandler.handleAllCommands(event.getChatId());
