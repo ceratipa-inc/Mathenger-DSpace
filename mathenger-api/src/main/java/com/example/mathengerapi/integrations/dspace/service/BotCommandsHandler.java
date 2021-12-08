@@ -16,7 +16,6 @@ public class BotCommandsHandler {
 
     private boolean isBlank(String field) {
         return field == null || field.isBlank();
-
     }
 
     public void handleAllCommunities(Long chatId) {
@@ -25,9 +24,11 @@ public class BotCommandsHandler {
         if (communities.isEmpty()) {
             message = "Communities not found.";
         } else {
-            message = "Here is a list of all communities:\n\n" + communities.stream()
-                    .map(community -> community.toString() + "\n")
-                    .collect(Collectors.joining()) + "\nTo view more about one of them, use the command “/community_{id}”";
+            message = "Here is a list of all communities:\n\n" +
+                    communities.stream()
+                            .map(community -> community.toString() + "\n")
+                            .collect(Collectors.joining()) +
+                    "\nTo view more about one of them, use the command “/community_{id}”";
         }
         botMessageService.send(message, chatId);
     }

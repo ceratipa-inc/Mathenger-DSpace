@@ -3,7 +3,6 @@ package com.example.mathengerapi.integrations.dspace;
 import com.example.mathengerapi.events.MessageSent;
 import com.example.mathengerapi.integrations.dspace.service.BotCommandsHandler;
 import com.example.mathengerapi.integrations.dspace.service.BotInfoHolder;
-import com.example.mathengerapi.integrations.dspace.service.BotMessageService;
 import com.example.mathengerapi.integrations.dspace.service.ChatStatusService;
 import com.example.mathengerapi.integrations.dspace.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
