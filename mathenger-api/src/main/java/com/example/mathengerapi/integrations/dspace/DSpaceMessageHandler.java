@@ -3,7 +3,9 @@ package com.example.mathengerapi.integrations.dspace;
 import com.example.mathengerapi.events.MessageSent;
 import com.example.mathengerapi.integrations.dspace.service.BotCommandsHandler;
 import com.example.mathengerapi.integrations.dspace.service.BotInfoHolder;
+import com.example.mathengerapi.integrations.dspace.service.BotMessageService;
 import com.example.mathengerapi.integrations.dspace.service.ChatStatusService;
+import com.example.mathengerapi.integrations.dspace.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -36,16 +38,15 @@ public class DSpaceMessageHandler {
         if ("/community".equals(message)) {
             botCommandsHandler.handleAllCommunities(event.getChatId());
         } else if (message.matches("/community_" + UUID_REGEX)) {
-            UUID communityId = UUID.fromString(message.substring(message.length() - UUID.randomUUID().toString().length(), message.length()));
+            UUID communityId = CommandUtils.extractId(message);
             botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
         } else if (message.matches("/colpublications_" + UUID_REGEX)) {
-            UUID collectionId = UUID.fromString(message.substring(message.length() - UUID.randomUUID().toString().length(), message.length()));
+            UUID collectionId = CommandUtils.extractId(message);
             botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
         } else if ("/help".equals(message)) {
             botCommandsHandler.handleAllCommands(event.getChatId());
         } else if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
-
     }
 }
