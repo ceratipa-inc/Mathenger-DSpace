@@ -56,7 +56,7 @@ public class DSpaceChatEventsListenerTest {
             assertThat(chatStatusRepository.findById(1L)).isPresent().get()
                     .hasFieldOrPropertyWithValue("chatType", ChatType.PRIVATE_CHAT)
                     .hasFieldOrPropertyWithValue("isActive", true);
-            verify(messageService).sendMessage(eq(botId), any(Message.class) , eq(1L));
+            verify(messageService).sendMessage(eq(botId), any(Message.class), eq(1L));
         });
     }
 

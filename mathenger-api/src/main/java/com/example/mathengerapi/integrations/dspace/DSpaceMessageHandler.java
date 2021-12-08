@@ -47,6 +47,5 @@ public class DSpaceMessageHandler {
         } else if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
-
     }
 }
