@@ -12,10 +12,12 @@ import com.example.mathengerapi.integrations.dspace.service.DSpaceClient;
 import com.example.mathengerapi.models.enums.ChatType;
 import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.services.MessageService;
+import feign.FeignException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -105,6 +107,38 @@ public class DSpaceMessageHandlerTest {
         await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
             verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
             verify(dSpaceClient, times(1)).getCommunities();
+        });
+    }
+
+    @Test
+    void shouldHandleAllCollectionsOfCommunityWhenIncorrectIdCommand() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        var expectedMessage = "Incorrect id. Check spelling. To display a list of all commands use the “/help” " +
+                "message when the user writes an incorrect id.";
+        when(dSpaceClient.getCommunityById(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160")))
+                .thenThrow(FeignException.NotFound.class);
+
+        send("/community_13d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getCommunityById(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
+        });
+    }
+
+    @Test
+    void shouldHandleAllItemsOfCollectionWhenIncorrectIdCommand() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        var expectedMessage = "Incorrect id. Check spelling. To display a list of all commands use the “/help” " +
+                "message when the user writes an incorrect id.";
+        when(dSpaceClient.getCollectionById(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160")))
+                .thenThrow(FeignException.NotFound.class);
+
+        send("/colpublications_13d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getCollectionById(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
         });
     }
 

@@ -2,6 +2,7 @@ package com.example.mathengerapi.integrations.dspace.service;
 
 import com.example.mathengerapi.integrations.dspace.model.Collection;
 import com.example.mathengerapi.integrations.dspace.model.Community;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,16 @@ public class BotCommandsHandler {
 
     public void handleAllCollectionsOfCommunity(Long chatId, UUID uuid) {
         var informationAboutCommunity = new StringBuilder("About this community:\n\n");
-        Community community = dSpaceClient.getCommunityById(uuid);
+        String message;
+        Community community;
+        try {
+            community = dSpaceClient.getCommunityById(uuid);
+        } catch (FeignException.NotFound e) {
+            message = "Incorrect id. Check spelling. To display a list of all commands use the “/help” " +
+                    "message when the user writes an incorrect id.";
+            botMessageService.send(message, chatId);
+            return;
+        }
         if (!isBlank(community.getIntroductoryText())) {
             informationAboutCommunity.append(community.getIntroductoryText()).append("\n");
         }
@@ -48,7 +58,6 @@ public class BotCommandsHandler {
             informationAboutCommunity.append("\n");
         }
         var collections = dSpaceClient.getCollectionsOfCommunity(uuid);
-        String message;
         if (collections.isEmpty()) {
             message = informationAboutCommunity + "No items were found, to display a list of all commands use “/help” message " +
                     "when there are no items in the selected community or collection.";
@@ -66,7 +75,16 @@ public class BotCommandsHandler {
 
     public void handleAllItemsOfCollection(Long chatId, UUID uuid) {
         var informationAboutCollection = new StringBuilder("About this collection:\n\n");
-        Collection collection = dSpaceClient.getCollectionById(uuid);
+        String message;
+        Collection collection;
+        try {
+            collection = dSpaceClient.getCollectionById(uuid);
+        } catch (FeignException.NotFound e) {
+            message = "Incorrect id. Check spelling. To display a list of all commands use the “/help” " +
+                    "message when the user writes an incorrect id.";
+            botMessageService.send(message, chatId);
+            return;
+        }
         if (!isBlank(collection.getIntroductoryText())) {
             informationAboutCollection.append(collection.getIntroductoryText()).append("\n");
         }
@@ -79,7 +97,6 @@ public class BotCommandsHandler {
             informationAboutCollection.append("\n");
         }
         var items = dSpaceClient.getItemsOfCollection(uuid);
-        String message;
         if (items.isEmpty()) {
             message = informationAboutCollection + "No items were found, to display a list of all commands use “/help” " +
                     "message when there are no items in the selected community or collection.";
