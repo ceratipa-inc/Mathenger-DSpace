@@ -73,9 +73,9 @@ public class BotCommandsHandler {
         botMessageService.send(message, chatId);
     }
 
-    public void handleWork(Long chatId, UUID uuid) {
+    public void handlePublication(Long chatId, UUID uuid) {
         var informationAboutCollection = new StringBuilder("About this work:\n\n");
-        Item work = dSpaceClient.getWorkById(uuid);
+        Item work = dSpaceClient.getPublicationById(uuid);
 
 
 

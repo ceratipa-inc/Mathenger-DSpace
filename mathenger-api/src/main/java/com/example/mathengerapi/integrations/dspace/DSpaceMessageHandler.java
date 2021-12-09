@@ -45,7 +45,7 @@ public class DSpaceMessageHandler {
             botCommandsHandler.handleAllCommands(event.getChatId());
         }else if(message.matches("/publication_" + UUID_REGEX)) {
             UUID workId = UUID.fromString(message.substring(13, message.length()));
-            botCommandsHandler.handleWork(event.getChatId(), workId);
+            botCommandsHandler.handlePublication(event.getChatId(), workId);
         } else if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
