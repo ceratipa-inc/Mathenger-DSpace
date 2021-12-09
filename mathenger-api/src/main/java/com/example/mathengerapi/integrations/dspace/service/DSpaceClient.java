@@ -30,4 +30,6 @@ public interface DSpaceClient {
     @GetMapping("/collections/{collectionId}/items")
     List<Item> getItemsOfCollection(@PathVariable("collectionId") UUID collectionId);
 
+    @GetMapping("/items/{workId}")
+    Item getWorkById(@PathVariable("workId") UUID workId);
 }

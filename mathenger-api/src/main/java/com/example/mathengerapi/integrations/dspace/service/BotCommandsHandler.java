@@ -2,6 +2,7 @@ package com.example.mathengerapi.integrations.dspace.service;
 
 import com.example.mathengerapi.integrations.dspace.model.Collection;
 import com.example.mathengerapi.integrations.dspace.model.Community;
+import com.example.mathengerapi.integrations.dspace.model.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +70,16 @@ public class BotCommandsHandler {
                         .map(item -> item.toString() + "\n")
                         .collect(Collectors.joining())
                 + "\nIf you want to read one, use the command “/publication_{id}";
+        botMessageService.send(message, chatId);
+    }
+
+    public void handleWork(Long chatId, UUID uuid) {
+        var informationAboutCollection = new StringBuilder("About this work:\n\n");
+        Item work = dSpaceClient.getWorkById(uuid);
+
+
+
+        String message = work.toString();
         botMessageService.send(message, chatId);
     }
 
