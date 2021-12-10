@@ -41,11 +41,11 @@ public class DSpaceMessageHandler {
         } else if (message.matches("/colpublications_" + UUID_REGEX)) {
             UUID collectionId = UUID.fromString(message.substring(17, message.length()));
             botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
-        } else if ("/help".equals(message)) {
-            botCommandsHandler.handleAllCommands(event.getChatId());
         }else if(message.matches("/publication_" + UUID_REGEX)) {
             UUID workId = UUID.fromString(message.substring(13, message.length()));
             botCommandsHandler.handlePublication(event.getChatId(), workId);
+        } else if ("/help".equals(message)) {
+            botCommandsHandler.handleAllCommands(event.getChatId());
         } else if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }

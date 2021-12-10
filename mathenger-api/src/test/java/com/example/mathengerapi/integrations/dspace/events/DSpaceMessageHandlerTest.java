@@ -201,7 +201,10 @@ public class DSpaceMessageHandlerTest {
         Long botId = botInfoHolder.getBotAccount().getId();
         Item item = createItem(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd item");
 
-        var expectedMessage = "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160";
+        var expectedMessage = "About this publication:\n\n" +
+                "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160" +
+                "\n\nYou can view the publication by the link: " +
+                "http://localhost:4000/items/43d93fd6-5eb0-4952-9bbb-4b6e417e1160";
 
         when(dSpaceClient.getPublicationById(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(item);
 

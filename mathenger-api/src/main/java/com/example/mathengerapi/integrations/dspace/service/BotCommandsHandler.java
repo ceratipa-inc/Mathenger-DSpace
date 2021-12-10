@@ -74,12 +74,14 @@ public class BotCommandsHandler {
     }
 
     public void handlePublication(Long chatId, UUID uuid) {
-        var informationAboutCollection = new StringBuilder("About this work:\n\n");
+        var informationAboutPublication = new StringBuilder("About this publication:\n\n");
         Item work = dSpaceClient.getPublicationById(uuid);
 
-
-
-        String message = work.toString();
+        String message = informationAboutPublication +
+                work.toString() +
+                "\n\nYou can view the publication " +
+                "by the link: http://localhost:4000/items/" +
+                uuid;
         botMessageService.send(message, chatId);
     }
 
