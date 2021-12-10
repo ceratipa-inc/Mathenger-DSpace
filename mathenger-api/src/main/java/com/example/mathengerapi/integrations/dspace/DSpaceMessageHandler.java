@@ -10,7 +10,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Async
 @Component
@@ -30,22 +32,42 @@ public class DSpaceMessageHandler {
             handleBotMessage(event);
         }
     }
-
-    private void handleBotMessage(MessageSent event) {
-        // TODO refactor to support many different commands without bunch of "if" blocks
+    private void handleAllCommunities(MessageSent event){
+        botCommandsHandler.handleAllCommunities(event.getChatId());
+    }
+    private void handleAllCollectionsOfCommunity(MessageSent event){
         var message = event.getText();
-        if ("/community".equals(message)) {
-            botCommandsHandler.handleAllCommunities(event.getChatId());
-        } else if (message.matches("/community_" + UUID_REGEX)) {
-            UUID communityId = CommandUtils.extractId(message);
-            botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
-        } else if (message.matches("/colpublications_" + UUID_REGEX)) {
-            UUID collectionId = CommandUtils.extractId(message);
-            botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
-        } else if ("/help".equals(message)) {
-            botCommandsHandler.handleAllCommands(event.getChatId());
-        } else if (chatStatusService.isPrivateChat(event.getChatId())) {
+        UUID communityId = CommandUtils.extractId(message);
+        botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
+    }
+    private void handleAllItemsOfCollection(MessageSent event){
+        var message = event.getText();
+        UUID collectionId = CommandUtils.extractId(message);
+        botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
+    }
+    private void handleAllCommands(MessageSent event){
+        botCommandsHandler.handleAllCommands(event.getChatId());
+    }
+    private void handleInvalidCommand(MessageSent event){
+        var message = event.getText();
+        if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
+    }
+    private void handleBotMessage(MessageSent inputEvent) {
+        Map<String, Consumer<MessageSent>> commandToConsumerMap = Map.of(
+                "/community", event -> handleAllCommunities(event),
+                "/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event),
+                "/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event),
+                "/help", event ->  handleAllCommands(event)
+                );
+        var message = inputEvent.getText();
+        for(Map.Entry<String, Consumer<MessageSent>> entry : commandToConsumerMap.entrySet()) {
+            if (message.matches(entry.getKey())) {
+                entry.getValue().accept(inputEvent);
+                return;
+            }
+        }
+        handleInvalidCommand(inputEvent);
     }
 }
