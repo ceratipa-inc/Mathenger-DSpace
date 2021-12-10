@@ -42,8 +42,8 @@ public class DSpaceMessageHandler {
         } else if (message.matches("/colpublications_" + UUID_REGEX)) {
             UUID collectionId = CommandUtils.extractId(message);
             botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
-        }else if(message.matches("/publication_" + UUID_REGEX)) {
-            UUID workId = UUID.fromString(message.substring(13, message.length()));
+        } else if (message.matches("/publication_" + UUID_REGEX)) {
+            UUID workId = CommandUtils.extractId(message);
             botCommandsHandler.handlePublication(event.getChatId(), workId);
         } else if ("/help".equals(message)) {
             botCommandsHandler.handleAllCommands(event.getChatId());

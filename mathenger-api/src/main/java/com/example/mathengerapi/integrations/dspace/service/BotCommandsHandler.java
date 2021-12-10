@@ -5,6 +5,7 @@ import com.example.mathengerapi.integrations.dspace.model.Community;
 import feign.FeignException;
 import com.example.mathengerapi.integrations.dspace.model.Item;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -114,6 +115,9 @@ public class BotCommandsHandler {
         botMessageService.send(message, chatId);
     }
 
+    @Value("${dspace.ui.base-url}")
+    private String dSpaceUIBaseUrl;
+
     public void handlePublication(Long chatId, UUID uuid) {
         var informationAboutPublication = new StringBuilder("About this publication:\n\n");
         Item work = dSpaceClient.getPublicationById(uuid);
@@ -121,7 +125,9 @@ public class BotCommandsHandler {
         String message = informationAboutPublication +
                 work.toString() +
                 "\n\nYou can view the publication " +
-                "by the link: http://localhost:4000/items/" +
+                "by the link: " +
+                dSpaceUIBaseUrl +
+                "/items/" +
                 uuid;
         botMessageService.send(message, chatId);
     }

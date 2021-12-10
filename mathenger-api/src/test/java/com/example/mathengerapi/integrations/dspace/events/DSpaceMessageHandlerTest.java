@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -328,6 +329,9 @@ public class DSpaceMessageHandlerTest {
             verify(dSpaceClient, times(1)).getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
         });
     }
+    @Value("${dspace.ui.base-url}")
+    private String dSpaceUIBaseUrl;
+
     @Test
     void shouldHandlePublication() {
         Long botId = botInfoHolder.getBotAccount().getId();
@@ -336,7 +340,8 @@ public class DSpaceMessageHandlerTest {
         var expectedMessage = "About this publication:\n\n" +
                 "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160" +
                 "\n\nYou can view the publication by the link: " +
-                "http://localhost:4000/items/43d93fd6-5eb0-4952-9bbb-4b6e417e1160";
+                dSpaceUIBaseUrl +
+                "/items/43d93fd6-5eb0-4952-9bbb-4b6e417e1160";
 
         when(dSpaceClient.getPublicationById(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(item);
 
