@@ -18,6 +18,7 @@ public class BotMessageService {
     public static final String COMMANDS = Stream.of("/community - display a list of all communities",
                     "/community_{id} - display a list of collections that are in the selected community",
                     "/colpublications_{id} - display the list of all works in the collection",
+                    "/publication_{id} - display information about publication",
                     "/help - display a list of all commands")
             .map(command -> command + "\n")
             .collect(Collectors.joining());
