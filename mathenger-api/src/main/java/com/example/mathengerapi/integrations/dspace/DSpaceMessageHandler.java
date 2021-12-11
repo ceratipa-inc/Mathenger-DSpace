@@ -7,10 +7,11 @@ import com.example.mathengerapi.integrations.dspace.service.ChatStatusService;
 import com.example.mathengerapi.integrations.dspace.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -45,6 +46,11 @@ public class DSpaceMessageHandler {
         UUID collectionId = CommandUtils.extractId(message);
         botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
     }
+    private void handlePublication(MessageSent event){
+        var message = event.getText();
+        UUID publicationId = CommandUtils.extractId(message);
+        botCommandsHandler.handlePublication(event.getChatId(), publicationId);
+    }
     private void handleAllCommands(MessageSent event){
         botCommandsHandler.handleAllCommands(event.getChatId());
     }
@@ -55,16 +61,17 @@ public class DSpaceMessageHandler {
         }
     }
     private void handleBotMessage(MessageSent inputEvent) {
-        Map<String, Consumer<MessageSent>> commandToConsumerMap = Map.of(
-                "/community", event -> handleAllCommunities(event),
-                "/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event),
-                "/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event),
-                "/help", event ->  handleAllCommands(event)
+        List<Pair<String, Consumer<MessageSent>>> commandToConsumerList = List.of(
+                Pair.of("/community", event -> handleAllCommunities(event)),
+                Pair.of("/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event)),
+                Pair.of("/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event)),
+                Pair.of("/publication_" + UUID_REGEX, event -> handlePublication(event)),
+                Pair.of("/help", event ->  handleAllCommands(event))
                 );
         var message = inputEvent.getText();
-        for(Map.Entry<String, Consumer<MessageSent>> entry : commandToConsumerMap.entrySet()) {
-            if (message.matches(entry.getKey())) {
-                entry.getValue().accept(inputEvent);
+        for(var entry : commandToConsumerList) {
+            if (message.matches(entry.getFirst())) {
+                entry.getSecond().accept(inputEvent);
                 return;
             }
         }
