@@ -150,7 +150,7 @@ public class DSpaceChatEventsListenerTest {
     }
 
     @Test
-    void shouldDeactivateChatThenBotIsRemoved() {
+    void shouldDeactivateChatWhenBotIsRemoved() {
         Long botId = botInfoHolder.getBotAccount().getId();
         var eventChatCreated = ChatCreated.builder()
                 .chatId(1L)
