@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -49,6 +50,7 @@ public class DSpaceMessageHandlerTest {
     private static final String COMMANDS = Stream.of("/community - display a list of all communities",
                     "/community_{id} - display a list of collections that are in the selected community",
                     "/colpublications_{id} - display the list of all works in the collection",
+                    "/publication_{id} - display information about publication",
                     "/help - display a list of all commands")
             .map(command -> command + "\n")
             .collect(Collectors.joining());
@@ -325,6 +327,29 @@ public class DSpaceMessageHandlerTest {
         await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
             verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
             verify(dSpaceClient, times(1)).getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
+        });
+    }
+    @Value("${dspace.ui.base-url}")
+    private String dSpaceUIBaseUrl;
+
+    @Test
+    void shouldHandlePublication() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        Item item = createItem(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd item");
+
+        var expectedMessage = "About this publication:\n\n" +
+                "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160" +
+                "\n\nYou can view the publication by the link: " +
+                dSpaceUIBaseUrl +
+                "/items/43d93fd6-5eb0-4952-9bbb-4b6e417e1160";
+
+        when(dSpaceClient.getPublicationById(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(item);
+
+        send("/publication_43d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getPublicationById(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
         });
     }
 

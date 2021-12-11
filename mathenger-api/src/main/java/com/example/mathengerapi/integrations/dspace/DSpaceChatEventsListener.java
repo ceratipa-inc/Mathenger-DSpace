@@ -1,23 +1,28 @@
 package com.example.mathengerapi.integrations.dspace;
 
+import com.example.mathengerapi.dto.ChatsDTO;
 import com.example.mathengerapi.events.ChatCreated;
 import com.example.mathengerapi.events.ChatDeleted;
 import com.example.mathengerapi.events.ChatDetailsUpdated;
 import com.example.mathengerapi.events.ChatMemberRemoved;
 import com.example.mathengerapi.events.ChatMembersAdded;
 import com.example.mathengerapi.integrations.dspace.entity.ChatStatus;
+import com.example.mathengerapi.integrations.dspace.model.Collection;
+import com.example.mathengerapi.integrations.dspace.repository.ChatStatusRepository;
 import com.example.mathengerapi.integrations.dspace.service.ChatStatusService;
 import com.example.mathengerapi.integrations.dspace.service.BotInfoHolder;
 import com.example.mathengerapi.integrations.dspace.service.BotMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @Async
 @Component
@@ -40,22 +45,27 @@ public class DSpaceChatEventsListener {
 
     @EventListener
     public void handleChatDetailsUpdated(ChatDetailsUpdated event) {
-        // TODO change chat name in db
+        chatStatusService.update(event.getChatId(), event.getName());
     }
 
     @EventListener
     public void handleChatMembersAdded(ChatMembersAdded event) {
-        // TODO if newMemberIds contains botId then activate chat and send hello message
+        if (event.getNewMemberIds().contains(botInfoHolder.getBotAccount().getId())) {
+            chatStatusService.changeActivity(event.getChatId(), true);
+            sendHelloMessage(event.getChatId());
+        }
     }
 
     @EventListener
     public void handleChatMemberRemoved(ChatMemberRemoved event) {
-        // TODO if memberId == botId then deactivate chat
+        if (Objects.equals(event.getMemberId(), botInfoHolder.getBotAccount().getId())) {
+            chatStatusService.changeActivity(event.getChatId(), false);
+        }
     }
 
     @EventListener
     public void handleChatDeleted(ChatDeleted event) {
-        // TODO delete chat from db
+        chatStatusService.delete(event.getChatId());
     }
 
     private boolean botIdIsIn(List<Long> memberIds) {
