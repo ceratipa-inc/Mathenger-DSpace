@@ -1,7 +1,7 @@
 package com.example.mathengerapi.integrations.dspace.events;
 
 import com.example.mathengerapi.config.MathengerTest;
-import com.example.mathengerapi.events.ChatCreated;
+import com.example.mathengerapi.events.*;
 import com.example.mathengerapi.integrations.dspace.repository.ChatStatusRepository;
 import com.example.mathengerapi.integrations.dspace.service.BotInfoHolder;
 import com.example.mathengerapi.models.enums.ChatType;
@@ -78,4 +78,142 @@ public class DSpaceChatEventsListenerTest {
                         .hasFieldOrPropertyWithValue("isActive", false)
         );
     }
+
+    @Test
+    void shouldUpdateChatDetails() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+
+        var eventChatCreated = ChatCreated.builder()
+                .chatId(1L)
+                .chatType(ChatType.GROUP_CHAT)
+                .memberIds(List.of(botId, botId + 2, botId + 3))
+                .adminIds(List.of(botId + 2))
+                .name("testName")
+                .build();
+
+        var eventChatUpdated = ChatDetailsUpdated.builder()
+                .chatId(1L)
+                .name("changedName")
+                .build();
+
+        applicationEventPublisher.publishEvent(eventChatCreated);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                    .hasFieldOrPropertyWithValue("chatName", "testName")
+                    .hasFieldOrPropertyWithValue("chatType", ChatType.GROUP_CHAT)
+                    .hasFieldOrPropertyWithValue("isActive", true);
+            verify(messageService).sendMessage(eq(botId), any(Message.class) , eq(1L));
+        });
+
+        applicationEventPublisher.publishEvent(eventChatUpdated);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(
+                () -> assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                        .hasFieldOrPropertyWithValue("chatName", "changedName")
+        );
+
+    }
+
+    @Test
+    void shouldDeleteChat() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        var eventChatCreated = ChatCreated.builder()
+                .chatId(1L)
+                .chatType(ChatType.GROUP_CHAT)
+                .memberIds(List.of(botId, botId + 2, botId + 3))
+                .adminIds(List.of(botId + 2))
+                .name("testName")
+                .build();
+
+        var eventChatDeleted = ChatDeleted.builder()
+                .chatId(1L)
+                .build();
+
+        applicationEventPublisher.publishEvent(eventChatCreated);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                    .hasFieldOrPropertyWithValue("chatName", "testName")
+                    .hasFieldOrPropertyWithValue("chatType", ChatType.GROUP_CHAT)
+                    .hasFieldOrPropertyWithValue("isActive", true);
+            verify(messageService).sendMessage(eq(botId), any(Message.class) , eq(1L));
+        });
+
+        applicationEventPublisher.publishEvent(eventChatDeleted);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(
+                () -> assertThat(chatStatusRepository.findById(1L)).isEmpty()
+        );
+    }
+
+    @Test
+    void shouldDeactivateChatWhenBotIsRemoved() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        var eventChatCreated = ChatCreated.builder()
+                .chatId(1L)
+                .chatType(ChatType.GROUP_CHAT)
+                .memberIds(List.of(botId, botId + 2, botId + 3))
+                .adminIds(List.of(botId + 2))
+                .name("testName")
+                .build();
+
+        var eventChatMembersRemoved = ChatMemberRemoved.builder()
+                .chatId(1L)
+                .memberId(botId)
+                .build();
+
+        applicationEventPublisher.publishEvent(eventChatCreated);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                    .hasFieldOrPropertyWithValue("chatName", "testName")
+                    .hasFieldOrPropertyWithValue("chatType", ChatType.GROUP_CHAT)
+                    .hasFieldOrPropertyWithValue("isActive", true);
+            verify(messageService).sendMessage(eq(botId), any(Message.class) , eq(1L));
+        });
+
+        applicationEventPublisher.publishEvent(eventChatMembersRemoved);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                    .hasFieldOrPropertyWithValue("isActive", false);
+        });
+    }
+
+    @Test
+    void shouldActivateChatAndSendHelloMessageWhenBotIsAdded() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        var eventChatCreated = ChatCreated.builder()
+                .chatId(1L)
+                .chatType(ChatType.GROUP_CHAT)
+                .memberIds(List.of(botId + 1, botId + 2, botId + 3))
+                .adminIds(List.of(botId + 2))
+                .name("testName")
+                .build();
+
+        var eventChatMembersAdded = ChatMembersAdded.builder()
+                .chatId(1L)
+                .newMemberIds(List.of(botId))
+                .build();
+
+        applicationEventPublisher.publishEvent(eventChatCreated);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                    .hasFieldOrPropertyWithValue("chatName", "testName")
+                    .hasFieldOrPropertyWithValue("chatType", ChatType.GROUP_CHAT)
+                    .hasFieldOrPropertyWithValue("isActive", false);
+        });
+
+        applicationEventPublisher.publishEvent(eventChatMembersAdded);
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(chatStatusRepository.findById(1L)).isPresent().get()
+                    .hasFieldOrPropertyWithValue("isActive", true);
+            verify(messageService).sendMessage(eq(botId), any(Message.class) , eq(1L));
+        });
+    }
+
+
 }
