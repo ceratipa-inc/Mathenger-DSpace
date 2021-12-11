@@ -7,7 +7,6 @@ import com.example.mathengerapi.integrations.dspace.service.BotInfoHolder;
 import com.example.mathengerapi.models.enums.ChatType;
 import com.example.mathengerapi.models.message.Message;
 import com.example.mathengerapi.services.MessageService;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -150,7 +148,7 @@ public class DSpaceChatEventsListenerTest {
     }
 
     @Test
-    void shouldDeactivateChatThenBotIsRemoved() {
+    void shouldDeactivateChatWhenBotIsRemoved() {
         Long botId = botInfoHolder.getBotAccount().getId();
         var eventChatCreated = ChatCreated.builder()
                 .chatId(1L)
@@ -184,7 +182,7 @@ public class DSpaceChatEventsListenerTest {
     }
 
     @Test
-    void shouldActivateChatAndSendHelloMessageThenBotIsAdded() {
+    void shouldActivateChatAndSendHelloMessageWhenBotIsAdded() {
         Long botId = botInfoHolder.getBotAccount().getId();
         var eventChatCreated = ChatCreated.builder()
                 .chatId(1L)

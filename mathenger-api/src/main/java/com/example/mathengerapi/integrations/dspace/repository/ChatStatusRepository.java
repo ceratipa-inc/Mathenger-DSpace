@@ -31,6 +31,6 @@ public interface ChatStatusRepository extends JpaRepository<ChatStatus, Long> {
 
     @Modifying
     @Transactional
-    @Query("update ChatStatus cs set cs.isActive = :bool where cs.chatId = :chatId")
-    void changeActivityOfChatStatus(Long chatId, boolean bool);
+    @Query("update ChatStatus cs set cs.isActive = :isActive where cs.chatId = :chatId")
+    void changeActivityOfChatStatus(Long chatId, boolean isActive);
 }
