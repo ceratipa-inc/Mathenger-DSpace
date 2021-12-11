@@ -25,4 +25,17 @@ public class ChatStatusService {
                 .map(type -> type.equals(ChatType.PRIVATE_CHAT))
                 .orElse(false);
     }
+
+    public void delete(Long chatId) {
+        chatStatusRepository.deleteByChatId(chatId);
+    }
+
+    public void update(Long chatId, String name) {
+        chatStatusRepository.updateChatStatus(chatId, name);
+    }
+
+    public void changeActivity(Long chatId, boolean bool) {
+        chatStatusRepository.changeActivityOfChatStatus(chatId, bool);
+    }
+
 }
