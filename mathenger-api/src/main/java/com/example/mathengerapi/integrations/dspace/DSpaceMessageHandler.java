@@ -33,6 +33,21 @@ public class DSpaceMessageHandler {
             handleBotMessage(event);
         }
     }
+    private void handleBotMessage(MessageSent inputEvent) {
+        List<Pair<String, Consumer<MessageSent>>> commandToConsumerList = List.of(
+                Pair.of("/community", event -> handleAllCommunities(event)),
+                Pair.of("/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event)),
+                Pair.of("/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event)),
+                Pair.of("/publication_" + UUID_REGEX, event -> handlePublication(event)),
+                Pair.of("/help", event -> handleAllCommands(event))
+        );
+        var message = inputEvent.getText();
+        commandToConsumerList.stream()
+                .filter(entry -> message.matches(entry.getFirst()))
+                .map(entry -> entry.getSecond())
+                .findFirst()
+                .ifPresentOrElse(consumer -> consumer.accept(inputEvent), () -> handleInvalidCommand(inputEvent));
+    }
 
     private void handleAllCommunities(MessageSent event) {
         botCommandsHandler.handleAllCommunities(event.getChatId());
@@ -65,23 +80,5 @@ public class DSpaceMessageHandler {
         if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
-    }
-
-    private void handleBotMessage(MessageSent inputEvent) {
-        List<Pair<String, Consumer<MessageSent>>> commandToConsumerList = List.of(
-                Pair.of("/community", event -> handleAllCommunities(event)),
-                Pair.of("/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event)),
-                Pair.of("/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event)),
-                Pair.of("/publication_" + UUID_REGEX, event -> handlePublication(event)),
-                Pair.of("/help", event -> handleAllCommands(event))
-        );
-        var message = inputEvent.getText();
-        commandToConsumerList.forEach(entry -> {
-            if (message.matches(entry.getFirst())) {
-                entry.getSecond().accept(inputEvent);
-                return;
-            }
-        });
-        handleInvalidCommand(inputEvent);
     }
 }
