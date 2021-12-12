@@ -33,48 +33,55 @@ public class DSpaceMessageHandler {
             handleBotMessage(event);
         }
     }
-    private void handleAllCommunities(MessageSent event){
+
+    private void handleAllCommunities(MessageSent event) {
         botCommandsHandler.handleAllCommunities(event.getChatId());
     }
-    private void handleAllCollectionsOfCommunity(MessageSent event){
+
+    private void handleAllCollectionsOfCommunity(MessageSent event) {
         var message = event.getText();
         UUID communityId = CommandUtils.extractId(message);
         botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
     }
-    private void handleAllItemsOfCollection(MessageSent event){
+
+    private void handleAllItemsOfCollection(MessageSent event) {
         var message = event.getText();
         UUID collectionId = CommandUtils.extractId(message);
         botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
     }
-    private void handlePublication(MessageSent event){
+
+    private void handlePublication(MessageSent event) {
         var message = event.getText();
         UUID publicationId = CommandUtils.extractId(message);
         botCommandsHandler.handlePublication(event.getChatId(), publicationId);
     }
-    private void handleAllCommands(MessageSent event){
+
+    private void handleAllCommands(MessageSent event) {
         botCommandsHandler.handleAllCommands(event.getChatId());
     }
-    private void handleInvalidCommand(MessageSent event){
+
+    private void handleInvalidCommand(MessageSent event) {
         var message = event.getText();
         if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
     }
+
     private void handleBotMessage(MessageSent inputEvent) {
         List<Pair<String, Consumer<MessageSent>>> commandToConsumerList = List.of(
                 Pair.of("/community", event -> handleAllCommunities(event)),
                 Pair.of("/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event)),
                 Pair.of("/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event)),
                 Pair.of("/publication_" + UUID_REGEX, event -> handlePublication(event)),
-                Pair.of("/help", event ->  handleAllCommands(event))
-                );
+                Pair.of("/help", event -> handleAllCommands(event))
+        );
         var message = inputEvent.getText();
-        for(var entry : commandToConsumerList) {
+        commandToConsumerList.forEach(entry -> {
             if (message.matches(entry.getFirst())) {
                 entry.getSecond().accept(inputEvent);
                 return;
             }
-        }
+        });
         handleInvalidCommand(inputEvent);
     }
 }
