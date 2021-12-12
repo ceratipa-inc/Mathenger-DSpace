@@ -7,10 +7,13 @@ import com.example.mathengerapi.integrations.dspace.service.ChatStatusService;
 import com.example.mathengerapi.integrations.dspace.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Async
 @Component
@@ -31,23 +34,51 @@ public class DSpaceMessageHandler {
         }
     }
 
-    private void handleBotMessage(MessageSent event) {
-        // TODO refactor to support many different commands without bunch of "if" blocks
+    private void handleBotMessage(MessageSent inputEvent) {
+        List<Pair<String, Consumer<MessageSent>>> commandToConsumerList = List.of(
+                Pair.of("/community", event -> handleAllCommunities(event)),
+                Pair.of("/community_" + UUID_REGEX, event -> handleAllCollectionsOfCommunity(event)),
+                Pair.of("/colpublications_" + UUID_REGEX, event -> handleAllItemsOfCollection(event)),
+                Pair.of("/publication_" + UUID_REGEX, event -> handlePublication(event)),
+                Pair.of("/help", event -> handleAllCommands(event))
+        );
+        var message = inputEvent.getText();
+        commandToConsumerList.stream()
+                .filter(entry -> message.matches(entry.getFirst()))
+                .map(entry -> entry.getSecond())
+                .findFirst()
+                .ifPresentOrElse(consumer -> consumer.accept(inputEvent), () -> handleInvalidCommand(inputEvent));
+    }
+
+    private void handleAllCommunities(MessageSent event) {
+        botCommandsHandler.handleAllCommunities(event.getChatId());
+    }
+
+    private void handleAllCollectionsOfCommunity(MessageSent event) {
         var message = event.getText();
-        if ("/community".equals(message)) {
-            botCommandsHandler.handleAllCommunities(event.getChatId());
-        } else if (message.matches("/community_" + UUID_REGEX)) {
-            UUID communityId = CommandUtils.extractId(message);
-            botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
-        } else if (message.matches("/colpublications_" + UUID_REGEX)) {
-            UUID collectionId = CommandUtils.extractId(message);
-            botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
-        } else if (message.matches("/publication_" + UUID_REGEX)) {
-            UUID workId = CommandUtils.extractId(message);
-            botCommandsHandler.handlePublication(event.getChatId(), workId);
-        } else if ("/help".equals(message)) {
-            botCommandsHandler.handleAllCommands(event.getChatId());
-        } else if (chatStatusService.isPrivateChat(event.getChatId())) {
+        UUID communityId = CommandUtils.extractId(message);
+        botCommandsHandler.handleAllCollectionsOfCommunity(event.getChatId(), communityId);
+    }
+
+    private void handleAllItemsOfCollection(MessageSent event) {
+        var message = event.getText();
+        UUID collectionId = CommandUtils.extractId(message);
+        botCommandsHandler.handleAllItemsOfCollection(event.getChatId(), collectionId);
+    }
+
+    private void handlePublication(MessageSent event) {
+        var message = event.getText();
+        UUID publicationId = CommandUtils.extractId(message);
+        botCommandsHandler.handlePublication(event.getChatId(), publicationId);
+    }
+
+    private void handleAllCommands(MessageSent event) {
+        botCommandsHandler.handleAllCommands(event.getChatId());
+    }
+
+    private void handleInvalidCommand(MessageSent event) {
+        var message = event.getText();
+        if (chatStatusService.isPrivateChat(event.getChatId())) {
             botCommandsHandler.handleInvalidCommand(event.getChatId(), message);
         }
     }
