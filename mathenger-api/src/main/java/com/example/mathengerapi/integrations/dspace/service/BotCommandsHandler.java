@@ -2,8 +2,8 @@ package com.example.mathengerapi.integrations.dspace.service;
 
 import com.example.mathengerapi.integrations.dspace.model.Collection;
 import com.example.mathengerapi.integrations.dspace.model.Community;
-import feign.FeignException;
 import com.example.mathengerapi.integrations.dspace.model.Item;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,8 @@ public class BotCommandsHandler {
     private final DSpaceClient dSpaceClient;
     private final BotMessageService botMessageService;
 
-    private boolean isBlank(String field) {
-        return field == null || field.isBlank();
-    }
+    @Value("${dspace.ui.base-url}")
+    private String dSpaceUIBaseUrl;
 
     public void handleAllCommunities(Long chatId) {
         var communities = dSpaceClient.getCommunities();
@@ -115,11 +114,8 @@ public class BotCommandsHandler {
         botMessageService.send(message, chatId);
     }
 
-    @Value("${dspace.ui.base-url}")
-    private String dSpaceUIBaseUrl;
-
     public void handlePublication(Long chatId, UUID uuid) {
-        var informationAboutPublication = new StringBuilder("About this publication:\n\n");
+        String informationAboutPublication = "About this publication:\n\n";
         Item work = dSpaceClient.getPublicationById(uuid);
 
         String message = informationAboutPublication +
@@ -133,7 +129,7 @@ public class BotCommandsHandler {
     }
 
     public void handleAllCommands(Long chatId) {
-        String message = botMessageService.COMMANDS;
+        String message = BotMessageService.COMMANDS;
         botMessageService.send(message, chatId);
     }
 
@@ -141,7 +137,11 @@ public class BotCommandsHandler {
         String message = "Sorry, I can’t understand " +
                 errorCommand + ".\n" +
                 "You can talk to me with these commands:\n\n" +
-                botMessageService.COMMANDS;
+                BotMessageService.COMMANDS;
         botMessageService.send(message, chatId);
+    }
+
+    private boolean isBlank(String field) {
+        return field == null || field.isBlank();
     }
 }
