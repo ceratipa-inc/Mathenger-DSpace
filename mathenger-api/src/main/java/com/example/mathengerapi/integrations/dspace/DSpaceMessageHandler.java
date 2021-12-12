@@ -33,6 +33,7 @@ public class DSpaceMessageHandler {
             handleBotMessage(event);
         }
     }
+
     private void handleBotMessage(MessageSent inputEvent) {
         List<Pair<String, Consumer<MessageSent>>> commandToConsumerList = List.of(
                 Pair.of("/community", event -> handleAllCommunities(event)),
