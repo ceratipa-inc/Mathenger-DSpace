@@ -194,6 +194,61 @@ public class DSpaceMessageHandlerTest {
         });
     }
 
+
+    @Test
+    void shouldHandleAllCollectionsOfCommunityWithoutIntroductoryTextCommand() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        Community community = createCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "My community", "", "You can write here something text as a short description");
+
+        when(dSpaceClient.getCommunityById(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(community);
+
+        List<Collection> collections = List.of(
+                createCollection(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "1st introductoryText", "1st shortDescription"),
+                createCollection(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription")
+        );
+        var expectedMessage = "About this community:\n\n"
+                + "You can write here something text as a short description\n" + "\n"
+                + "Here you can view a list of collections in the community which you chose:\n\n"
+                + "1st collection /id:33d93fd6-5eb0-4952-9bbb-4b6e417e1160\n"
+                + "2nd collection /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160\n\n"
+                + "To view more about one of them, use the command “/colpublications_{idcollection}”";
+        when(dSpaceClient.getCollectionsOfCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(collections);
+
+        send("/community_23d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getCollectionsOfCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
+        });
+    }
+
+
+    @Test
+    void shouldHandleAllCollectionsOfCommunityWithoutShortDescriptionCommand() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        Community community = createCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "My community", "You can write here something text as a introductory text", "");
+
+        when(dSpaceClient.getCommunityById(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(community);
+
+        List<Collection> collections = List.of(
+                createCollection(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "1st introductoryText", "1st shortDescription"),
+                createCollection(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd collection", "2nd introductoryText", "2nd shortDescription")
+        );
+        var expectedMessage = "About this community:\n\n"
+                + "You can write here something text as a introductory text\n" + "\n"
+                + "Here you can view a list of collections in the community which you chose:\n\n" + "1st collection /id:33d93fd6-5eb0-4952-9bbb-4b6e417e1160\n"
+                + "2nd collection /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160\n\n"
+                + "To view more about one of them, use the command “/colpublications_{idcollection}”";
+        when(dSpaceClient.getCollectionsOfCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(collections);
+
+        send("/community_23d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getCollectionsOfCommunity(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
+        });
+    }
+
     @Test
     void shouldHandleAllCollectionsOfCommunityWithoutIntroductoryWhenCollectionsListIsEmptyCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
@@ -329,6 +384,7 @@ public class DSpaceMessageHandlerTest {
             verify(dSpaceClient, times(1)).getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
         });
     }
+
     @Value("${dspace.ui.base-url}")
     private String dSpaceUIBaseUrl;
 
