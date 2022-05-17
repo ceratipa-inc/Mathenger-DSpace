@@ -48,10 +48,10 @@ public class DSpaceMessageHandlerTest {
     private static final Long MEMBER_ID = 10L;
 
     private static final String COMMANDS = Stream.of("/community - display a list of all communities",
-                    "/community_{id} - display a list of collections that are in the selected community",
-                    "/colpublications_{id} - display the list of all works in the collection",
-                    "/publication_{id} - display information about publication",
-                    "/help - display a list of all commands")
+            "/community_{id} - display a list of collections that are in the selected community",
+            "/colpublications_{id} - display the list of all works in the collection",
+            "/publication_{id} - display information about publication",
+            "/help - display a list of all commands")
             .map(command -> command + "\n")
             .collect(Collectors.joining());
 
@@ -289,6 +289,60 @@ public class DSpaceMessageHandlerTest {
     }
 
     @Test
+    void shouldHandleAllItemsOfCollectionWithoutIntroductoryTextCommand() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        Collection collection = createCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "My collection", "", "My short description");
+
+        when(dSpaceClient.getCollectionById(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(collection);
+
+        List<Item> items = List.of(
+                createItem(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st item"),
+                createItem(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd item")
+        );
+        var expectedMessage = "About this collection:\n\n"
+                + "My short description\n" + "\n"
+                + "Here you can view a list of publications in the selected collection:\n\n"
+                + "1st item /id:33d93fd6-5eb0-4952-9bbb-4b6e417e1160\n"
+                + "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160\n\n"
+                + "If you want to read one, use the command “/publication_{id}";
+        when(dSpaceClient.getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(items);
+
+        send("/colpublications_23d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
+        });
+    }
+
+    @Test
+    void shouldHandleAllItemsOfCollectionWithoutShortDescriptionCommand() {
+        Long botId = botInfoHolder.getBotAccount().getId();
+        Collection collection = createCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "My collection", "My introductory text", "");
+
+        when(dSpaceClient.getCollectionById(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(collection);
+
+        List<Item> items = List.of(
+                createItem(UUID.fromString("33d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st item"),
+                createItem(UUID.fromString("43d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "2nd item")
+        );
+        var expectedMessage = "About this collection:\n\n"
+                + "My introductory text\n" + "\n"
+                + "Here you can view a list of publications in the selected collection:\n\n"
+                + "1st item /id:33d93fd6-5eb0-4952-9bbb-4b6e417e1160\n"
+                + "2nd item /id:43d93fd6-5eb0-4952-9bbb-4b6e417e1160\n\n"
+                + "If you want to read one, use the command “/publication_{id}";
+        when(dSpaceClient.getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"))).thenReturn(items);
+
+        send("/colpublications_23d93fd6-5eb0-4952-9bbb-4b6e417e1160");
+
+        await().atMost(AWAITING_TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(messageService).sendMessage(eq(botId), textEquals(expectedMessage), eq(CHAT_ID));
+            verify(dSpaceClient, times(1)).getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
+        });
+    }
+
+    @Test
     void shouldHandleAllItemsOfCollectionWithoutIntroductoryWhenItemsListIsEmptyCommand() {
         Long botId = botInfoHolder.getBotAccount().getId();
         Collection collection = createCollection(UUID.fromString("13d93fd6-5eb0-4952-9bbb-4b6e417e1160"), "1st collection", "", "");
@@ -329,6 +383,7 @@ public class DSpaceMessageHandlerTest {
             verify(dSpaceClient, times(1)).getItemsOfCollection(UUID.fromString("23d93fd6-5eb0-4952-9bbb-4b6e417e1160"));
         });
     }
+
     @Value("${dspace.ui.base-url}")
     private String dSpaceUIBaseUrl;
 
